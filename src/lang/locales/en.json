@@ -1,0 +1,47 @@
+{
+  "success": {
+    "auth": {
+      "login": "Login success",
+      "register": "Register a new account successfully",
+      "refreshToken": "Refresh token successfully",
+      "verifiedAccount": "Verified account successfully",
+      "forgotPassword": "Send request forgot password success",
+      "sendEmailResetPassword": "Reset password link sent to email",
+      "resetPassword": "Reset password successfully",
+      "userDetailInfo": "Get detail information success"
+    }
+  },
+  "error": {
+    "default": {
+      "internalServer": "Internal Server Error",
+      "notFoundItem": "{{item}} not found",
+      "notFound": "Data not found"
+    },
+    "existed": {
+      "slugItem": "{{item}} with {{slug}} already exists"
+    },
+    "missing": {
+      "tokenAuth": "Unauthorized: Token is missing",
+      "requiredEntry": "{{label}} is required",
+      "passwordMatch": "Confirm password must match password"
+    },
+    "failed": {
+      "registerAccount": "Failed to register a new account",
+      "resetPassword": "Failed to reset password",
+      "verifyAccount": "Failed to verify account"
+    },
+    "invalid": {
+      "emailEntry": "Invalid email entry",
+      "emailFormatted": "Invalid email formatted",
+      "password": "Invalid password entry",
+      "tokenExpired": "Unauthorized: Invalid or expired token"
+    },
+    "denied": {
+      "tokenAccess": "Access denied. No token provided."
+    },
+    "other": {
+      "passwordLength": "Password must be at least {{number}} characters long",
+      "emailNotRegistered": "Email not registered"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { RoleModuleAssociation } from "./RoleModuleAssociation";
+
+@Entity({ name: 'module_menu_association' })
+export class ModuleMenuAssociation {
+  @PrimaryGeneratedColumn('uuid')
+  menu_access_id!: string;
+
+  @OneToOne(() => RoleModuleAssociation, (value) => value.role_module_access, { eager: true })
+  @JoinColumn({ name: 'module_access_id' })
+  module_menus!: RoleModuleAssociation;
+
+  @Column({ type: 'text', default: null, nullable: true })
+  access_name!: string;
+
+  @Column({ type: 'boolean', default: false })
+  access_status!: boolean;
+
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
+  created_at!: Date;
+
+  @Column({ name: 'created_by', type: 'uuid' })
+  created_by!: string;
+
+  @UpdateDateColumn({ type: 'timestamp', nullable: true, name: 'updated_at' })
+  updated_at!: Date;
+
+  @Column({ name: 'updated_by', type: 'uuid' })
+  updated_by!: string;
+
+  @DeleteDateColumn({ type: 'timestamp', nullable: true, name: 'deleted_at' })
+  deleted_at!: Date;
+
+  @Column({ name: 'deleted_by', type: 'uuid' })
+  deleted_by!: string;
+
+
+}

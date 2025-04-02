@@ -1,0 +1,155 @@
+{
+  "/auth/login": {
+    "post": {
+      "tags": ["Auth"],
+      "summary": "Authentication",
+      "requestBody": {
+        "required": false,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SchemaAuthLogin"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchemaAuthLoginResponse"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/auth/profile": {
+    "get": {
+      "tags": ["Auth"],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "summary": "Authentication",
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchemaResponse"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/auth/referesh-token": {
+    "get": {
+      "tags": ["Auth"],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "summary": "Authentication",
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchemaResponse"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/auth/online-auction/signin-membership": {
+    "post": {
+      "tags": ["Auth"],
+      "summary": ["API Login to online auction"],
+      "requestBody": {
+        "required": false,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SchemaAuthOnlineAuctionLogin"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchemaAuthLoginResponse"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/auth/blue-t/signin": {
+    "post": {
+      "tags": ["Auth"],
+      "summary": "Blue-T login",
+      "requestBody": {
+        "required": false,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SchemaAuthLogin"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchemaAuthLoginResponse"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/auth/blue-t/refresh-token": {
+    "get": {
+      "tags": ["Auth"],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "summary": "Blue-T refresh token",
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchemaResponse"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

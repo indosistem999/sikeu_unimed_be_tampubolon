@@ -1,0 +1,27 @@
+# Use Node.js Alpine version 22.14.0
+FROM node:22.14.0-alpine
+
+RUN apk add --no-cache yarn alpine-conf && \
+    setup-timezone -z Asia/Jakarta && \
+    rm -rf /var/cache/apk/*
+
+LABEL maintainer="IndoSistem"
+
+# Set working directory inside the container
+WORKDIR /usr/src/app
+
+ENV TZ Asia/Bangkok
+
+# Copy only package manager files to improve caching efficiency
+COPY package.json .
+# COPY yarn.lock .
+
+# Copy the entire source code (excluding node_modules due to volume mount)
+COPY . .
+
+# RUN cp .env.example .env
+
+RUN yarn install && yarn global add nodemon && yarn cache clean --all
+
+CMD ["yarn", "dev"]
+
