@@ -3,9 +3,9 @@ import createSwaggerSchema from './schema';
 
 const swaggerDocInfo: object = {
   description:
-    'API documentation for the University Management System, made by <a href="https://github.com/alpredoruben" target="_blank">@alpredoruben.</a>',
+    'Restfull API documentation for the Finance Core App.',
   version: '1.0.0',
-  title: 'University Management System API',
+  title: 'Finance Core API',
   contact: {
     email: '',
   },

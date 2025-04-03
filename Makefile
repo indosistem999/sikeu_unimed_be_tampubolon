@@ -1,6 +1,7 @@
 migration-file=CreateUsersTable
 entity-name=Users
-compose-file-local=docker-compose.dev.yml
+compose-file=docker-compose.dev.yaml
+app-container-name=finance_core_app:
 
 local-migration-create:
 	yarn typeorm migration:create  ./src/database/migrations/$(migration-file)
@@ -15,11 +16,18 @@ seeder:
 	npm run seed
 
 
-deploy-local-watch:
-	docker compose -f $(compose-file-local) up --remove-orphans --force-recreate
+# Docker Command
+app-deploy:
+	docker compose -f $(compose-file) up -d --remove-orphans --force-recreate
 
-down-local:
-	docker compose -f $(compose-file-local) down -v
+app-deploy-watch:
+	docker compose -f $(compose-file) up --remove-orphans --force-recreate
 
-local-logs:
-	docker logs -f 
+app-down:
+	docker compose -f $(compose-file) down -v
+
+app-logs:
+	docker logs -f $(app-container-name)
+
+app-check:
+	docker-compose -f $(compose-file) exec -T $(app-container-name) bash

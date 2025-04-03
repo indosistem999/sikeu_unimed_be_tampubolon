@@ -12,6 +12,4 @@ class RouteDocumentation extends MainRoutes {
   }
 }
 
-const routeDocumentation = new RouteDocumentation().router;
-
-export default routeDocumentation;
+export default RouteDocumentation;

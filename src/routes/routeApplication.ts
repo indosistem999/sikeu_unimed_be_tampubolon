@@ -10,4 +10,4 @@ class RouteApplication extends MainRoutes {
   }
 }
 
-export default new RouteApplication().router;
+export default RouteApplication;

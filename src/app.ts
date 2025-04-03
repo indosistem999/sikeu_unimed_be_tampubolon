@@ -15,8 +15,7 @@ import {
   setCompression,
 } from './app/middlewares/other.middleweare';
 import { Config as cfg, IsProduction } from './constanta';
-import { rabbitMqConfig } from './config/rabbitmq';
-import routeDocumentation from './routes/routeDocumentation';
+import RouteDocumentation from './routes/routeDocumentation';
 import RouteApplication from './routes/routeApplication'
 import { RunSubscribers } from './events/subscribers';
 
@@ -26,15 +25,17 @@ export class App {
   constructor() {
     this.app = express();
 
-    RunSubscribers()
+    if(cfg.AppEnv?.toLowerCase() !== 'test') {
+      RunSubscribers()
+    }
+    
 
     this.initializeMiddleware();
     this.inititalizeRoutes();
-    this.initializeDatabase();
-    this.initializeRabbitMQ();
+    // this.initializeDatabase();
   }
 
-  private initializeMiddleware(): void {
+  protected initializeMiddleware(): void {
     this.app.use(setHeaderLanguage);
     this.app.use(setCompression());
     this.app.set('trust proxy', 1);
@@ -63,17 +64,17 @@ export class App {
     this.app.use(MessageDialog.init);
   }
 
-  private inititalizeRoutes(): void {
+  protected inititalizeRoutes(): void {
     this.app.use(removeFaviconMiddleware);
     if (!IsProduction) {
-      this.app.use(routeDocumentation);
+      this.app.use(new RouteDocumentation().router);
     }
-    this.app.use(RouteApplication); // Main Router Rest API
+    this.app.use(new RouteApplication().router); // Main Router Rest API
     this.app.use(syntaxErrorMiddleware);
     this.app.use(errorMiddleware);
   }
 
-  private initializeDatabase(): void {
+  protected initializeDatabase(): void {
     AppDataSource.initialize()
       .then(() => {
         console.log('📦 Database connection established successfully!');
@@ -84,12 +85,4 @@ export class App {
       });
   }
 
-  private async initializeRabbitMQ(): Promise<void> {
-    try {
-      await rabbitMqConfig.connect();
-      Logger().info('RabbitMQ connection initialized');
-    } catch (error) {
-      Logger().error('RabbitMQ connection error:', error);
-    }
-  }
 }

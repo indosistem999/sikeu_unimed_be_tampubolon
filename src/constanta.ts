@@ -5,6 +5,22 @@ export const IsProduction: boolean = process.env.APP_ENV?.toString() === 'produc
 
 export const SaltRounds: number = 10;
 
+const getUrlRabbitMQ = (): string => {
+  const rmqList = {
+    host: process?.env?.RABBITMQ_HOST ?? 'localhost',
+    port: process?.env?.RABBITMQ_PORT ?? '5672',
+    user: process?.env?.RABBITMQ_USER ?? null,
+    password: process?.env?.RABBITMQ_PASS ?? null
+  }
+
+  if(rmqList?.user == null) {
+    return `amqp://${rmqList.host}:${rmqList.port}`;
+  }
+
+  return `amqp://${rmqList.user}:${rmqList.password}@${rmqList.host}:${rmqList.port}`;
+  
+}
+
 const getContentSecurePolice = (): string | any => {
   if (IsProduction) {
     return process?.env?.APP_CONTENT_SECURITY_POLICY_PROD;
@@ -44,7 +60,7 @@ export const Config = {
   RedisPass: process.env.REDIS_PASS?.toString() || 'password',
 
   // RabbitMQ
-  RabbitMqUrl: process.env.RABBITMQ_URL?.toString() || 'amqp://localhost',
+  RabbitMqUrl: getUrlRabbitMQ(),
 
   // Mail SMTP
   MailDriver: process.env.MAIL_DRIVER ?? 'smtp',

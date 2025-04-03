@@ -1,12 +1,37 @@
-node_modules
-dist
-build
-.vscode
-.git
-.gitignore
-*.log
+# Exclude node_modules but keep it for local usage
+node_modules/
+
+# Ignore local environment files
 .env
-coverage
-tests
-*.md
-.idea
+.env.local
+
+# Ignore Docker-related files (if they shouldn't be copied to the image)
+docker-compose.yml
+docker-compose.*.yml
+Dockerfile
+Dockerfile.*
+
+# Ignore log files
+*.log
+
+# Ignore temporary files and directories from the OS or editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Ignore build artifacts
+dist/
+build/
+
+# Ignore coverage files
+coverage/
+
+# Ignore test-related artifacts
+*.test.*
+*.spec.*
+
+# Ignore dependency lock files (optional, if you'd like to regenerate them)
+yarn.lock
+package-lock.json
