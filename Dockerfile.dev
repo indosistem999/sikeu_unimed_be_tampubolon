@@ -1,28 +1,27 @@
-# Use Node.js Alpine version
 FROM node:22.14.0-alpine
 
 # Install necessary packages
-RUN apk update && apk add --no-cache yarn
-RUN apk add --no-cache tzdata
+RUN apk update && apk add --no-cache yarn tzdata
 ENV TZ=Asia/Jakarta
 RUN cp /usr/share/zoneinfo/Asia/Jakarta /etc/localtime && echo "Asia/Jakarta" > /etc/timezone
 
-
-# Set working directory inside the container
+# Set working directory
 WORKDIR /usr/src/app
 
-# Copy package files first for caching efficiency
+# Copy package files
 COPY package.json .
-# COPY yarn.lock .
 
-# Copy application source code except node_modules
+# Copy source code
 COPY . .
 
-# Copy .env.example to .env inside the container
+# Copy .env.example to .env
 RUN cp .env.example .env
 
-# Install dependencies, globally add nodemon, and clean yarn cache
-RUN yarn install && yarn global add nodemon && yarn cache clean --all
+# Install dependencies locally and globally, and clean yarn cache
+RUN yarn install
+RUN yarn global add ts-node nodemon
+ENV PATH=$PATH:/usr/local/share/.config/yarn/global/node_modules/.bin
+RUN yarn cache clean --all
 
-# Entry point for development
-CMD ["yarn", "dev"]
+# Start the application
+CMD ["yarn", "start:dev"]

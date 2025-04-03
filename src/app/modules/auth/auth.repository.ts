@@ -1,4 +1,4 @@
-import AppDataSource from '../../../config/ormconfig';
+import AppDataSource from '../../../config/dbconfig';
 import { Users } from '../../../database/models/Users';
 import { I_ResultService } from '../../../interfaces/app.interface';
 import {
@@ -11,13 +11,14 @@ import {
   I_RequestRefreshToken,
 } from '../../../interfaces/auth.interface';
 import { MessageDialog } from '../../../lang';
-import { comparedPassword, encryptPassword, generateSalt, hashedPassword } from '../../../lib/utils/bcrypt.util';
+import { comparedPasswordBySalt, encryptPassword, generateSalt, hashedPassword } from '../../../lib/utils/bcrypt.util';
 import { standartDateISO } from '../../../lib/utils/common.util';
 import { generatedToken, verifiedToken } from '../../../lib/utils/jwt.util';
 import UserLogRepository from '../userlog/userLog.repository'
 import {LogType as logType} from '../../../constanta'
 import RoleRepository from '../role/role.repository';
 import { eventPublishMessageToSendEmail } from '../../../events/publishers/email.publisher';
+import bcrypt from 'bcrypt';
 
 class AuthRepository implements I_AuthRepository {
   private userRepo = AppDataSource.getRepository(Users);
@@ -48,7 +49,8 @@ class AuthRepository implements I_AuthRepository {
         };
       }
 
-      if (await comparedPassword(payload.password, user.password)) {
+      const hashedPassword = await bcrypt.hash(payload.password, user.salt)
+      if (user.password !== hashedPassword) {
         return {
           success: false,
           message: MessageDialog.__('error.invalid.password'),
@@ -64,9 +66,9 @@ class AuthRepository implements I_AuthRepository {
       user = await this.userRepo.save(user);
 
       const resultLog = await this.userLogRepository.store({
-        activity_time: others.today,
+        activity_time: others.last_login,
         activity_type: logType.Login,
-        user_id: user.user_id,
+        user,
         description: `User has signed in at ${lastLogin} on IP: ${others?.request_ip}, Hostname: ${others?.request_host}`
       })
 
@@ -143,7 +145,7 @@ class AuthRepository implements I_AuthRepository {
       const resultLog = await this.userLogRepository.store({
         activity_time: today,
         activity_type: logType.Register,
-        user_id: user.user_id,
+        user,
         description: `User ${user.email} has registered at ${today}`
       })
 
@@ -205,7 +207,8 @@ class AuthRepository implements I_AuthRepository {
   /** Refresh Token */
   async refreshToken(payload: I_RequestToken): Promise<I_ResultService> {
     const decoded = verifiedToken(payload.token);
-    let user = await this.userRepo.findOne({where: {user_id: decoded?.user_id}})
+
+    let user = await this.userRepo.findOne({where: {user_id: decoded?.user_id}, relations: ['role']})
 
     if (!user) {
       return {
@@ -221,12 +224,26 @@ class AuthRepository implements I_AuthRepository {
     user.email_verification_token_expired = null;
     user.updated_at = today;
     user.updated_by = user.user_id
-    user = await this.userRepo.save(user);
+    await this.userRepo.save(user);
+
+    const jwtPayload: I_AuthUserPayload = {
+      user_id: user.user_id,
+      email: user.email,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      role: {
+        role_id: user.role?.role_id,
+        role_name: user.role?.role_name,
+        role_slug: user.role?.role_slug,
+      }
+    };
 
     const token: I_RequestRefreshToken = {
-      access_token: generatedToken(user),
-      refresh_token: generatedToken(user),
+      access_token: generatedToken(jwtPayload),
+      refresh_token: generatedToken(jwtPayload),
     };
+
+    console.log({token})
 
     return {
       success: true,
@@ -321,7 +338,7 @@ class AuthRepository implements I_AuthRepository {
 
   async getMe(id: string): Promise<I_ResultService> {
     try {
-      const user = await this.userRepo.findOne({ where: { user_id: id } });
+      const user = await this.userRepo.findOne({ where: { user_id: id }, relations: ['role'] });
       if (!user) {
         return {
           success: false,
@@ -329,6 +346,8 @@ class AuthRepository implements I_AuthRepository {
           record: user,
         };
       }
+
+      console.log({user})
 
       return {
         success: true,
@@ -338,8 +357,12 @@ class AuthRepository implements I_AuthRepository {
           email: user.email,
           first_name: user.first_name,
           last_name: user.last_name,
-          role:user.role,
-          modules: user.role.role_modules.map((item) => ({...item.master_module})),
+          role: {
+            role_id: user?.role?.role_id,
+            role_name: user?.role?.role_name,
+            role_slug: user?.role?.role_slug
+          },
+          // modules: user.role.role_modules.map((item) => ({...item.master_module})),
         },
       };
     } catch (err: any) {

@@ -51,13 +51,13 @@ export interface I_RegisterRequest {
 
 /** Token Request Interface */
 export interface I_RequestToken {
-  token: string;
+  token: any;
 }
 
 /**  */
 export interface I_RequestRefreshToken {
-  access_token: string;
-  refresh_token: string;
+  access_token: any;
+  refresh_token: any;
 }
 
 export interface I_ResetPassword {

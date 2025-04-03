@@ -1,9 +1,10 @@
-import { Request, Response, NextFunction } from 'express';
+import {  Response, NextFunction } from 'express';
 import { sendErrorResponse } from '../../lib/utils/response.util';
 import { MessageDialog } from '../../lang';
 import { verifiedToken } from '../../lib/utils/jwt.util';
+import { I_RequestCustom } from '../../interfaces/app.interface';
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+export const authMiddleware = (req: I_RequestCustom, res: Response, next: NextFunction): void => {
   const authHeader = req?.headers?.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {

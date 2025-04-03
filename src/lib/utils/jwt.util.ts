@@ -9,7 +9,7 @@ import { I_AuthUserPayload } from '../../interfaces/auth.interface';
  * @returns The generated JWT token.
  */
 export const generatedToken = (payload: I_AuthUserPayload, expiresIn: number = 1): string => {
-  const options: SignOptions = { expiresIn };
+  const options: SignOptions = { expiresIn: `${expiresIn}h` };
   return jwt.sign(payload, cfg.JwtSecretKey, options);
 };
 

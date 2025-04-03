@@ -1,6 +1,7 @@
 import { Request } from 'express';
 import { I_PaginateArgs } from '../../interfaces/pagination.interface';
 import { standartDateISO } from './common.util';
+import { I_RequestCustom } from '../../interfaces/app.interface';
 
 export const defineRequestQuery = (req: Request, columns: string[]): { [key: string]: any } => {
   try {
@@ -62,7 +63,7 @@ export const defineRequestPaginateArgs = (req: Request): I_PaginateArgs => {
   };
 };
 
-export const defineRequestOption = (req: Request, type: string = 'create') => {
+export const defineRequestOption = (req: I_RequestCustom, type: string = 'create') => {
   const payload: Record<string, any> = req?.body;
   switch (type.toLowerCase()) {
     case 'update':

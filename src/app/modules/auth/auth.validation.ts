@@ -56,7 +56,10 @@ export default new (class AuthValidation {
         res,
         400,
         errors
-          .map((err) => Object.values(err.constraints!))
+          .map((err) => {
+            console.log({err})
+            return Object.values(err.constraints!)
+          })
           .flat()
           .toString(),
         errors

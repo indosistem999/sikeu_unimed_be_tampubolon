@@ -1,4 +1,4 @@
-import express, { Application, Request, Response } from 'express';
+import express, { Application } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import {
@@ -6,16 +6,15 @@ import {
   removeFaviconMiddleware,
   syntaxErrorMiddleware,
 } from './app/middlewares/error.middleware';
-import AppDataSource from './config/ormconfig';
-import { httpLogger, Logger } from './config/logger';
+import AppDataSource from './config/dbconfig';
+import { httpLogger } from './config/logger';
 import { MessageDialog } from './lang';
 import {
   setHeaderProtection,
   setHeaderLanguage,
   setCompression,
 } from './app/middlewares/other.middleweare';
-import { Config as cfg, IsProduction } from './constanta';
-import RouteDocumentation from './routes/routeDocumentation';
+import { Config as cfg } from './constanta';
 import RouteApplication from './routes/routeApplication'
 import { RunSubscribers } from './events/subscribers';
 
@@ -32,7 +31,7 @@ export class App {
 
     this.initializeMiddleware();
     this.inititalizeRoutes();
-    // this.initializeDatabase();
+    this.initializeDatabase();
   }
 
   protected initializeMiddleware(): void {
@@ -66,10 +65,7 @@ export class App {
 
   protected inititalizeRoutes(): void {
     this.app.use(removeFaviconMiddleware);
-    if (!IsProduction) {
-      this.app.use(new RouteDocumentation().router);
-    }
-    this.app.use(new RouteApplication().router); // Main Router Rest API
+    this.app.use(RouteApplication); // Main Router Rest API
     this.app.use(syntaxErrorMiddleware);
     this.app.use(errorMiddleware);
   }

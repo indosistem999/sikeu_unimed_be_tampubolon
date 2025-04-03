@@ -50,7 +50,7 @@
       }
     }
   },
-  "/auth/referesh-token": {
+  "/auth/refresh-token": {
     "get": {
       "tags": ["Auth"],
       "security": [
@@ -73,71 +73,20 @@
       }
     }
   },
-  "/auth/online-auction/signin-membership": {
+  "/auth/forgot-password": {
     "post": {
       "tags": ["Auth"],
-      "summary": ["API Login to online auction"],
+      "summary": "Authentication",
       "requestBody": {
         "required": false,
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/SchemaAuthOnlineAuctionLogin"
+              "$ref": "#/components/schemas/SchemaAuthForgotPassword"
             }
           }
         }
       },
-      "responses": {
-        "200": {
-          "description": "OK",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SchemaAuthLoginResponse"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "/auth/blue-t/signin": {
-    "post": {
-      "tags": ["Auth"],
-      "summary": "Blue-T login",
-      "requestBody": {
-        "required": false,
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/SchemaAuthLogin"
-            }
-          }
-        }
-      },
-      "responses": {
-        "200": {
-          "description": "OK",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SchemaAuthLoginResponse"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "/auth/blue-t/refresh-token": {
-    "get": {
-      "tags": ["Auth"],
-      "security": [
-        {
-          "bearerAuth": []
-        }
-      ],
-      "summary": "Blue-T refresh token",
       "responses": {
         "200": {
           "description": "OK",

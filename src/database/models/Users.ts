@@ -43,7 +43,7 @@ export class Users {
   reset_token!: string;
 
   @Column({ type: 'text', nullable: true, default: null })
-  security_qestion_id!: string;
+  security_question_id!: string;
 
   @Column({ type: 'text', nullable: true, default: null })
   security_question_answer!: string;

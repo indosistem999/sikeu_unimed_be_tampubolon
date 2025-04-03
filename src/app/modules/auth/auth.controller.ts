@@ -3,29 +3,38 @@ import MainRoutes from '../../../config/mainRoute';
 import AuthService from './auth.service';
 import AuthValidation from './auth.validation';
 import { authMiddleware } from '../../middlewares/auth.middleware';
+import { I_RequestCustom } from '../../../interfaces/app.interface';
 
-export default new (class AuthController extends MainRoutes {
+class AuthController extends MainRoutes {
   public routes(): void {
     /** [POST] - Login Account */
     this.router.post(
-      '/sign-in',
-      AuthValidation.loginValidation,
+      '/login',
       async (req: Request, res: Response) => {
-        await AuthService.login(req, res);
+        await AuthService.login(req, res)
       }
     );
 
     /** [POST] - Register New Account */
     this.router.post(
-      '/sign-up',
+      '/register',
       AuthValidation.registerValidation,
       async (req: Request, res: Response) => {
         await AuthService.register(req, res);
       }
     );
 
+    /** [POST] - Forgot Password */
+    this.router.post(
+      '/forgot-password',
+      AuthValidation.forgotPasswordValidation,
+      async (req: Request, res: Response) => {
+        await AuthService.forgotPassword(req, res);
+      }
+    );
+
     /** [POST] - Refresh Token */
-    this.router.post('/refresh-token', authMiddleware, async (req: Request, res: Response) => {
+    this.router.get('/refresh-token', authMiddleware, async (req: I_RequestCustom, res: Response) => {
       await AuthService.refreshToken(req, res);
     });
 
@@ -34,15 +43,7 @@ export default new (class AuthController extends MainRoutes {
       await AuthService.verifyAccount(req, res);
     });
 
-    /** [POST] - Forgot Password */
-    this.router.post(
-      '/forgot-password',
-      authMiddleware,
-      AuthValidation.forgotPasswordValidation,
-      async (req: Request, res: Response) => {
-        await AuthService.forgotPassword(req, res);
-      }
-    );
+    
 
     /** [POST] - Reset Password */
     this.router.post('/reset-password', async (req: Request, res: Response) => {
@@ -50,8 +51,10 @@ export default new (class AuthController extends MainRoutes {
     });
 
     /** [GET] - Detail User Information */
-    this.router.get('/info-me', authMiddleware, async (req: Request, res: Response) => {
+    this.router.get('/profile', authMiddleware, async (req: I_RequestCustom, res: Response) => {
       await AuthService.getMe(req, res);
     });
   }
-})().router;
+}
+
+export default new AuthController().router

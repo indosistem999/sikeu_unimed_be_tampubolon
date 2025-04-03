@@ -1,13 +1,26 @@
-import { AuthController } from '../app/modules';
+import AuthController from '../app/modules/auth/auth.controller';
 import MainRoutes from '../config/mainRoute';
+import { IsProduction } from '../constanta';
+import { swaggerDocLocalApi } from '../docs/swagger';
+import swaggerUi from 'swagger-ui-express'
 import RouteHealtCheck from './routeHealtCheck'
 
+const tagVersionOne: string = '/api/v1';
+
 class RouteApplication extends MainRoutes {
-  private readonly tagVersion: string = '/api/v1';
   public routes(): void {
     this.router.use(RouteHealtCheck)
-    // this.router.use(`${this.tagVersion}/auth`, AuthController);
+
+    if (!IsProduction) {
+     this.router.use(
+        '/documentation',
+        swaggerUi.serveFiles(swaggerDocLocalApi),
+        swaggerUi.setup(swaggerDocLocalApi)
+      );
+    }
+
+    this.router.use(`${tagVersionOne}/auth`, AuthController);
   }
 }
 
-export default RouteApplication;
+export default new RouteApplication().router;

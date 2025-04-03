@@ -10,6 +10,8 @@ import { sendErrorResponse, sendSuccessResponse } from '../../../lib/utils/respo
 import AuthRepository from './auth.repository';
 import { standartDateISO } from '../../../lib/utils/common.util';
 import { getRequestProperties } from '../../../lib/utils/request.util';
+import { I_RequestCustom } from '../../../interfaces/app.interface';
+import { MessageDialog } from '../../../lang';
 
 export default new (class AuthService implements I_AuthService {
   private readonly authRepo = new AuthRepository();
@@ -37,7 +39,16 @@ export default new (class AuthService implements I_AuthService {
   }
 
   async refreshToken(req: Request, res: Response): Promise<Response> {
-    const payload: I_RequestToken = req?.body;
+    const authHeader = req?.headers?.authorization ?? undefined;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      sendErrorResponse(res, 401, MessageDialog.__('error.denied.tokenAccess'), authHeader);
+    }
+
+    const payload:I_RequestToken = {
+      token: authHeader?.split(' ')[1]?.toString()
+    }
+
     const result = await this.authRepo.refreshToken(payload);
 
     if (!result?.success) {
@@ -80,8 +91,8 @@ export default new (class AuthService implements I_AuthService {
     return sendSuccessResponse(res, 200, result.message, result.record);
   }
 
-  async getMe(req: Request, res: Response): Promise<Response> {
-    const id: any = '';
+  async getMe(req: I_RequestCustom, res: Response): Promise<Response> {
+    const id: any = req?.user?.user_id;
     const result = await this.authRepo.getMe(id);
 
     if (!result?.success) {

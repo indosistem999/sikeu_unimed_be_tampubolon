@@ -1,4 +1,4 @@
-import AppDataSource from "../../../config/ormconfig";
+import AppDataSource from "../../../config/dbconfig";
 import { UserLog } from "../../../database/models/UserLog";
 import { I_ResultService } from "../../../interfaces/app.interface";
 import { I_UserLogRepository, I_UserLogRequest } from "../../../interfaces/userLog.interface";

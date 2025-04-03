@@ -1,5 +1,6 @@
 import {Request, Response} from 'express'
 import { I_ResultService } from './app.interface';
+import { Users } from '../database/models/Users';
 
 
 export interface I_UserLogRepository {
@@ -14,7 +15,7 @@ export interface I_UserLogService {
 }
 
 export interface I_UserLogRequest {
-    user_id: string;
+    user: Users;
     activity_type: string;
     activity_time: Date;
     description: string | null

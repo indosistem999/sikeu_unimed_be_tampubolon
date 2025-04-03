@@ -1,4 +1,10 @@
 import { Request, Response } from 'express';
+import { I_AuthUserPayload } from './auth.interface';
+
+export interface I_RequestCustom extends Request {
+  user?: I_AuthUserPayload;
+  rate_limit?: Record<string, any>;
+}
 
 export interface I_AppError extends Error {
   statusCode?: number;

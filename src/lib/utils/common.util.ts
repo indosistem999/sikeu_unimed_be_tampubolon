@@ -42,10 +42,11 @@ export const formatTimestamp = (date: Date): string => {
 export const generateSlug = (name: string): string | null => {
   if (name != null && name != undefined) {
     return name
-      .toLowerCase() // Convert to lowercase
-      .trim() // Remove leading and trailing spaces
-      .replace(/\s+/g, '-') // Replace spaces with hyphens
-      .replace(/[^a-z0-9-]/g, ''); // Remove special characters except hyphens
+      .toLowerCase()                      // Convert to lowercase
+        .trim()                              // Remove any leading or trailing spaces
+        .replace(/\s+/g, '-')                // Replace spaces with hyphens
+        .replace(/[^a-z0-9\-]/g, '')         // Remove any non-alphanumeric characters except hyphens
+        .replace(/--+/g, '-');
   }
 
   return null;

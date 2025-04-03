@@ -1,5 +1,4 @@
 import { I_AuthUserPayload } from '../interfaces/auth.interface';
-
 declare global {
   namespace Express {
     interface Request {
