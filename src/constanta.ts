@@ -68,10 +68,14 @@ export const Config = {
   MailPort: Number(process.env.MAIL_PORT ?? '2525'),
   MailUser: process.env.MAIL_USERNAME ?? 'd010bd981faee5',
   MailPass: process.env.MAIL_PASSWORD ?? 'aac26c8b410877',
-  MailSecure: Boolean(process.env.MAIL_SECURE ?? 'true'),
+  MailSecure: process.env.MAIL_SECURE?.toLowerCase() == 'false'? false : true,
   MailFrom: process.env.MAIL_FROM ?? 'support@gmail.com',
   MailAlert: process.env.MAIL_ALERT_LIST ?? 'alpredo.tampubolon@gmail.com',
   MailIgnoreTLS: Boolean(process.env.MAIL_IGNORE_TLS ?? 'false'),
+
+  // Customer
+  CustomerPhone: process.env.CUSTOMER_PHONE ?? '0612234556',
+  CustomerEmail: process.env.CUSTOMER_EMAIL ?? 'cs@support.com'
 };
 
 
@@ -87,4 +91,17 @@ export const QueueList = {
 
 export const ExchangeList = {
   Email: 'exchange_email'
+}
+
+
+export const optionalEmail = {
+  forgotPassword: {
+    subject: 'Request Reset Password and Receive New Token/OTP',
+    template: 'forgotPassword',
+    cc: ''
+  },
+  additional: {
+    customer_phone: Config.CustomerPhone,
+    customer_email: Config.CustomerEmail
+  }
 }

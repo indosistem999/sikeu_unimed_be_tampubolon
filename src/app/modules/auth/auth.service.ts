@@ -4,6 +4,7 @@ import {
   I_LoginRequest,
   I_RegisterRequest,
   I_RequestToken,
+  I_RequestVerifiedOTP,
   I_ResetPassword,
 } from '../../../interfaces/auth.interface';
 import { sendErrorResponse, sendSuccessResponse } from '../../../lib/utils/response.util';
@@ -16,6 +17,7 @@ import { MessageDialog } from '../../../lang';
 export default new (class AuthService implements I_AuthService {
   private readonly authRepo = new AuthRepository();
 
+  /** Login */
   async login(req: Request, res: Response): Promise<Response> {
     const payload: I_LoginRequest = req?.body;
     const today: Date = new Date(standartDateISO());
@@ -29,12 +31,45 @@ export default new (class AuthService implements I_AuthService {
     if (!result?.success) {
       return sendErrorResponse(res, 400, result.message, result.record);
     }
+
+    if(payload?.remember_me === true) {
+      res.cookie("refresh_token", result?.record?.refresh_token, { httpOnly: true });
+    }
+
     return sendSuccessResponse(res, 200, result.message, result.record);
   }
 
+  /** Register */
   async register(req: Request, res: Response): Promise<Response> {
     const payload: I_RegisterRequest = req?.body;
     const result = await this.authRepo.signUp(payload);
+    return sendSuccessResponse(res, 200, result.message, result.record);
+  }
+
+  /** Forgot Password */
+  async forgotPassword(req: Request, res: Response): Promise<Response> {
+    const { email } = req?.body;
+    const result = await this.authRepo.forgotPassword(email);
+
+    if (!result?.success) {
+      return sendErrorResponse(res, 400, result.message, result.record);
+    }
+
+    return sendSuccessResponse(res, 200, result.message, result.record);
+  }
+
+  async verifiedOTP(req: Request, res: Response): Promise<Response> {
+    const payload: I_RequestVerifiedOTP = {
+      email: req?.body?.email,
+      reset_token_code: req?.body?.reset_token_code
+    }
+
+    const result = await this.authRepo.verifiedOTP(payload);
+
+    if (!result?.success) {
+      return sendErrorResponse(res, 400, result.message, result.record);
+    }
+
     return sendSuccessResponse(res, 200, result.message, result.record);
   }
 
@@ -69,16 +104,6 @@ export default new (class AuthService implements I_AuthService {
     return sendSuccessResponse(res, 200, result.message, result.record);
   }
 
-  async forgotPassword(req: Request, res: Response): Promise<Response> {
-    const { email } = req?.body;
-    const result = await this.authRepo.forgotPassword(email);
-
-    if (!result?.success) {
-      return sendErrorResponse(res, 400, result.message, result.record);
-    }
-
-    return sendSuccessResponse(res, 200, result.message, result.record);
-  }
 
   async resetPassword(req: Request, res: Response): Promise<Response> {
     const payload: I_ResetPassword = req?.body;

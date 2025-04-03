@@ -16,6 +16,11 @@
         "type": "string",
         "summary": "Enter your answare of the question",
         "default": "abcd"
+      },
+      "remember_me": {
+        "type": "boolean",
+        "default": false,
+        "summary": "Check it to set remember credential"
       }
     }
   },
@@ -23,6 +28,32 @@
     "type": "object",
     "properties": {
       "email": {
+        "type": "string"
+      }
+    }
+  },
+  "SchemaAuthVerifiedOTP": {
+    "type": "object",
+    "properties": {
+      "email": {
+        "type": "string"
+      },
+      "reset_token_code": {
+        "type": "string",
+        "default": "178729"
+      }
+    }
+  },
+  "SchemaAuthResetPassword": {
+    "type": "object",
+    "properties": {
+      "email": {
+        "type": "string"
+      },
+      "new_password": {
+        "type": "string"
+      },
+      "confirm_password": {
         "type": "string"
       }
     }

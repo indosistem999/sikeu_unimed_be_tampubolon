@@ -41,3 +41,10 @@ export class DTO_ValidationForgotPassword {
   @IsEmail({}, { message: MessageDialog.__('error.invalid.emailFormatted') })
   email!: string;
 }
+
+
+export class DTO_ValidationVerifyOTP {
+  @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'OTP Code' }) })
+  reset_token_code!: string;
+}
+

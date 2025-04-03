@@ -9,15 +9,18 @@ import {
   I_RegisterRequest,
   I_ResetPassword,
   I_RequestRefreshToken,
+  I_RequestVerifiedOTP,
 } from '../../../interfaces/auth.interface';
 import { MessageDialog } from '../../../lang';
-import { comparedPasswordBySalt, encryptPassword, generateSalt, hashedPassword } from '../../../lib/utils/bcrypt.util';
-import { generateOTPCode, standartDateISO } from '../../../lib/utils/common.util';
+import { encryptPassword, generateSalt, hashedPassword } from '../../../lib/utils/bcrypt.util';
+import { formatDateToday, generateOTPCode, getTotalDays, getTotalMinutes, standartDateISO } from '../../../lib/utils/common.util';
 import { generatedToken, verifiedToken } from '../../../lib/utils/jwt.util';
 import UserLogRepository from '../userlog/userLog.repository'
 import {LogType as logType} from '../../../constanta'
 import RoleRepository from '../role/role.repository';
 import { eventPublishMessageToSendEmail } from '../../../events/publishers/email.publisher';
+import {optionalEmail} from '../../../constanta'
+
 import bcrypt from 'bcrypt';
 
 class AuthRepository implements I_AuthRepository {
@@ -58,24 +61,7 @@ class AuthRepository implements I_AuthRepository {
         };
       }
 
-      const lastLogin = others?.last_login ?? new Date(standartDateISO())
-      user.last_login = lastLogin;
-      user.last_ip = others?.request_ip,
-      user.last_hostname = others?.request_host ?? null 
-      user.security_question_answer = payload.security_question_answer;
-      user = await this.userRepo.save(user);
-
-      const resultLog = await this.userLogRepository.store({
-        activity_time: others.last_login,
-        activity_type: logType.Login,
-        user,
-        description: `User has signed in at ${lastLogin} on IP: ${others?.request_ip}, Hostname: ${others?.request_host}`
-      })
-
-      if(!resultLog.success) {
-        return resultLog;
-      }
-
+      // Create JWT Payload and Generate Token Access
       const jwtPayload: I_AuthUserPayload = {
         user_id: user.user_id,
         email: user.email,
@@ -89,7 +75,35 @@ class AuthRepository implements I_AuthRepository {
       };
 
       const access_token = generatedToken(jwtPayload);
-      const refresh_token = generatedToken(jwtPayload);
+      const refresh_token = generatedToken(jwtPayload, '7d');
+
+
+      const today = others?.last_login 
+      const totalDays = user?.last_login == null ? 1 : getTotalDays(today, user?.last_login)
+
+
+      user.last_login = today;
+      user.last_ip = others?.request_ip,
+      user.last_hostname = others?.request_host 
+      user.security_question_answer = payload.security_question_answer;
+      user.refresh_token = refresh_token;
+      user = await this.userRepo.save(user);
+
+      console.log({totalDays})
+
+      // Create Log Activity
+      if(totalDays >= 1) {
+        const resultLog = await this.userLogRepository.store({
+          activity_time: others.last_login,
+          activity_type: logType.Login,
+          user,
+          description: `User has signed in at ${today} on IP: ${others?.request_ip}, Hostname: ${others?.request_host}`
+        })
+  
+        if(!resultLog.success) {
+          return resultLog;
+        }
+      }
 
       return {
         success: true,
@@ -130,7 +144,7 @@ class AuthRepository implements I_AuthRepository {
         salt,
         password: password_hash,
         registered_date: today,
-        is_active: false,
+        is_active: 1,
         role: {...customerRole.record}
       }))
 
@@ -187,17 +201,30 @@ class AuthRepository implements I_AuthRepository {
 
       const otpCode: string = generateOTPCode();
       const today: Date = new Date(standartDateISO())
+      const expiredAt: Date = new Date(today.setMinutes(today.getMinutes() + 1));
 
       user.reset_token_code = otpCode;
-      user.reset_token_expired = 60 // 60 detik
+      user.reset_token_expired = expiredAt; // 60 detik
       user.updated_at = today;
       user.updated_by = user.user_id
       await this.userRepo.save(user);
 
       // Publish Messaget To Send email
-      await eventPublishMessageToSendEmail({
-        ...user
-      })
+      const optionMessage: {[key:string]: any} = {
+        user: {
+          reset_token_code: otpCode,
+          reset_token_expired: formatDateToday('dddd, MMMM D, YYYY h:mm:ss', expiredAt),
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email
+        },
+        ...optionalEmail.forgotPassword,
+        ...optionalEmail.additional
+      }
+
+      console.log({optionMessage})
+      
+      await eventPublishMessageToSendEmail(optionMessage)
 
       return {
         success: true,
@@ -210,6 +237,59 @@ class AuthRepository implements I_AuthRepository {
         message: err.message,
         record: err,
       };
+    }
+  }
+
+  /** Verified OTP */
+  async verifiedOTP(payload: I_RequestVerifiedOTP): Promise<I_ResultService> {
+    try {
+      const user = await this.userRepo.findOne({where: {email: payload?.email}, relations: ['role']});
+
+      if(!user) {
+        return {
+          success: false,
+          message: MessageDialog.__('error.default.notFoundItem', {item: `Email ${payload?.email}`}),
+          record: user
+        }
+      }
+
+      const today: Date = new Date(standartDateISO());
+      const minutes: number = getTotalMinutes(user.reset_token_expired, today);
+
+      if(minutes > 1) {
+        return {
+          success: false,
+          message: MessageDialog.__('error.invalid.otpExpired'),
+          record: {
+            time_today: today,
+            token_expired: user.reset_token_expired,
+            minutes_different: minutes
+          }
+        }
+      }
+
+      user.reset_token_code = null;
+      user.reset_token_expired = null;
+      user.updated_at = today;
+      user.updated_by = user.user_id;
+      await this.userRepo.save(user);
+
+      return {
+        success: true,
+        message: MessageDialog.__('success.auth.verifiedOTP'),
+        record: {
+          user_id: user.user_id,
+          email: user.email,
+          first_name: user.first_name,
+          last_name: user.last_name
+        }
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message,
+        record: error
+      }
     }
   }
 
@@ -249,10 +329,8 @@ class AuthRepository implements I_AuthRepository {
 
     const token: I_RequestRefreshToken = {
       access_token: generatedToken(jwtPayload),
-      refresh_token: generatedToken(jwtPayload),
+      refresh_token: generatedToken(jwtPayload, '7d')
     };
-
-    console.log({token})
 
     return {
       success: true,
@@ -276,7 +354,7 @@ class AuthRepository implements I_AuthRepository {
       }
 
       const today: Date = new Date(standartDateISO());
-      user.is_active = true;
+      user.is_active = 1;
       user.verified_at = today;
       user.updated_at = today;
       user.updated_by = user.user_id;
@@ -304,10 +382,8 @@ class AuthRepository implements I_AuthRepository {
   
 
   async resetPassword(payload: I_ResetPassword): Promise<I_ResultService> {
-    const decoded = verifiedToken(payload.token);
-
     try {
-      const user = await this.userRepo.findOne({ where: { user_id: decoded?.user_id } });
+      const user = await this.userRepo.findOne({ where: { email: payload?.email } });
 
       if (!user) {
         return {
@@ -317,7 +393,7 @@ class AuthRepository implements I_AuthRepository {
         };
       }
 
-      const salt = user?.salt !== null ? user?.salt : await generateSalt()
+      const salt = await generateSalt()
 
       user.password = await hashedPassword(payload.new_password, salt);
       user.salt = salt;

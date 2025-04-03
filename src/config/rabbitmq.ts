@@ -8,25 +8,9 @@ export interface I_RabbitMQConfig {
 }
 
 
-export const rabbitMQClose = async (rmq: I_RabbitMQConfig): Promise<void> => {
-  try {
-    if (rmq.channel) {
-      await rmq.channel.close();
-      rmq.channel = null;
-      Logger().info('RabbitMQ channel closed.');
-    }
-    if (rmq.connection) {
-      await rmq.connection.close();
-      rmq.connection = null;
-      Logger().info('RabbitMQ connection closed.');
-    }
-  } catch (error) {
-    Logger().error('Error during RabbitMQ shutdown:');
-  }
-}
-
 export const rabbitMQConfig = async():Promise<I_RabbitMQConfig> => {
   try {
+    console.log({url: cfg.RabbitMqUrl})
     const connection = await await amqplib.connect(cfg.RabbitMqUrl, 'heartbeat=60');
     Logger().info('Connect to RabbitMQ successfully');
     const channel = await connection.createChannel() as Channel;
@@ -121,4 +105,23 @@ export const subscribeMessage = async(
       `Error subscribing to queue '${queueName}' on exchange '${exchangeName}': ${error.message}`
     );
   } 
+}
+
+
+
+export const rabbitMQClose = async (rmq: I_RabbitMQConfig): Promise<void> => {
+  try {
+    if (rmq.channel) {
+      await rmq.channel.close();
+      rmq.channel = null;
+      Logger().info('RabbitMQ channel closed.');
+    }
+    if (rmq.connection) {
+      await rmq.connection.close();
+      rmq.connection = null;
+      Logger().info('RabbitMQ connection closed.');
+    }
+  } catch (error) {
+    Logger().error('Error during RabbitMQ shutdown:');
+  }
 }

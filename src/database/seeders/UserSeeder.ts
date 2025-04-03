@@ -10,7 +10,7 @@ const userList = [
         last_name: 'Ipsum',
         email: 'admin@example.com',
         password: 'oracle123', // Replace with an actual hashed password
-        is_active: true,
+        is_active: 0,
         registered_date: new Date(standartDateISO()),
         verified_at: new Date(standartDateISO()),
         role: {
@@ -22,7 +22,7 @@ const userList = [
         last_name: 'Alpredo',
         email: 'ruben@example.com',
         password: 'test123', // Replace with an actual hashed password
-        is_active: true,
+        is_active: 0,
         registered_date: new Date(standartDateISO()),
         verified_at: new Date(standartDateISO()),
         role: {

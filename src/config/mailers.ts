@@ -19,7 +19,10 @@ const tranportOption: any = {
   sender: cfg.MailFrom,
   secure: cfg.MailSecure,
   ignoreTLS: cfg.MailIgnoreTLS,
+  tls: { rejectUnauthorized: false }, // Override TLS verification
 };
+
+console.log({tranportOption})
 
 if (IsProduction) {
   delete (tranportOption as any).secure;
@@ -114,7 +117,12 @@ class MailSMTP {
         ...this.mailAttributes.additional,
       };
 
+      console.info({mailOptions})
+
       const info = await this.transporter.sendMail(mailOptions);
+
+      console.info(`Transport send email`, info)
+
       Logger().info(
         `${this.mailAttributes.subject.toLowerCase().replaceAll(' ', '')}.txt`,
         'mail',

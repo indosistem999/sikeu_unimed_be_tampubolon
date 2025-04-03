@@ -17,9 +17,10 @@ export interface I_AuthRepository {
 export interface I_AuthService {
   login?(req: Request, res: Response): Promise<Response>;
   register?(req: Request, res: Response): Promise<Response>;
+  forgotPassword?(req: Request, res: Response): Promise<Response>;
+  verifiedOTP?(req: Request, res: Response): Promise<Response>;
   refreshToken?(req: Request, res: Response): Promise<Response>;
   verifyAccount?(req: Request, res: Response): Promise<Response>;
-  forgotPassword?(req: Request, res: Response): Promise<Response>;
   resetPassword?(req: Request, res: Response): Promise<Response>;
   getMe?(req: Request, res: Response): Promise<Response>;
 }
@@ -38,6 +39,7 @@ export interface I_LoginRequest {
   email: string;
   password: string;
   security_question_answer: string
+  remember_me?: boolean;
 }
 
 /** Register Request Interface */
@@ -54,6 +56,11 @@ export interface I_RequestToken {
   token: any;
 }
 
+export interface I_RequestVerifiedOTP {
+  email:  string;
+  reset_token_code: string;
+}
+
 /**  */
 export interface I_RequestRefreshToken {
   access_token: any;
@@ -61,7 +68,7 @@ export interface I_RequestRefreshToken {
 }
 
 export interface I_ResetPassword {
-  token: string;
+  email: string;
   new_password: string;
   confirm_password: string;
 }

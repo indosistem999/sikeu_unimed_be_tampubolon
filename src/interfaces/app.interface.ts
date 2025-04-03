@@ -47,11 +47,11 @@ export interface I_MailAttributes {
 }
 
 export interface I_MailTemplateSender {
-  sender?: string;
+  sender: string;
   receiver: string;
-  subject?: string;
-  cc?: string;
-  attachments?: any;
+  subject: string;
+  cc: string | any;
+  attachments: any;
   template: string;
   data: Record<string, any>;
 }

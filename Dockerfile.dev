@@ -20,8 +20,10 @@ RUN cp .env.example .env
 # Install dependencies locally and globally, and clean yarn cache
 RUN yarn install
 RUN yarn global add ts-node nodemon
-ENV PATH=$PATH:/usr/local/share/.config/yarn/global/node_modules/.bin
+ENV PATH=$PATH:/usr/src/app/node_modules/.bin
 RUN yarn cache clean --all
 
 # Start the application
-CMD ["yarn", "start:dev"]
+# CMD ["yarn", "start:dev"]
+CMD ["node_modules/.bin/nodemon", "--watch", "src/**", "--ext", "ts,json", "--ignore", "src/**/*.spec.ts", "--exec", "node_modules/.bin/ts-node", "src/server.ts"]
+

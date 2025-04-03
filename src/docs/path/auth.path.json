@@ -19,7 +19,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SchemaAuthLoginResponse"
+                "$ref": "#/components/schemas/DefaultResponseSchema"
               }
             }
           }
@@ -42,7 +42,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SchemaResponse"
+                "$ref": "#/components/schemas/DefaultResponseSchema"
               }
             }
           }
@@ -65,7 +65,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SchemaResponse"
+                "$ref": "#/components/schemas/DefaultResponseSchema"
               }
             }
           }
@@ -93,7 +93,63 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SchemaResponse"
+                "$ref": "#/components/schemas/DefaultResponseSchema"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/auth/verify-otp": {
+    "post": {
+      "tags": ["Auth"],
+      "summary": "Authentication",
+      "requestBody": {
+        "required": false,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SchemaAuthVerifiedOTP"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultResponseSchema"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/auth/reset-password": {
+    "post": {
+      "tags": ["Auth"],
+      "summary": "Authentication",
+      "requestBody": {
+        "required": false,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SchemaAuthResetPassword"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultResponseSchema"
               }
             }
           }

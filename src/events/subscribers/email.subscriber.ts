@@ -1,7 +1,21 @@
+import { execEmailSender } from '../../config/mailers';
 import {subscribeMessage} from '../../config/rabbitmq';
 import {QueueList, ExchangeList} from '../../constanta'
 
-const goSendToEmail = (exchangeName: string, queueName: string, message: string) => {
+const goSendToEmail = async(exchangeName: string, queueName: string, message: string): Promise<void> => {
+    const payload = JSON.parse(message);
+
+    await execEmailSender({
+        sender: payload.customer_email,
+        receiver: payload.user.email,
+        subject: payload.subject,
+        cc: payload.cc,  
+        attachments: [],
+        template: payload.template,
+        data: payload
+    })
+
+
     console.log(`I have get message that`, {exchangeName, queueName, message})
 }
 

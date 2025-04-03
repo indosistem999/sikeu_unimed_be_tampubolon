@@ -37,10 +37,28 @@ export class Users {
   salt!: string;
 
   @Column({ type: 'text', nullable: true, default: null })
-  remember_token!: string;
+  refresh_token!: string;
 
   @Column({ type: 'text', nullable: true, default: null })
-  reset_token!: string;
+  photo!: string;
+
+  @Column({ type: 'text', nullable: true, default: null })
+  phone_number!: string;
+
+  @Column({ type: 'text', nullable: true, default: null })
+  email_verification_token!: string | null;
+
+  @Column({ type: 'timestamp', nullable: true, default: null })
+  email_verification_token_expired!: Date | null;
+
+  @Column({ type: 'text', nullable: true, default: null })
+  reset_token_code!: string | any;
+
+  @Column({ type: 'timestamp', nullable: true, default: null })
+  reset_token_expired!: Date | any;
+
+  @Column({ type: 'tinyint', default: false })
+  is_active!: number;
 
   @Column({ type: 'text', nullable: true, default: null })
   security_question_id!: string;
@@ -59,27 +77,6 @@ export class Users {
 
   @Column({ type: 'timestamp', nullable: true, default: null })
   registered_date!: Date;
-
-  @Column({ type: 'text', nullable: true, default: null })
-  email_verification_token!: string | null;
-
-  @Column({ type: 'text', nullable: true, default: null })
-  email_verification_token_expired!: string | null;
-
-  @Column({ type: 'text', nullable: true, default: null })
-  reset_token_code!: string;
-
-  @Column({ type: 'bigint', nullable: true, default: null })
-  reset_token_expired!: number;
-
-  @Column({ type: 'text', nullable: true, default: null })
-  photo!: string;
-
-  @Column({ type: 'text', nullable: true, default: null })
-  phone_number!: string;
-
-  @Column({ type: 'boolean', default: false })
-  is_active!: boolean;
 
   @Column({ type: 'timestamp', nullable: true, default: null })
   verified_at!: Date;

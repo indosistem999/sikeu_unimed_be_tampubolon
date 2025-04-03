@@ -33,10 +33,22 @@ class AuthController extends MainRoutes {
       }
     );
 
+    /** [POST] - Verification OTP */
+    this.router.post('/verify-otp', AuthValidation.verifyOTPValidation, async(req: Request, res: Response) => {
+      await AuthService.verifiedOTP(req, res);
+    })
+
+    /** [POST] - Reset Password */
+    this.router.post('/reset-password', async (req: Request, res: Response) => {
+      await AuthService.resetPassword(req, res);
+    });
+
     /** [POST] - Refresh Token */
     this.router.get('/refresh-token', authMiddleware, async (req: I_RequestCustom, res: Response) => {
       await AuthService.refreshToken(req, res);
     });
+
+    
 
     /** [GET] - Verified Account */
     this.router.get('/verify/:token', async (req: Request, res: Response) => {
@@ -45,10 +57,7 @@ class AuthController extends MainRoutes {
 
     
 
-    /** [POST] - Reset Password */
-    this.router.post('/reset-password', async (req: Request, res: Response) => {
-      await AuthService.resetPassword(req, res);
-    });
+    
 
     /** [GET] - Detail User Information */
     this.router.get('/profile', authMiddleware, async (req: I_RequestCustom, res: Response) => {

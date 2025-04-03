@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { Config as cfg } from '../../constanta';
 import { Request } from 'express';
 import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
-import crypto from 'crypto'
+import {randomInt} from 'crypto'
 
 /**
  * Generates a new UUID v4.
@@ -110,5 +110,26 @@ export const Match = (property: string, validationOptions?: ValidationOptions) =
 
 
 export const generateOTPCode = (length: number = 6): string => {
-  return crypto.randomBytes(length).toString('hex').slice(0, length);
+  if (length <= 0) throw new Error("Length must be greater than 0");
+
+  const min = Math.pow(10, length - 1);
+  const max = Math.pow(10, length) - 1;
+
+  return randomInt(min, max + 1).toString();
+}
+
+export const getTotalDays = (start: Date, end: Date): number => {
+  const startTimestamp:number = new Date(start).getTime();
+  const endTimestamp: number = new Date(end).getTime();
+  const millisecondsPerDay = 1000 * 60 * 60 * 24;
+  return Math.abs(endTimestamp - startTimestamp) / millisecondsPerDay;
+}
+
+
+export const getTotalMinutes = (start: Date, end: Date): number => {
+  const startTimestamp:number = new Date(start).getTime();
+  const endTimestamp: number = new Date(end).getTime();
+
+  const millisecondsPerMinute = 1000 * 60;
+  return Math.abs(endTimestamp - startTimestamp) / millisecondsPerMinute;
 }

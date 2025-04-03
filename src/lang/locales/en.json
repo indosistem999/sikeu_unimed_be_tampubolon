@@ -8,7 +8,8 @@
       "forgotPassword": "Send request forgot password success",
       "sendEmailResetPassword": "Reset password link sent to email",
       "resetPassword": "Reset password successfully",
-      "userDetailInfo": "Get detail information success"
+      "userDetailInfo": "Get detail information success",
+      "verifiedOTP": "The OTP code is correct. Now entry new password."
     },
     "log": {
       "storeUserLog": "Success to store user log"
@@ -41,7 +42,8 @@
       "emailEntry": "Invalid email entry",
       "emailFormatted": "Invalid email formatted",
       "password": "Invalid password entry",
-      "tokenExpired": "Unauthorized: Invalid or expired token"
+      "tokenExpired": "Unauthorized: Invalid or expired token",
+      "otpExpired": "The OTP code has expired. Please request again."
     },
     "denied": {
       "tokenAccess": "Access denied. No token provided."
