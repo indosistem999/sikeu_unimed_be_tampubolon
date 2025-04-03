@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { Config as cfg } from '../../constanta';
 import { Request } from 'express';
 import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
+import crypto from 'crypto'
 
 /**
  * Generates a new UUID v4.
@@ -106,3 +107,8 @@ export const Match = (property: string, validationOptions?: ValidationOptions) =
     });
   };
 };
+
+
+export const generateOTPCode = (length: number = 6): string => {
+  return crypto.randomBytes(length).toString('hex').slice(0, length);
+}

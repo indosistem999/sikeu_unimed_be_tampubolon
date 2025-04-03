@@ -12,7 +12,7 @@ import {
 } from '../../../interfaces/auth.interface';
 import { MessageDialog } from '../../../lang';
 import { comparedPasswordBySalt, encryptPassword, generateSalt, hashedPassword } from '../../../lib/utils/bcrypt.util';
-import { standartDateISO } from '../../../lib/utils/common.util';
+import { generateOTPCode, standartDateISO } from '../../../lib/utils/common.util';
 import { generatedToken, verifiedToken } from '../../../lib/utils/jwt.util';
 import UserLogRepository from '../userlog/userLog.repository'
 import {LogType as logType} from '../../../constanta'
@@ -176,7 +176,7 @@ class AuthRepository implements I_AuthRepository {
   /** Forgot Password */
   async forgotPassword(email: string): Promise<I_ResultService> {
     try {
-      const user = await this.userRepo.findOne({ where: { email } });
+      const user = await this.userRepo.findOne({ where: { email }, relations: ['role'] });
       if (!user) {
         return {
           success: false,
@@ -184,6 +184,15 @@ class AuthRepository implements I_AuthRepository {
           record: user,
         };
       }
+
+      const otpCode: string = generateOTPCode();
+      const today: Date = new Date(standartDateISO())
+
+      user.reset_token_code = otpCode;
+      user.reset_token_expired = 60 // 60 detik
+      user.updated_at = today;
+      user.updated_by = user.user_id
+      await this.userRepo.save(user);
 
       // Publish Messaget To Send email
       await eventPublishMessageToSendEmail({

@@ -67,7 +67,10 @@ export class Users {
   email_verification_token_expired!: string | null;
 
   @Column({ type: 'text', nullable: true, default: null })
-  reset_token_expired!: string;
+  reset_token_code!: string;
+
+  @Column({ type: 'bigint', nullable: true, default: null })
+  reset_token_expired!: number;
 
   @Column({ type: 'text', nullable: true, default: null })
   photo!: string;
