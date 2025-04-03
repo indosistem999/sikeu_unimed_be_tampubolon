@@ -9,8 +9,8 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
 } from 'typeorm';
-import { Roles } from './Roles';
 import { UserLog } from './UserLog';
+import { Roles } from './Roles';
 
 @Entity({ name: 'users' })
 export class Users {
@@ -61,10 +61,10 @@ export class Users {
   registered_date!: Date;
 
   @Column({ type: 'text', nullable: true, default: null })
-  email_verification_token!: string;
+  email_verification_token!: string | null;
 
   @Column({ type: 'text', nullable: true, default: null })
-  email_verification_token_expired!: string;
+  email_verification_token_expired!: string | null;
 
   @Column({ type: 'text', nullable: true, default: null })
   reset_token_expired!: string;

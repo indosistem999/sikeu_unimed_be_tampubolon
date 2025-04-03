@@ -9,7 +9,10 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always"
   },
-  "explorer.excludeGitIgnore": true
+  "explorer.excludeGitIgnore": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  }
   // "terminal.integrated.defaultProfile.linux": "bash",
   // "terminal.integrated.defaultProfile.windows": "Command Prompt",
   // "terminal.integrated.defaultProfile.osx": "zsh",

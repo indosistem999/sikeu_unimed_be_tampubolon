@@ -1,6 +1,5 @@
-import { AppDataSource } from '../../../config/database';
-import { Role } from '../../../database/models/roles';
-import { User } from '../../../database/models/users';
+import AppDataSource from '../../../config/ormconfig';
+import { Users } from '../../../database/models/Users';
 import { I_ResultService } from '../../../interfaces/app.interface';
 import {
   I_AuthRepository,
@@ -12,21 +11,33 @@ import {
   I_RequestRefreshToken,
 } from '../../../interfaces/auth.interface';
 import { MessageDialog } from '../../../lang';
-import { comparedPassword, hashedPassword } from '../../../lib/utils/bcrypt.util';
+import { comparedPassword, encryptPassword, generateSalt, hashedPassword } from '../../../lib/utils/bcrypt.util';
 import { standartDateISO } from '../../../lib/utils/common.util';
 import { generatedToken, verifiedToken } from '../../../lib/utils/jwt.util';
+import UserLogRepository from '../userlog/userLog.repository'
+import {LogType as logType} from '../../../constanta'
+import RoleRepository from '../role/role.repository';
+import { eventPublishMessageToSendEmail } from '../../../events/publishers/email.publisher';
 
 class AuthRepository implements I_AuthRepository {
-  private userRepo = AppDataSource.getRepository(User);
-  private roleRepo = AppDataSource.getRepository(Role);
+  private userRepo = AppDataSource.getRepository(Users);
 
-  async signIn(payload: I_LoginRequest): Promise<I_ResultService> {
+  private userLogRepository: UserLogRepository;
+  private roleRepository: RoleRepository;
+
+  constructor() {
+    this.userLogRepository = new UserLogRepository();
+    this.roleRepository = new RoleRepository();
+  }
+
+  /** Login */
+  async signIn(payload: I_LoginRequest, others: any): Promise<I_ResultService> {
     try {
       let user = await this.userRepo.findOne({
         where: {
           email: payload.email,
         },
-        relations: ['roles'],
+        relations: ['role'],
       });
 
       if (!user) {
@@ -45,21 +56,34 @@ class AuthRepository implements I_AuthRepository {
         };
       }
 
-      const today: Date = new Date(standartDateISO());
-
-      user.last_login = today;
+      const lastLogin = others?.last_login ?? new Date(standartDateISO())
+      user.last_login = lastLogin;
+      user.last_ip = others?.request_ip,
+      user.last_hostname = others?.request_host ?? null 
+      user.security_question_answer = payload.security_question_answer;
       user = await this.userRepo.save(user);
+
+      const resultLog = await this.userLogRepository.store({
+        activity_time: others.today,
+        activity_type: logType.Login,
+        user_id: user.user_id,
+        description: `User has signed in at ${lastLogin} on IP: ${others?.request_ip}, Hostname: ${others?.request_host}`
+      })
+
+      if(!resultLog.success) {
+        return resultLog;
+      }
 
       const jwtPayload: I_AuthUserPayload = {
         user_id: user.user_id,
         email: user.email,
         first_name: user.first_name,
         last_name: user.last_name,
-        roles: user.roles.map((item) => ({
-          role_id: item.role?.role_id,
-          role_name: item.role?.role_name,
-          role_slug: item.role?.role_slug,
-        })),
+        role: {
+          role_id: user.role?.role_id,
+          role_name: user.role?.role_name,
+          role_slug: user.role?.role_slug,
+        }
       };
 
       const access_token = generatedToken(jwtPayload);
@@ -82,32 +106,31 @@ class AuthRepository implements I_AuthRepository {
     }
   }
 
+  /** Register */
   async signUp(payload: I_RegisterRequest): Promise<I_ResultService> {
     const { first_name, last_name, password, email } = payload;
-    const hash = await hashedPassword(password);
+    const {salt, password_hash} = await encryptPassword(password);
 
     try {
-      const customerRole = await this.roleRepo.findOne({ where: { role_name: 'customer' } });
 
-      if (!customerRole) {
-        return {
-          success: false,
-          message: MessageDialog.__('error.default.notFoundItem', { item: 'Customer role' }),
-          record: customerRole,
-        };
+      const customerRole = await this.roleRepository.fetchOneByParam({ where: { role_name: 'customer' } })
+
+      if (!customerRole.success) {
+        return customerRole
       }
 
-      const user = await this.userRepo.save(
-        this.userRepo.create({
-          first_name,
-          last_name,
-          email,
-          password: hash,
-          registered_date: new Date(standartDateISO()),
-          roles: [customerRole],
-          is_active: false,
-        })
-      );
+      const today: Date = new Date(standartDateISO());
+
+      const user = await this.userRepo.save(this.userRepo.create({
+        first_name,
+        last_name,
+        email,
+        salt,
+        password: password_hash,
+        registered_date: today,
+        is_active: false,
+        role: {...customerRole.record}
+      }))
 
       if (!user) {
         return {
@@ -115,6 +138,17 @@ class AuthRepository implements I_AuthRepository {
           message: MessageDialog.__('error.failed.registerAccount'),
           record: user,
         };
+      }
+
+      const resultLog = await this.userLogRepository.store({
+        activity_time: today,
+        activity_type: logType.Register,
+        user_id: user.user_id,
+        description: `User ${user.email} has registered at ${today}`
+      })
+
+      if(!resultLog.success) {
+        return resultLog;
       }
 
       return {
@@ -125,7 +159,7 @@ class AuthRepository implements I_AuthRepository {
           email: user.email,
           first_name: user.first_name,
           last_name: user.last_name,
-          role: user.roles,
+          role: user.role,
         },
       };
     } catch (err: any) {
@@ -137,8 +171,41 @@ class AuthRepository implements I_AuthRepository {
     }
   }
 
+  /** Forgot Password */
+  async forgotPassword(email: string): Promise<I_ResultService> {
+    try {
+      const user = await this.userRepo.findOne({ where: { email } });
+      if (!user) {
+        return {
+          success: false,
+          message: MessageDialog.__('error.other.emailNotRegistered'),
+          record: user,
+        };
+      }
+
+      // Publish Messaget To Send email
+      await eventPublishMessageToSendEmail({
+        ...user
+      })
+
+      return {
+        success: true,
+        message: MessageDialog.__('success.auth.sendEmailResetPassword'),
+        record: { email },
+      };
+    } catch (err: any) {
+      return {
+        success: false,
+        message: err.message,
+        record: err,
+      };
+    }
+  }
+
+  /** Refresh Token */
   async refreshToken(payload: I_RequestToken): Promise<I_ResultService> {
-    const user = verifiedToken(payload.token);
+    const decoded = verifiedToken(payload.token);
+    let user = await this.userRepo.findOne({where: {user_id: decoded?.user_id}})
 
     if (!user) {
       return {
@@ -147,6 +214,14 @@ class AuthRepository implements I_AuthRepository {
         record: user,
       };
     }
+
+    const today = new Date(standartDateISO())
+
+    user.email_verification_token = null;
+    user.email_verification_token_expired = null;
+    user.updated_at = today;
+    user.updated_by = user.user_id
+    user = await this.userRepo.save(user);
 
     const token: I_RequestRefreshToken = {
       access_token: generatedToken(user),
@@ -178,7 +253,7 @@ class AuthRepository implements I_AuthRepository {
       user.is_active = true;
       user.verified_at = today;
       user.updated_at = today;
-      user.updated_by = user;
+      user.updated_by = user.user_id;
       await this.userRepo.save(user);
 
       return {
@@ -200,32 +275,7 @@ class AuthRepository implements I_AuthRepository {
     }
   }
 
-  async forgotPassword(email: string): Promise<I_ResultService> {
-    try {
-      const user = await this.userRepo.findOne({ where: { email } });
-      if (!user) {
-        return {
-          success: false,
-          message: MessageDialog.__('error.other.emailNotRegistered'),
-          record: user,
-        };
-      }
-
-      //
-
-      return {
-        success: true,
-        message: MessageDialog.__('success.auth.sendEmailResetPassword'),
-        record: { email },
-      };
-    } catch (err: any) {
-      return {
-        success: false,
-        message: err.message,
-        record: err,
-      };
-    }
-  }
+  
 
   async resetPassword(payload: I_ResetPassword): Promise<I_ResultService> {
     const decoded = verifiedToken(payload.token);
@@ -241,16 +291,24 @@ class AuthRepository implements I_AuthRepository {
         };
       }
 
-      user.password = await hashedPassword(payload.new_password);
+      const salt = user?.salt !== null ? user?.salt : await generateSalt()
+
+      user.password = await hashedPassword(payload.new_password, salt);
+      user.salt = salt;
       user.updated_at = new Date(standartDateISO());
-      user.updated_by = user;
+      user.updated_by = user.user_id;
 
       await this.userRepo.save(user);
 
       return {
         success: true,
         message: MessageDialog.__('success.auth.resetPassword'),
-        record: { user },
+        record: {
+          user_id: user.user_id,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email
+        },
       };
     } catch (err: any) {
       return {
@@ -280,32 +338,8 @@ class AuthRepository implements I_AuthRepository {
           email: user.email,
           first_name: user.first_name,
           last_name: user.last_name,
-          role: user.roles.map((item) => ({
-            role_id: item?.role?.role_id,
-            role_name: item?.role?.role_name,
-            role_slug: item?.role?.role_slug,
-          })),
-          permissions: user.roles.map((item) => {
-            return {
-              role_id: item?.role?.role_id,
-              role_name: item?.role?.role_name,
-              role_slug: item?.role?.role_slug,
-              permissions: item?.role?.permissions,
-            };
-          }),
-          menus: user.roles.map((item) => {
-            return {
-              role_id: item?.role?.role_id,
-              role_name: item?.role?.role_name,
-              role_slug: item?.role?.role_slug,
-              permissions: item?.role?.permissions.map((value) => {
-                return {
-                  ...value.permission,
-                  menus: value.permission?.menus,
-                };
-              }),
-            };
-          }),
+          role:user.role,
+          modules: user.role.role_modules.map((item) => ({...item.master_module})),
         },
       };
     } catch (err: any) {

@@ -4,7 +4,7 @@ import { I_ResultService } from './app.interface';
 
 /* Auth Repository Interface */
 export interface I_AuthRepository {
-  signIn?(payload: I_LoginRequest): Promise<I_ResultService>;
+  signIn?(payload: I_LoginRequest, others:any): Promise<I_ResultService>;
   signUp?(payload: I_RegisterRequest): Promise<I_ResultService>;
   refreshToken?(payload: I_RequestToken): Promise<I_ResultService>;
   verifyAccount?(payload: I_RequestToken): Promise<I_ResultService>;
@@ -30,13 +30,14 @@ export interface I_AuthUserPayload extends JwtPayload {
   first_name: string;
   last_name: string;
   email: string;
-  roles: any[];
+  role: any;
 }
 
 /** Login Request Interface */
 export interface I_LoginRequest {
   email: string;
   password: string;
+  security_question_answer: string
 }
 
 /** Register Request Interface */

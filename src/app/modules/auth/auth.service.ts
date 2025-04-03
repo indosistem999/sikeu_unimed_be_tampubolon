@@ -8,14 +8,21 @@ import {
 } from '../../../interfaces/auth.interface';
 import { sendErrorResponse, sendSuccessResponse } from '../../../lib/utils/response.util';
 import AuthRepository from './auth.repository';
+import { standartDateISO } from '../../../lib/utils/common.util';
+import { getRequestProperties } from '../../../lib/utils/request.util';
 
 export default new (class AuthService implements I_AuthService {
   private readonly authRepo = new AuthRepository();
 
   async login(req: Request, res: Response): Promise<Response> {
     const payload: I_LoginRequest = req?.body;
+    const today: Date = new Date(standartDateISO());
+    const otherProperty:{[key:string]: any} = {
+      ...getRequestProperties(req),
+      last_login: today
+    }
 
-    const result = await this.authRepo.signIn(payload);
+    const result = await this.authRepo.signIn(payload, otherProperty);
 
     if (!result?.success) {
       return sendErrorResponse(res, 400, result.message, result.record);

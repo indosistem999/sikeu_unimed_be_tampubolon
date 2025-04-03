@@ -57,3 +57,18 @@ export const Config = {
   MailAlert: process.env.MAIL_ALERT_LIST ?? 'alpredo.tampubolon@gmail.com',
   MailIgnoreTLS: Boolean(process.env.MAIL_IGNORE_TLS ?? 'false'),
 };
+
+
+export const LogType = {
+  Register: 'register',
+  Login: 'login', 
+}
+
+
+export const QueueList = {
+  Email: 'queue_email'
+}
+
+export const ExchangeList = {
+  Email: 'exchange_email'
+}

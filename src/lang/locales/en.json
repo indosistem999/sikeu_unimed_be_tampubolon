@@ -9,6 +9,12 @@
       "sendEmailResetPassword": "Reset password link sent to email",
       "resetPassword": "Reset password successfully",
       "userDetailInfo": "Get detail information success"
+    },
+    "log": {
+      "storeUserLog": "Success to store user log"
+    },
+    "role": {
+      "findItem": "Get role {{item}} successfully"
     }
   },
   "error": {
@@ -28,7 +34,8 @@
     "failed": {
       "registerAccount": "Failed to register a new account",
       "resetPassword": "Failed to reset password",
-      "verifyAccount": "Failed to verify account"
+      "verifyAccount": "Failed to verify account",
+      "storeUserLog": "Failed to store user log"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",

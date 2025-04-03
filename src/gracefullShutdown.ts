@@ -1,5 +1,5 @@
 import { Server } from 'http';
-import { AppDataSource } from './config/database';
+import AppDataSource from './config/ormconfig';
 import { rabbitMqConfig } from './config/rabbitmq';
 import { Logger } from './config/logger';
 

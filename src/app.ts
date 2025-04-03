@@ -6,7 +6,7 @@ import {
   removeFaviconMiddleware,
   syntaxErrorMiddleware,
 } from './app/middlewares/error.middleware';
-import { AppDataSource } from './config/database';
+import AppDataSource from './config/ormconfig';
 import { httpLogger, Logger } from './config/logger';
 import { MessageDialog } from './lang';
 import {
@@ -18,16 +18,20 @@ import { Config as cfg, IsProduction } from './constanta';
 import { rabbitMqConfig } from './config/rabbitmq';
 import routeDocumentation from './routes/routeDocumentation';
 import RouteApplication from './routes/routeApplication'
+import { RunSubscribers } from './events/subscribers';
 
 export class App {
   public app: Application;
 
   constructor() {
     this.app = express();
+
+    RunSubscribers()
+
     this.initializeMiddleware();
     this.inititalizeRoutes();
     this.initializeDatabase();
-    // this.initializeRabbitMQ();
+    this.initializeRabbitMQ();
   }
 
   private initializeMiddleware(): void {

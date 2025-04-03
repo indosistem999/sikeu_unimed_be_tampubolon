@@ -82,3 +82,10 @@ export const defineRequestOption = (req: Request, type: string = 'create') => {
   }
   return payload;
 };
+
+export const getRequestProperties = (req: Request): {[key:string]: any}  => {
+  return {
+    request_ip: req?.headers['x-forwarded-for'] || req?.socket?.remoteAddress,
+    request_host: req?.hostname
+  }
+}

@@ -10,6 +10,9 @@ export class DTO_ValidationLogin {
   @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Password' }) })
   @MinLength(6, { message: MessageDialog.__('error.other.passwordLength', { number: '6' }) })
   password!: string;
+
+  @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Security Answer' }) })
+  security_question_answer!: string
 }
 
 export class DTO_ValidationRegister {
