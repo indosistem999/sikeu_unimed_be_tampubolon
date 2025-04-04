@@ -26,11 +26,11 @@ export class CreateUsersTable1743601670753 implements MigrationInterface {
       registered_date TIMESTAMP NULL,
       verified_at TIMESTAMP NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+      created_by CHAR(36) NULL,
       updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+      updated_by CHAR(36) NULL,
       deleted_at TIMESTAMP NULL,
-      created_by CHAR(36),
-      updated_by CHAR(36),
-      deleted_by CHAR(36),
+      deleted_by CHAR(36) NULL,
       CONSTRAINT fk_role_id FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE SET NULL
     );`);
   }

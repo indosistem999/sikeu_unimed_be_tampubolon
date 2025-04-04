@@ -6,6 +6,7 @@ export interface I_MasterModuleRepository {
     fetchAll?(req: Request): Promise<I_ResultService>
     fetchById?(id: string): Promise<I_ResultService>
     softDelete?(id: string, payload: Record<string, any>): Promise<I_ResultService>
+    update?(id: string, payload: Record<string, any>): Promise<I_ResultService>
 }
 
 export interface I_MasterModuleService {
@@ -13,8 +14,6 @@ export interface I_MasterModuleService {
     fetchAll?(req: Request, res: Response): Promise<Response>
     fetchById?(req: Request, res: Response): Promise<Response>
     softDelete?(req: Request, res: Response): Promise<Response>
-}
-
-export interface I_RequestAddModule {
-
+    update?(req: Request, res: Response): Promise<Response>
+    showFile?(req: Request, res: Response): Response | any
 }

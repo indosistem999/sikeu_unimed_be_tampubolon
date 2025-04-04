@@ -26,22 +26,8 @@ class MasterModuleValidation {
             );
         }
 
-        if (!req.files || typeof req.files !== 'object') {
-            sendErrorResponse(res, 400, MessageDialog.__('error.missing.fileUpload'), req.files);
-        }
-
-        const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-
-        const fileIcon = files['file_icon']?.[0];
-        const fileLogo = files['file_logo']?.[0];
-
-        // File validation logic
-        if (!fileIcon) {
-            sendErrorResponse(res, 400, MessageDialog.__('error.missing.requiredFile', { value: 'file icon' }));
-        }
-
-        if (!fileLogo) {
-            sendErrorResponse(res, 400, MessageDialog.__('error.missing.requiredFile', { value: 'file logo' }));
+        if (!req?.file) {
+            sendErrorResponse(res, 400, MessageDialog.__('error.missing.fileUpload'), req.file);
         }
 
         next();

@@ -7,11 +7,11 @@ export class CreateRoleModuleAssociationTable1743601776141 implements MigrationI
           role_id CHAR(36) NOT NULL,
           module_id CHAR(36) NOT NULL,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-          updated_at TIMESTAMP DEFAULT NULL,
-          deleted_at TIMESTAMP DEFAULT NULL,
-          created_by CHAR(36),
-          updated_by CHAR(36),
-          deleted_by CHAR(36),
+          created_by CHAR(36) NULL,
+          updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+          updated_by CHAR(36) NULL,
+          deleted_at TIMESTAMP NULL,
+          deleted_by CHAR(36) NULL,
           CONSTRAINT fk_association_role_id FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE,
           CONSTRAINT fk_association_module_id FOREIGN KEY (module_id) REFERENCES master_module(module_id) ON DELETE CASCADE
         )`);

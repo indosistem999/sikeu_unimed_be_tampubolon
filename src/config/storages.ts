@@ -3,7 +3,11 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs'
 import crypto from 'crypto'
+import { Config as cfg } from '../constanta';
+import { I_ResultService } from '../interfaces/app.interface';
 
+
+const BASE_URL = `${cfg.AppHost}:${cfg.AppPort}`
 
 const uploadPath = path.join(__dirname, '../../uploads');
 
@@ -59,3 +63,64 @@ export const uploadImageToStorage = multer({
         }
     }
 });
+
+export const makeFullUrlFile = (filePath: string): any => {
+    if (filePath !== null && filePath !== '') {
+        return `${BASE_URL}/api/v1/master-module/files/${filePath}`;
+    }
+    return filePath
+}
+
+
+
+export const getFileFromStorage = (type: string, filename: string): I_ResultService => {
+    const validTypes = ['icon', 'logo', 'images']; // Ensure valid directories
+
+    if (!validTypes.includes(type)) {
+        return {
+            success: false,
+            message: 'Invalid file type',
+            record: null
+        }
+    }
+
+    const filePath = path.join(uploadPath, type, filename);
+
+    // Check if the file exists
+    if (!fs.existsSync(filePath)) {
+        return {
+            success: false,
+            message: 'File not found',
+            record: filePath
+        }
+    }
+
+    return {
+        success: true,
+        message: 'Get file success',
+        record: filePath
+    }
+}
+
+
+export const removeFileInStorage = (fileName: string): I_ResultService => {
+    // Change this to your actual file name
+    const filePath = path.join(uploadPath, fileName);
+
+    if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        return {
+            success: true,
+            message: `${fileName} was found and deleted.`,
+            record: filePath
+        }
+        console.log(`${fileName} was found and deleted.`);
+    } else {
+        return {
+            success: true,
+            message: `${fileName} does not exist.`,
+            record: filePath
+        }
+    }
+}
+

@@ -10,14 +10,11 @@ export class MasterModule {
   @Column({ type: 'varchar', length: 255, name: 'module_name' })
   module_name!: string;
 
-  @Column({ type: 'text', default: null, nullable: false, name: 'folder_name' })
-  folder_name!: string;
+  @Column({ type: 'text', default: null, nullable: false, name: 'module_path' })
+  module_path!: string;
 
   @Column({ type: 'text', default: null, nullable: false, name: 'icon' })
   icon!: string;
-
-  @Column({ type: 'text', default: null, nullable: false, name: 'logo' })
-  logo!: string;
 
   @Column({ type: 'bigint', default: null, nullable: false, name: 'order_number' })
   order_number!: number;

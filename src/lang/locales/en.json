@@ -21,7 +21,8 @@
       "create": "Added new module successfully",
       "fetchAll": "Get modules successfully",
       "findOne": "Get module successfully",
-      "softDelete": "Delete module successfully"
+      "softDelete": "Delete module successfully",
+      "update": "Edited module successfully"
     }
   },
   "error": {

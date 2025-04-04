@@ -1,32 +1,77 @@
+import { IsNull } from 'typeorm';
 import AppDataSource from '../../config/dbconfig';
-import { generateSlug } from '../../lib/utils/common.util';
-import { Roles } from '../models/Roles';
+import { standartDateISO } from '../../lib/utils/common.util';
+import { MasterModule } from '../models/MasterModule';
+import { Users } from '../models/Users'
 
-const rolesList = [
-    { role_name: 'Admin', },
-    { role_name: 'Staff', },
-    { role_name: 'Owner', },
-    { role_name: 'Developer' }
+export const moduleList = [
+  {
+    module_name: 'Pengaturan',
+    module_path: '/pengatuan',
+    order_number: 1
+  },
+  {
+    module_name: 'SPPD',
+    module_path: '/sppd',
+    order_number: 2
+  },
+  {
+    module_name: 'BKU & SPM',
+    module_path: '/bku_spm',
+    order_number: 3
+  },
+  {
+    module_name: 'Website',
+    module_path: '/website',
+    order_number: 4
+  },
+  {
+    module_name: 'Gaji Honor',
+    module_path: '/gaji_honor',
+    order_number: 5
+  }
 ]
 
-export const rolesSeeder = async () => {
-    const repository = AppDataSource.getRepository(Roles);
+export const masterModuleSeeder = async () => {
+  const repoModule = AppDataSource.getRepository(MasterModule);
+  const repoUser = AppDataSource.getRepository(Users);
 
-    for (let i = 0; i < rolesList.length; i++) {
-        const element = rolesList[i];
-        const slug = generateSlug(element.role_name) ?? ''
 
-        const findRole = await repository.findOne({
-            where: {
-                role_slug: slug
-            }
-        })
+  for (let i = 0; i < moduleList.length; i++) {
+    const element = moduleList[i];
+    let userId: any = null
 
-        if (!findRole) {
-            await repository.save(repository.create({
-                role_name: element?.role_name,
-                role_slug: slug
-            }))
-        }
+    const user = await repoUser.findOne({
+      where: {
+        role: { role_slug: 'admin' },
+        deleted_at: IsNull()
+      },
+      relations: ['role']
+    })
+
+    if (user) {
+      userId = user.user_id
     }
+
+    const row = await repoModule.findOne({
+      where: {
+        module_name: element.module_name,
+        deleted_at: IsNull()
+      }
+    })
+
+    if (!row) {
+      const today: Date = new Date(standartDateISO())
+      await repoModule.save(repoModule.create({
+        ...element,
+        created_at: today,
+        created_by: userId,
+        updated_at: today,
+        updated_by: userId
+      }))
+    }
+
+
+
+  }
 };

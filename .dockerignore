@@ -35,3 +35,5 @@ coverage/
 # Ignore dependency lock files (optional, if you'd like to regenerate them)
 yarn.lock
 package-lock.json
+
+uploads

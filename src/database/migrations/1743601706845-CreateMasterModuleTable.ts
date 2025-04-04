@@ -5,16 +5,15 @@ export class CreateMasterModuleTable1743601706845 implements MigrationInterface 
     await queryRunner.query(`CREATE TABLE master_module (
       module_id CHAR(36) PRIMARY KEY,
       module_name VARCHAR(255) NOT NULL,
-      folder_name VARCHAR(255) NULL,
+      module_path VARCHAR(255) NULL,
       icon LONGTEXT NULL, 
-      logo LONGTEXT NULL, 
       order_number BIGINT DEFAULT NULL,  -- Fixed missing comma
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+      created_by CHAR(36) NULL,
       updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+      updated_by CHAR(36) NULL,
       deleted_at TIMESTAMP NULL,
-      created_by CHAR(36),
-      updated_by CHAR(36),
-      deleted_by CHAR(36)
+      deleted_by CHAR(36) NULL
     );`);
   }
 

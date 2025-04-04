@@ -9,7 +9,7 @@ export const propSchema: {
 export const sortRequest: Record<string, any> = {
     order_number: 'order_number',
     module_name: 'module_name',
-    folder_name: 'folder_name'
+    module_path: 'module_path'
 };
 
 export const sortDefault: string[] = [`order_number`, 'asc'];

@@ -9,11 +9,11 @@ export class CreateUserLogTable1743601745659 implements MigrationInterface {
           activity_time TIMESTAMP DEFAULT NULL,
           description LONGTEXT DEFAULT NULL,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-          updated_at TIMESTAMP DEFAULT NULL,
-          deleted_at TIMESTAMP DEFAULT NULL,
-          created_by CHAR(36) DEFAULT NULL,
-          updated_by CHAR(36) DEFAULT NULL,
-          deleted_by CHAR(36) DEFAULT NULL,
+          created_by CHAR(36) NULL,
+          updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+          updated_by CHAR(36) NULL,
+          deleted_at TIMESTAMP NULL,
+          deleted_by CHAR(36) NULL,
           CONSTRAINT fk_log_user_id FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
         )`);
   }

@@ -1,11 +1,12 @@
-import { Request } from "express";
-import { I_RequestCustom, I_ResultService } from "../../../interfaces/app.interface";
+
+import { I_ResultService } from "../../../interfaces/app.interface";
 import { I_MasterModuleRepository } from "../../../interfaces/masterModule.interface";
 import AppDataSource from "../../../config/dbconfig";
 import { MasterModule } from "../../../database/models/MasterModule";
 import { MessageDialog } from "../../../lang";
 import { propSchema } from "./masterModule.constanta";
 import { IsNull } from "typeorm";
+import { makeFullUrlFile, removeFileInStorage } from "../../../config/storages";
 
 
 class MasterModuleRepository implements I_MasterModuleRepository {
@@ -29,8 +30,9 @@ class MasterModuleRepository implements I_MasterModuleRepository {
                 record: {
                     module_id: masterModule?.module_id,
                     module_name: masterModule?.module_name,
-                    folder_name: masterModule?.folder_name,
-                    order_number: masterModule?.order_number
+                    module_path: masterModule?.module_path,
+                    order_number: masterModule?.order_number,
+                    icon: makeFullUrlFile(masterModule?.icon)
                 },
             };
         } catch (err: any) {
@@ -52,7 +54,7 @@ class MasterModuleRepository implements I_MasterModuleRepository {
             if (payload?.search !== null) {
                 const { search } = payload;
                 queryBuilder.andWhere(
-                    '(master_module.module_name LIKE :search OR master_module.folder_name LIKE :search)',
+                    '(master_module.module_name LIKE :search OR master_module.module_path LIKE :search)',
                     { search: `%${search}%` }
                 );
             }
@@ -93,8 +95,7 @@ class MasterModuleRepository implements I_MasterModuleRepository {
                 select: [
                     'module_id',
                     'module_name',
-                    'folder_name',
-                    'logo',
+                    'module_path',
                     'icon',
                     'order_number'
                 ]
@@ -112,7 +113,8 @@ class MasterModuleRepository implements I_MasterModuleRepository {
                 success: true,
                 message: MessageDialog.__('success.masterModule.findOne'),
                 record: {
-
+                    ...row,
+                    icon: makeFullUrlFile(row?.icon),
                 }
             }
         } catch (error: any) {
@@ -162,6 +164,73 @@ class MasterModuleRepository implements I_MasterModuleRepository {
                 success: false,
                 message: err.message,
                 record: err
+            }
+        }
+    }
+
+    /** Update */
+    async update(id: string, payload: Record<string, any>): Promise<I_ResultService> {
+        try {
+            let masterModule = await this.moduleRepo.findOne({
+                where: {
+                    module_id: id,
+                    deleted_at: IsNull(),
+                },
+            })
+
+            if (!masterModule) {
+                return {
+                    success: false,
+                    message: MessageDialog.__('error.default.notFoundItem', { item: 'Module' }),
+                    record: masterModule
+                }
+            }
+
+            const fileName: string = masterModule?.icon
+
+            masterModule = {
+                ...masterModule,
+                ...payload
+            }
+
+            await this.moduleRepo.save(masterModule);
+
+            // Delete old file
+            if (fileName !== null && fileName !== '') {
+                const removeFile = removeFileInStorage(fileName)
+
+                if (!removeFile.success) {
+                    return {
+                        success: true,
+                        message: `${MessageDialog.__('success.masterModule.update')}. But ${removeFile.message}.`,
+                        record: {
+                            module_id: masterModule?.module_id,
+                            module_name: masterModule?.module_name,
+                            module_path: masterModule?.module_path,
+                            order_number: masterModule?.order_number,
+                            icon: makeFullUrlFile(masterModule?.icon)
+                        }
+                    }
+                }
+            }
+
+
+            return {
+                success: true,
+                message: MessageDialog.__('success.masterModule.update'),
+                record: {
+                    module_id: masterModule?.module_id,
+                    module_name: masterModule?.module_name,
+                    module_path: masterModule?.module_path,
+                    order_number: masterModule?.order_number,
+                    icon: makeFullUrlFile(masterModule?.icon)
+                }
+            }
+        } catch (error: any) {
+            return {
+                success: false,
+                message: error.message,
+                record: error
             }
         }
     }

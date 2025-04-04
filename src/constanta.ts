@@ -13,12 +13,12 @@ const getUrlRabbitMQ = (): string => {
     password: process?.env?.RABBITMQ_PASS ?? null
   }
 
-  if(rmqList?.user == null) {
+  if (rmqList?.user == null) {
     return `amqp://${rmqList.host}:${rmqList.port}`;
   }
 
   return `amqp://${rmqList.user}:${rmqList.password}@${rmqList.host}:${rmqList.port}`;
-  
+
 }
 
 const getContentSecurePolice = (): string | any => {
@@ -30,6 +30,7 @@ const getContentSecurePolice = (): string | any => {
 
 export const Config = {
   // Application
+  AppHost: process.env.APP_HOST || 'http://localhost',
   AppName: process.env.APP_NAME?.toString() || 'boiler-api-core',
   AppPort: Number(process.env.APP_PORT) || 7701,
   AppLang: process.env.APP_LANG?.toString() || 'en',
@@ -68,7 +69,7 @@ export const Config = {
   MailPort: Number(process.env.MAIL_PORT ?? '2525'),
   MailUser: process.env.MAIL_USERNAME ?? 'd010bd981faee5',
   MailPass: process.env.MAIL_PASSWORD ?? 'aac26c8b410877',
-  MailSecure: process.env.MAIL_SECURE?.toLowerCase() == 'false'? false : true,
+  MailSecure: process.env.MAIL_SECURE?.toLowerCase() == 'false' ? false : true,
   MailFrom: process.env.MAIL_FROM ?? 'support@gmail.com',
   MailAlert: process.env.MAIL_ALERT_LIST ?? 'alpredo.tampubolon@gmail.com',
   MailIgnoreTLS: Boolean(process.env.MAIL_IGNORE_TLS ?? 'false'),
@@ -81,7 +82,7 @@ export const Config = {
 
 export const LogType = {
   Register: 'register',
-  Login: 'login', 
+  Login: 'login',
 }
 
 

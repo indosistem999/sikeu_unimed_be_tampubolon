@@ -6,9 +6,9 @@
         "type": "string",
         "description": "Enter module name"
       },
-      "folder_name": {
+      "module_path": {
         "type": "string",
-        "description": "Embed Link"
+        "description": "Enter Link/Path"
       },
       "order_number": {
         "type": "number",
@@ -17,13 +17,31 @@
       },
       "file_icon": {
         "type": "string",
-        "format": "binary",
+        "format": "base64",
         "description": "Upload image for module icon"
-      },
-      "file_logo": {
+      }
+    }
+  },
+  "SchemaUpdateToMasterModule": {
+    "type": "object",
+    "properties": {
+      "module_name": {
         "type": "string",
-        "format": "binary",
-        "description": "Upload image for module logo"
+        "description": "Enter module name"
+      },
+      "module_path": {
+        "type": "string",
+        "description": "Enter Link/Path"
+      },
+      "order_number": {
+        "type": "number",
+        "default": 0,
+        "description": "Order number"
+      },
+      "file_icon": {
+        "type": "string",
+        "format": "base64",
+        "description": "Upload image for module icon"
       }
     }
   }

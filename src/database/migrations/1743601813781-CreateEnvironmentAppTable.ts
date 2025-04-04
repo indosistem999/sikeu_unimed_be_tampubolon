@@ -12,11 +12,11 @@ export class CreateEnvironmentAppTable1743601813781 implements MigrationInterfac
       address LONGTEXT NULL, 
       website VARCHAR(255) NULL,  
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+      created_by CHAR(36) NULL,
       updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+      updated_by CHAR(36) NULL,
       deleted_at TIMESTAMP NULL,
-      created_by CHAR(36),
-      updated_by CHAR(36),
-      deleted_by CHAR(36) 
+      deleted_by CHAR(36) NULL
     );`);
   }
 
