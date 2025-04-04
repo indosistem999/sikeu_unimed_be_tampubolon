@@ -1,0 +1,62 @@
+{
+  "SchemaCreateToMasterIdentity": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Enter name"
+      },
+      "file_logo": {
+        "type": "string",
+        "format": "base64",
+        "description": "Upload image for module icon"
+      },
+      "phone": {
+        "type": "string",
+        "description": "Enter phone"
+      },
+      "email": {
+        "type": "string",
+        "description": "Enter email"
+      },
+      "address": {
+        "type": "string",
+        "description": "Enter address"
+      },
+      "website": {
+        "type": "string",
+        "description": "Enter website"
+      }
+    }
+  },
+  "SchemaUpdateToMasterIdentity": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Enter name"
+      },
+      "file_logo": {
+        "type": "string",
+        "format": "base64",
+        "description": "Upload image for module icon"
+      },
+      "phone": {
+        "type": "string",
+        "description": "Enter phone"
+      },
+      "email": {
+        "type": "string",
+        "description": "Enter email"
+      },
+      "address": {
+        "type": "string",
+        "description": "Enter address"
+      },
+      "website": {
+        "type": "string",
+        "description": "Enter website"
+      }
+    }
+  }
+}

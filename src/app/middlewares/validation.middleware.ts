@@ -46,7 +46,7 @@ export class validateOrderNumberModuleExisted implements ValidatorConstraintInte
     private moduleRepo = AppDataSource.getRepository(MasterModule);
 
     async validate(order_number: number, args: ValidationArguments | any): Promise<boolean> {
-        const req: any = args?.object['req']; // Access req object
+        const req: any = args?.object['req'];
         const module_id = req?.params?.module_id;
 
         // Await the asynchronous call to ensure proper validation
@@ -54,10 +54,14 @@ export class validateOrderNumberModuleExisted implements ValidatorConstraintInte
             where: { order_number, deleted_at: IsNull() },
         });
 
-        const find = rows?.find((f: MasterModule) => f.module_id != module_id)
+        if (rows?.length > 0) {
+            const find = rows?.find((f: any) => {
+                return f.module_id == module_id
+            })
 
-        if (find) {
-            return false
+            if (!find || find === undefined) {
+                return false
+            }
         }
 
         return true
@@ -66,4 +70,18 @@ export class validateOrderNumberModuleExisted implements ValidatorConstraintInte
     defaultMessage(args: ValidationArguments): string {
         return MessageDialog.__('error.existed.orderNumber', { value: `${args.value}` });
     }
+}
+
+
+// Custom property decorator
+export function IsOrderNumberModuleExisted(validationOptions?: ValidationOptions) {
+    return function (object: Object, propertyName: string): void {
+        registerDecorator({
+            name: 'IsOrderNumberModuleExisted',
+            target: object.constructor,
+            propertyName,
+            options: validationOptions,
+            validator: validateOrderNumberModuleExisted,
+        });
+    };
 }

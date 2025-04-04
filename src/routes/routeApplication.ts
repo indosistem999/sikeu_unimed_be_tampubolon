@@ -4,8 +4,11 @@ import { IsProduction } from '../constanta';
 import { swaggerDocLocalApi } from '../docs/swagger';
 import swaggerUi from 'swagger-ui-express'
 import RouteHealtCheck from './routeHealtCheck';
+
+// Controller
 import AuthController from '../app/modules/auth/auth.controller';
 import MasterModuleController from '../app/modules/master_module/masterModule.controller';
+import MasterIdentityController from '../app/modules/master_identity/masterIdentity.controller';
 
 const tagVersionOne: string = '/api/v1';
 
@@ -23,6 +26,9 @@ class RouteApplication extends MainRoutes {
 
     // API Auth
     this.router.use(`${tagVersionOne}/auth`, AuthController);
+
+    // API Master Identity
+    this.router.use(`${tagVersionOne}/master-identity`, MasterIdentityController)
 
     // API Module
     this.router.use(`${tagVersionOne}/master-module`, MasterModuleController)

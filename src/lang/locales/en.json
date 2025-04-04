@@ -18,18 +18,25 @@
       "findItem": "Get role {{item}} successfully"
     },
     "masterModule": {
-      "create": "Added new module successfully",
+      "create": "New Master module added successfully",
       "fetchAll": "Get modules successfully",
       "findOne": "Get module successfully",
-      "softDelete": "Delete module successfully",
-      "update": "Edited module successfully"
+      "softDelete": "Master Module deleted successfully",
+      "update": "Master Module edited successfully"
+    },
+    "masterIdentity": {
+      "fetch": "Get master identity successfully",
+      "store": "Master Identity added successfully",
+      "update": "Master Identity edited successfully",
+      "softDelete": "Master Identity deleted successfully"
     }
   },
   "error": {
     "default": {
       "internalServer": "Internal Server Error",
       "notFoundItem": "{{item}} not found",
-      "notFound": "Data not found"
+      "notFound": "Data not found",
+      "emptyData": "{{item}} is empty"
     },
     "existed": {
       "slugItem": "{{item}} with {{slug}} already exists",
@@ -46,7 +53,8 @@
       "registerAccount": "Failed to register a new account",
       "resetPassword": "Failed to reset password",
       "verifyAccount": "Failed to verify account",
-      "storeUserLog": "Failed to store user log"
+      "storeUserLog": "Failed to store user log",
+      "storeIdentity": "Failed to store master identity"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",

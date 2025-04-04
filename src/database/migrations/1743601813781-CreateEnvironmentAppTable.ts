@@ -1,13 +1,12 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateEnvironmentAppTable1743601813781 implements MigrationInterface {
+export class CreateMasterIdentityTable1743601813781 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`CREATE TABLE environment_app (
-      env_id CHAR(36) PRIMARY KEY,
-      code VARCHAR(255) NOT NULL,
+    await queryRunner.query(`CREATE TABLE master_identity (
+      identity_id CHAR(36) PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       logo TEXT NULL,  
-      phone_number VARCHAR(20) NULL, 
+      phone VARCHAR(20) NULL, 
       email VARCHAR(255) NULL,  
       address LONGTEXT NULL, 
       website VARCHAR(255) NULL,  
@@ -21,6 +20,6 @@ export class CreateEnvironmentAppTable1743601813781 implements MigrationInterfac
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`DROP TABLE environment_app`);
+    await queryRunner.query(`DROP TABLE master_identity`);
   }
 }
