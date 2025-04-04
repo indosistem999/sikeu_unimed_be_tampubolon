@@ -12,11 +12,11 @@
   "explorer.excludeGitIgnore": true,
   "[typescript]": {
     "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
-  }
-  // "terminal.integrated.defaultProfile.linux": "bash",
+  },
+  "terminal.integrated.defaultProfile.linux": "bash",
   // "terminal.integrated.defaultProfile.windows": "Command Prompt",
   // "terminal.integrated.defaultProfile.osx": "zsh",
-  // "[typescript]": {
-  //   "editor.defaultFormatter": "vscode.typescript-language-features"
-  // }
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }

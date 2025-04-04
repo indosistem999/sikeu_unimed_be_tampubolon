@@ -8,7 +8,7 @@ import { I_AuthUserPayload } from '../../interfaces/auth.interface';
  * @param expiresIn - The expiration time for the token (e.g., "1h", "7d").
  * @returns The generated JWT token.
  */
-export const generatedToken = (payload: I_AuthUserPayload, expiresIn: any = '1h'): string => {
+export const generatedToken = (payload: I_AuthUserPayload, expiresIn: any = '1d'): string => {
   const options: SignOptions = { expiresIn };
   return jwt.sign(payload, cfg.JwtSecretKey, options);
 };

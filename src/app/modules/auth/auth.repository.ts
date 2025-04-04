@@ -15,7 +15,7 @@ import { MessageDialog } from '../../../lang';
 import { encryptPassword, generateSalt, hashedPassword } from '../../../lib/utils/bcrypt.util';
 import { formatDateToday, generateOTPCode, getTotalDays, getTotalMinutes, standartDateISO } from '../../../lib/utils/common.util';
 import { generatedToken, verifiedToken } from '../../../lib/utils/jwt.util';
-import UserLogRepository from '../userlog/userLog.repository'
+import UserLogRepository from '../user_log/userLog.repository'
 import {LogType as logType} from '../../../constanta'
 import RoleRepository from '../role/role.repository';
 import { eventPublishMessageToSendEmail } from '../../../events/publishers/email.publisher';
@@ -381,7 +381,7 @@ class AuthRepository implements I_AuthRepository {
 
   
 
-  async resetPassword(payload: I_ResetPassword): Promise<I_ResultService> {
+  async changePassword(payload: I_ResetPassword): Promise<I_ResultService> {
     try {
       const user = await this.userRepo.findOne({ where: { email: payload?.email } });
 

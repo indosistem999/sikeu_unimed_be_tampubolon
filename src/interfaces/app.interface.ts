@@ -2,8 +2,7 @@ import { Request, Response } from 'express';
 import { I_AuthUserPayload } from './auth.interface';
 
 export interface I_RequestCustom extends Request {
-  user?: I_AuthUserPayload;
-  rate_limit?: Record<string, any>;
+  [key: string]: any; // Or specify more precise types
 }
 
 export interface I_AppError extends Error {
@@ -60,4 +59,11 @@ export interface I_ResultMailSender {
   success: boolean;
   data?: any;
   message?: string;
+}
+
+
+export interface I_FileOptionInterface {
+  mime_allowed: string[];
+  extension_allowed: string[];
+  size: number;
 }

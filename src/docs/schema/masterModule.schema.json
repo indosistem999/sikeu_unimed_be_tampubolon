@@ -1,0 +1,30 @@
+{
+  "SchemaCreateToMasterModule": {
+    "type": "object",
+    "properties": {
+      "module_name": {
+        "type": "string",
+        "description": "Enter module name"
+      },
+      "folder_name": {
+        "type": "string",
+        "description": "Embed Link"
+      },
+      "order_number": {
+        "type": "number",
+        "default": 0,
+        "description": "Order number"
+      },
+      "file_icon": {
+        "type": "string",
+        "format": "binary",
+        "description": "Upload image for module icon"
+      },
+      "file_logo": {
+        "type": "string",
+        "format": "binary",
+        "description": "Upload image for module logo"
+      }
+    }
+  }
+}

@@ -9,7 +9,7 @@ export interface I_AuthRepository {
   refreshToken?(payload: I_RequestToken): Promise<I_ResultService>;
   verifyAccount?(payload: I_RequestToken): Promise<I_ResultService>;
   forgotPassword?(email: string): Promise<I_ResultService>;
-  resetPassword?(payload: I_ResetPassword): Promise<I_ResultService>;
+  changePassword?(payload: I_ResetPassword): Promise<I_ResultService>;
   getMe?(id: string): Promise<I_ResultService>;
 }
 
@@ -21,7 +21,7 @@ export interface I_AuthService {
   verifiedOTP?(req: Request, res: Response): Promise<Response>;
   refreshToken?(req: Request, res: Response): Promise<Response>;
   verifyAccount?(req: Request, res: Response): Promise<Response>;
-  resetPassword?(req: Request, res: Response): Promise<Response>;
+  changePassword?(req: Request, res: Response): Promise<Response>;
   getMe?(req: Request, res: Response): Promise<Response>;
 }
 

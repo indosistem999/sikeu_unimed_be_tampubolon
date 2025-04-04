@@ -40,7 +40,7 @@ class AuthController extends MainRoutes {
 
     /** [POST] - Reset Password */
     this.router.post('/reset-password', async (req: Request, res: Response) => {
-      await AuthService.resetPassword(req, res);
+      await AuthService.changePassword(req, res);
     });
 
     /** [POST] - Refresh Token */

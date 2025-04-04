@@ -16,6 +16,12 @@
     },
     "role": {
       "findItem": "Get role {{item}} successfully"
+    },
+    "masterModule": {
+      "create": "Added new module successfully",
+      "fetchAll": "Get modules successfully",
+      "findOne": "Get module successfully",
+      "softDelete": "Delete module successfully"
     }
   },
   "error": {
@@ -25,12 +31,15 @@
       "notFound": "Data not found"
     },
     "existed": {
-      "slugItem": "{{item}} with {{slug}} already exists"
+      "slugItem": "{{item}} with {{slug}} already exists",
+      "orderNumber": "Order number {{value}} already exists in the database."
     },
     "missing": {
       "tokenAuth": "Unauthorized: Token is missing",
       "requiredEntry": "{{label}} is required",
-      "passwordMatch": "Confirm password must match password"
+      "passwordMatch": "Confirm password must match password",
+      "fileUpload": "Files are not uploaded or missing.",
+      "requiredFile": "Field {{value}} is missing or required"
     },
     "failed": {
       "registerAccount": "Failed to register a new account",

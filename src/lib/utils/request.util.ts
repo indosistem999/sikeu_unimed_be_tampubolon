@@ -29,8 +29,8 @@ export const defineRequestOrder = (
   sortColumn: Record<string, string> = {}
 ): object | object[] | any => {
   let order: object | object[] | any = {};
-  const direction = req?.query?.direction || defaultOrder[0];
-  const orders = req?.query?.order || defaultOrder[1];
+  const direction = req?.query?.direction_name || defaultOrder[0];
+  const orders = req?.query?.order_name?.toUpperCase() || defaultOrder[1]?.toUpperCase();
   if (typeof orders === 'string' && typeof direction === 'string') {
     order = [{ column: sortColumn?.[direction] ?? defaultOrder[0], order: orders }];
   } else {
@@ -84,7 +84,7 @@ export const defineRequestOption = (req: I_RequestCustom, type: string = 'create
   return payload;
 };
 
-export const getRequestProperties = (req: Request): {[key:string]: any}  => {
+export const getRequestProperties = (req: Request): { [key: string]: any } => {
   return {
     request_ip: req?.headers['x-forwarded-for'] || req?.socket?.remoteAddress,
     request_host: req?.hostname

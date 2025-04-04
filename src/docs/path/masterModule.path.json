@@ -1,0 +1,145 @@
+{
+  "/master-module": {
+    "get": {
+      "tags": ["Master Module"],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "in": "query",
+          "name": "direction_name",
+          "required": false,
+          "schema": {
+            "type": "array or string"
+          },
+          "description": "Example --> direction_name=module_name, direction_name=order_number"
+        },
+        {
+          "in": "query",
+          "name": "order_name",
+          "required": false,
+          "schema": {
+            "type": "array or string"
+          },
+          "description": "Example --> order_name=asc, order_name=desc"
+        },
+        {
+          "in": "query",
+          "name": "search",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Example --> search=Pengaturan"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchemaResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "tags": ["Master Module"],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "required": false,
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "$ref": "#/components/schemas/SchemaCreateToMasterModule"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchemaResponse"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/master-module/{module_id}": {
+    "get": {
+      "tags": ["Master Module"],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "module_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchemaResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "tags": ["Master Module"],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "module_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchemaResponse"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

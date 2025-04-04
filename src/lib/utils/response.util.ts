@@ -1,18 +1,10 @@
 import { Response } from 'express';
 
 export const setResponse = (success: boolean, message: string, data: any = {}) => {
-  if (success) {
-    return {
-      success,
-      message,
-      data,
-    };
-  }
-
   return {
     success,
     message,
-    error: data,
+    data,
   };
 };
 
@@ -41,7 +33,7 @@ export const sendErrorResponse = (
   res: Response,
   code: number,
   message: string,
-  error: any = null
+  data: any = null
 ) => {
-  return res.status(code).json(setResponse(false, message, error));
+  return res.status(code).json(setResponse(false, message, data));
 };

@@ -105,9 +105,9 @@ export default new (class AuthService implements I_AuthService {
   }
 
 
-  async resetPassword(req: Request, res: Response): Promise<Response> {
+  async changePassword(req: Request, res: Response): Promise<Response> {
     const payload: I_ResetPassword = req?.body;
-    const result = await this.authRepo.resetPassword(payload);
+    const result = await this.authRepo.changePassword(payload);
 
     if (!result?.success) {
       return sendErrorResponse(res, 400, result.message, result.record);
