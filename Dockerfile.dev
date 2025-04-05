@@ -1,28 +1,35 @@
+# Use a lightweight Node.js Alpine image for minimal footprint
 FROM node:22.14.0-alpine
 
-# Install necessary packages
-RUN apk update && apk add --no-cache yarn tzdata
-ENV TZ=Asia/Jakarta
-RUN cp /usr/share/zoneinfo/Asia/Jakarta /etc/localtime && echo "Asia/Jakarta" > /etc/timezone
+# Set timezone and install necessary packages efficiently
+RUN npm install -g npm@11.2.0
+RUN apk update && apk add --no-cache \
+    yarn \
+    tzdata \
+    bash \
+    && ln -sf /usr/share/zoneinfo/Asia/Jakarta /etc/localtime \
+    && echo "Asia/Jakarta" > /etc/timezone
+
+# Create a non-root user for security
+RUN addgroup app && adduser -S -G app app
 
 # Set working directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy package files
-COPY package.json .
+# Copy essential files first to optimize caching
+COPY package.json yarn.lock ./
 
-# Copy source code
+# Install dependencies before copying source code (leverages Docker layer caching)
+RUN yarn install --frozen-lockfile
+
+# Install development tools locally instead of globally (ensuring version consistency)
+RUN yarn add --dev ts-node nodemon
+
+# Copy remaining application files
 COPY . .
 
-# Copy .env.example to .env
-RUN cp .env.example .env
+# Switch to non-root user for execution
+USER app
 
-# Install dependencies locally and globally, and clean yarn cache
-RUN yarn install
-RUN yarn global add ts-node nodemon
-RUN yarn cache clean --all
-
-# Start the application
-# CMD ["yarn", "start:dev"]
-CMD ["node_modules/.bin/nodemon", "--watch", "src", "--exec", "node_modules/.bin/ts-node", "src/server.ts"]
-
+# Define default command for development
+CMD ["yarn", "dev"]

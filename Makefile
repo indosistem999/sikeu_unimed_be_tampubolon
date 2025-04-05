@@ -18,16 +18,29 @@ seeder:
 
 # Docker Command
 app-deploy:
-	docker compose -f $(compose-file) up -d --remove-orphans --force-recreate
+	docker compose -f $(compose-file) up -d --build --remove-orphans --force-recreate
+
+app-rebuild:
+	docker compose -f $(compose-file) build --no-cache
 
 app-deploy-watch:
-	docker compose -f $(compose-file) up --remove-orphans --force-recreate
+	docker compose -f $(compose-file) up --build  --remove-orphans --force-recreate
 
 app-down:
-	docker compose -f $(compose-file) down -v
+	docker compose -f $(compose-file) down 
 
 app-logs:
 	docker logs -f $(app-container-name)
 
 app-check:
-	docker-compose -f $(compose-file) exec -T $(app-container-name) bash
+	docker exec -it $(app-container-name) sh
+
+migration-generate:
+	docker exec -it finance_core_app yarn run migration:generate
+
+migration-run:
+	docker exec -it finance_core_app yarn run migration:run
+
+
+seed:
+	docker exec -it finance_core_app yarn run seed

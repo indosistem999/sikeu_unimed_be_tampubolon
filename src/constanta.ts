@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-export const IsProduction: boolean = process.env.APP_ENV?.toString() === 'production';
+export const IsProduction: boolean = process.env.NODE_ENV?.toString() === 'production';
 
 export const SaltRounds: number = 10;
 
@@ -34,7 +34,7 @@ export const Config = {
   AppName: process.env.APP_NAME?.toString() || 'boiler-api-core',
   AppPort: Number(process.env.APP_PORT) || 7701,
   AppLang: process.env.APP_LANG?.toString() || 'en',
-  AppEnv: process.env.APP_ENV?.toString() || 'development',
+  AppEnv: process.env.NODE_ENV?.toString() || 'development',
   AppAuthor: process.env.APP_AUTHOR?.toString() || 'Ruben Alpredo Tampubolon',
   AppDebug: Boolean(process.env.APP_DEBUG?.toString().toLowerCase()) || true,
   AppPermissionPolicy: process?.env?.APP_PERMISSION_POLICY ?? '',

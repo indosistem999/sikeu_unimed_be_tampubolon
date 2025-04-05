@@ -1,9 +1,12 @@
 # Exclude node_modules but keep it for local usage
-node_modules/
+node_modules
+logs
 
 # Ignore local environment files
-.env
-.env.local
+# .env
+# .env.local
+
+.npm
 
 # Ignore Docker-related files (if they shouldn't be copied to the image)
 docker-compose.yml
@@ -22,8 +25,8 @@ Thumbs.db
 *.swp
 
 # Ignore build artifacts
-dist/
-build/
+dist
+build
 
 # Ignore coverage files
 coverage/
@@ -33,7 +36,11 @@ coverage/
 *.spec.*
 
 # Ignore dependency lock files (optional, if you'd like to regenerate them)
-yarn.lock
 package-lock.json
 
 uploads
+
+
+.git
+.gitignore
+.config
