@@ -29,6 +29,12 @@
       "store": "Master Identity added successfully",
       "update": "Master Identity edited successfully",
       "softDelete": "Master Identity deleted successfully"
+    },
+    "masterMenu": {
+      "fetch": "Get master menu successfully",
+      "store": "Master Menu {{item}} added successfully",
+      "update": "Master Menu edited successfully",
+      "softDelete": "Master Menu deleted successfully"
     }
   },
   "error": {
@@ -54,7 +60,8 @@
       "resetPassword": "Failed to reset password",
       "verifyAccount": "Failed to verify account",
       "storeUserLog": "Failed to store user log",
-      "storeIdentity": "Failed to store master identity"
+      "storeIdentity": "Failed to store master identity",
+      "storeMenu": "Failed to store menu"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",

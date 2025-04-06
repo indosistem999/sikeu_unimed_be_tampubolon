@@ -1,4 +1,5 @@
 import AppDataSource from "../../config/dbconfig";
+import { masterMenuSeeder } from "./MasterMenuSeeder";
 import { masterModuleSeeder } from "./MasterModuleSeeder";
 import { rolesSeeder } from "./RoleSeeder";
 import { usersSeeder } from "./UserSeeder";
@@ -21,6 +22,12 @@ const runSeeders = async () => {
   console.log('Seeding Master Module...');
   await masterModuleSeeder();
   console.log('Master Module seeded successfully');
+
+
+  /** Master Menu */
+  console.log('Seeding Master Menu...');
+  await masterMenuSeeder();
+  console.log('Master Module menu successfully');
 }
 
 

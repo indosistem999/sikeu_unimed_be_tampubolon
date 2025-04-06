@@ -38,7 +38,7 @@ export class MasterModule {
   deleted_by!: string;
 
 
-  @OneToMany(() => MasterMenu, (value: any) => value.object_module)
+  @OneToMany(() => MasterMenu, (value: any) => value.master_module)
   module_menu!: MasterMenu[]
 
   @OneToMany(() => RoleModuleAssociation, (value) => value.master_module)

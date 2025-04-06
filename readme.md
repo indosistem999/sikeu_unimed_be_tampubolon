@@ -1,7 +1,25 @@
 # Readme
 
-"typeorm": "typeorm-ts-node-commonjs",
-"seed": "ts-node src/database/seeders/index.ts",
-"start:dev": "nodemon --watch src/** --ext ts,json --ignore src/**/\*.spec.ts --exec ts-node src/server.ts",
-"dev": "nodemon --watch src --exec ts-node src/server.ts",
-"migration:run": "yarn typeorm migration:run -- -d src/config/dbconfig.ts"
+# Troubleshoot Access Privalleges on MySQL as Admin
+
+Run Docker Command in Terminal
+
+```docker
+  docker exec -it finance_mysql mysql -u root -p
+```
+
+Run SQL Query on Terminal
+
+```sql
+  SELECT user, host FROM mysql.user;
+  SHOW GRANTS FOR 'admin'@'%';
+  GRANT ALL PRIVILEGES ON db_financial.* TO 'admin'@'%';
+  FLUSH PRIVILEGES;
+```
+
+Restart MySQL Container Server
+
+```docker
+  docker restart finance_mysql
+
+```

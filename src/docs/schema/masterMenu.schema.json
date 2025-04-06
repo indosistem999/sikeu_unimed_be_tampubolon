@@ -1,0 +1,92 @@
+{
+  "SchemaCreateForMasterMenu": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Enter name of menu"
+      },
+      "file_icon": {
+        "type": "string",
+        "format": "base64",
+        "description": "Upload Icon Menu"
+      },
+      "slug": {
+        "type": "string",
+        "description": "Enter slug (path location)"
+      },
+      "order_number": {
+        "type": "number",
+        "default": 1,
+        "description": "Order Number"
+      },
+      "module_id": {
+        "type": "string",
+        "description": "Enter module_id (uuid). Example: module_id=de189b42-7b63-4e52-9f3c-491e431d046e"
+      }
+    }
+  },
+
+  "SchemaCreateForSubMenu": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Enter name of menu"
+      },
+      "file_icon": {
+        "type": "string",
+        "format": "base64",
+        "description": "Upload Icon Menu"
+      },
+      "slug": {
+        "type": "string",
+        "description": "Enter slug (path location)"
+      },
+      "order_number": {
+        "type": "number",
+        "default": 1,
+        "description": "Order Number"
+      },
+      "parent_id": {
+        "type": "string",
+        "description": "Enter parent_id (uuid). Example: module_id=a0282ba5-989a-4bff-844a-b8e477e75372"
+      },
+      "module_id": {
+        "type": "string",
+        "description": "Enter module_id (uuid). Example: module_id=de189b42-7b63-4e52-9f3c-491e431d046e"
+      }
+    }
+  },
+  "SchemaUpdateForMasterMenu": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Enter name of menu"
+      },
+      "file_icon": {
+        "type": "string",
+        "format": "base64",
+        "description": "Upload Icon Menu"
+      },
+      "slug": {
+        "type": "string",
+        "description": "Enter slug (path location)"
+      },
+      "order_number": {
+        "type": "number",
+        "default": 1,
+        "description": "Order Number"
+      },
+      "parent_id": {
+        "type": "string",
+        "description": "Enter parent_id (uuid). Example: module_id=a0282ba5-989a-4bff-844a-b8e477e75372"
+      },
+      "module_id": {
+        "type": "string",
+        "description": "Enter module_id (uuid). Example: module_id=de189b42-7b63-4e52-9f3c-491e431d046e"
+      }
+    }
+  }
+}

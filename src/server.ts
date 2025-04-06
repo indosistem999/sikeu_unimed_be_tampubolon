@@ -21,5 +21,5 @@ server.listen(cfg.AppPort, () => {
 });
 
 // Handle graceful shutdown
-process.on('SIGINT', () => gracefullShutdown(server));
-process.on('SIGTERM', () => gracefullShutdown(server));
+// process.on('SIGINT', () => gracefullShutdown(server));
+// process.on('SIGTERM', () => gracefullShutdown(server));

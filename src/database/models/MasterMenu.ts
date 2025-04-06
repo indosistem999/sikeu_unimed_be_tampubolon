@@ -13,18 +13,34 @@ export class MasterMenu {
   icon!: string;
 
   @Column({ type: 'text', default: null, nullable: false })
-  link!: string;
+  slug!: string;
 
-  @ManyToOne(() => MasterMenu, (value: any) => value.children, { nullable: true })
-  @JoinColumn({ name: 'parent_id' })
-  parent!: MasterMenu;
+  @Column({ type: 'bigint', default: null, nullable: false, name: 'order_number' })
+  order_number!: number;
+
+  @Column({ type: "uuid", nullable: true }) // Ensure this matches UUID type
+  parent_id?: string;
+
+
+  @ManyToOne(() => MasterMenu, (value) => value.children, {
+    nullable: true,
+    onDelete: "SET NULL", // Ensure consistency with database constraint
+  })
+  @JoinColumn({ name: "parent_id" })
+  parent?: MasterMenu;
 
   @OneToMany(() => MasterMenu, (value) => value.parent)
   children!: MasterMenu[];
 
-  @ManyToOne(() => MasterModule, (value) => value.module_menu)
-  @JoinColumn({ name: 'module_id' })
-  object_module!: MasterModule
+
+  @Column({ type: "uuid", nullable: true }) // Ensure this matches UUID type
+  module_id?: string;
+
+  @ManyToOne(() => MasterModule, (value) => value.module_menu, {
+    onDelete: "CASCADE", // If a module is deleted, related menus are removed
+  })
+  @JoinColumn({ name: "module_id" })
+  master_module!: MasterModule;
 
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })

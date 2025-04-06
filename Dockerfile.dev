@@ -11,7 +11,7 @@ RUN apk update && apk add --no-cache \
     && echo "Asia/Jakarta" > /etc/timezone
 
 # Create a non-root user for security
-RUN addgroup app && adduser -S -G app app
+# RUN addgroup app && adduser -S -G app app
 
 # Set working directory
 WORKDIR /app
@@ -28,8 +28,12 @@ RUN yarn add --dev ts-node nodemon
 # Copy remaining application files
 COPY . .
 
+# Ensure logs directory exists and is owned by the app user
+# RUN mkdir -p /app/logs && chown -R app:app /app/logs && chmod -R 777 /app/logs
+
+
 # Switch to non-root user for execution
-USER app
+# USER app
 
 # Define default command for development
 CMD ["yarn", "dev"]

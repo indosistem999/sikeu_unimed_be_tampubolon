@@ -9,6 +9,7 @@ import RouteHealtCheck from './routeHealtCheck';
 import AuthController from '../app/modules/auth/auth.controller';
 import MasterModuleController from '../app/modules/master_module/masterModule.controller';
 import MasterIdentityController from '../app/modules/master_identity/masterIdentity.controller';
+import MasterMenuController from '../app/modules/master_menu/masterMenu.controller'
 
 const tagVersionOne: string = '/api/v1';
 
@@ -32,6 +33,9 @@ class RouteApplication extends MainRoutes {
 
     // API Module
     this.router.use(`${tagVersionOne}/master-module`, MasterModuleController)
+
+    // API Menu
+    this.router.use(`${tagVersionOne}/master-menu`, MasterMenuController)
   }
 }
 

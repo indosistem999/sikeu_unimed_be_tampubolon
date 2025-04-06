@@ -17,6 +17,9 @@ seeder:
 
 
 # Docker Command
+app-build:
+	docker compose -f $(compose-file) up -d --build 
+
 app-deploy:
 	docker compose -f $(compose-file) up -d --build --remove-orphans --force-recreate
 
@@ -27,7 +30,7 @@ app-deploy-watch:
 	docker compose -f $(compose-file) up --build  --remove-orphans --force-recreate
 
 app-down:
-	docker compose -f $(compose-file) down 
+	docker compose -f $(compose-file) down -v
 
 app-logs:
 	docker logs -f $(app-container-name)
