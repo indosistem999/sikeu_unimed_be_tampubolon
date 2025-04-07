@@ -68,14 +68,14 @@ class UserRepository implements I_UserRepository {
             if (!result) {
                 return {
                     success: false,
-                    message: MessageDialog.__('error.default.notFoundItem', { item: 'work unit' }),
+                    message: MessageDialog.__('error.default.notFoundItem', { item: 'user' }),
                     record: result
                 }
             }
 
             return {
                 success: true,
-                message: MessageDialog.__('success.workUnit.fetch'),
+                message: MessageDialog.__('success.user.fetch'),
                 record: result
             }
         } catch (error: any) {
@@ -91,14 +91,14 @@ class UserRepository implements I_UserRepository {
             if (!result) {
                 return {
                     success: false,
-                    message: MessageDialog.__('error.failed.storeWorkUnit'),
+                    message: MessageDialog.__('error.failed.storeUser'),
                     record: result
                 }
             }
 
             return {
                 success: true,
-                message: MessageDialog.__('success.workUnit.store'),
+                message: MessageDialog.__('success.user.store'),
                 record: {
                     unit_id: result.unit_id
                 }
@@ -122,7 +122,7 @@ class UserRepository implements I_UserRepository {
             if (!result) {
                 return {
                     success: false,
-                    message: MessageDialog.__('error.default.notFoundItem', { item: 'Work unit' }),
+                    message: MessageDialog.__('error.default.notFoundItem', { item: 'user' }),
                     record: result
                 }
             }
@@ -134,7 +134,7 @@ class UserRepository implements I_UserRepository {
 
             return {
                 success: true,
-                message: MessageDialog.__('success.workUnit.update'),
+                message: MessageDialog.__('success.user.update'),
                 record: {
                     unit_id: result?.unit_id,
                 }
@@ -158,7 +158,7 @@ class UserRepository implements I_UserRepository {
             if (!result) {
                 return {
                     success: false,
-                    message: MessageDialog.__('error.default.notFoundItem', { item: 'work unit' }),
+                    message: MessageDialog.__('error.default.notFoundItem', { item: 'user' }),
                     record: result
                 }
             }
@@ -172,7 +172,7 @@ class UserRepository implements I_UserRepository {
 
             return {
                 success: true,
-                message: MessageDialog.__('success.workUnit.softDelete'),
+                message: MessageDialog.__('success.user.softDelete'),
                 record: {
                     unit_id: id
                 }

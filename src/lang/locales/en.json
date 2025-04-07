@@ -42,6 +42,12 @@
       "store": "Work unit added successfully",
       "update": "Work unit edited successfully",
       "softDelete": "Work unit deleted successfully"
+    },
+    "user": {
+      "fetch": "Get user successfully",
+      "store": "User added successfully",
+      "update": "User edited successfully",
+      "softDelete": "User deleted successfully"
     }
   },
   "error": {
@@ -70,7 +76,8 @@
       "storeUserLog": "Failed to store user log",
       "storeIdentity": "Failed to store master identity",
       "storeMenu": "Failed to store menu",
-      "storeWorkUnit": "Failed to store work unit"
+      "storeWorkUnit": "Failed to store work unit",
+      "storeUser": "Failed to store user"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",
