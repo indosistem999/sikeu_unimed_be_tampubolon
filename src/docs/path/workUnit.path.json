@@ -10,6 +10,24 @@
       "parameters": [
         {
           "in": "query",
+          "name": "page",
+          "required": false,
+          "schema": {
+            "type": "number"
+          },
+          "description": "Page value is number. ex : ?page=1"
+        },
+        {
+          "in": "query",
+          "name": "limit",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "Limit value is number by default limit is 10. ex : ?limit=100"
+        },
+        {
+          "in": "query",
           "name": "direction_name",
           "required": false,
           "schema": {
@@ -42,7 +60,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DefaultResponseSchema"
+                "$ref": "#/components/schemas/DefaultResponsePaginationSchema"
               }
             }
           }

@@ -1,9 +1,11 @@
 import AppDataSource from '../../../config/dbconfig';
 import { I_ResultService } from '../../../interfaces/app.interface';
-import { IsNull } from 'typeorm';
+import { IsNull, Like } from 'typeorm';
 import { MessageDialog } from '../../../lang';
 import { I_WorkUnitRepository } from '../../../interfaces/workUnit.interface';
 import { MasterWorkUnit } from '../../../database/models/MasterWorkUnit';
+import { I_ResponsePagination } from '../../../interfaces/pagination.interface';
+import { setPagination } from '../../../lib/utils/pagination.util';
 
 class WorkUnitRepository implements I_WorkUnitRepository {
   private repository = AppDataSource.getRepository(MasterWorkUnit);
@@ -19,25 +21,33 @@ class WorkUnitRepository implements I_WorkUnitRepository {
   /** Fetch Data */
   async fetch(filters: Record<string, any>): Promise<I_ResultService> {
     try {
-      let result = await this.repository.find({
-        where: {
-          deleted_at: IsNull(),
-        },
+      const { paging, sorting } = filters
+      let whereConditions: Record<string, any>[] = []
+
+
+      if (paging?.search && paging?.search != '' && paging?.search != null) {
+        const searchTerm: string = paging?.search
+        whereConditions = [
+          { unit_name: Like(`%${searchTerm}%`), deleted_at: IsNull() }, // Partial match
+          { unit_type: Like(`%${searchTerm}%`), deleted_at: IsNull() }, // Partial match
+          { unit_code: Like(`%${searchTerm}%`), deleted_at: IsNull() },             // Exact match
+        ];
+      }
+
+      let [rows, count] = await this.repository.findAndCount({
+        where: whereConditions,
+        skip: paging?.skip,
+        take: paging?.limit,
+        order: sorting
       })
 
-      if (!result) {
-        return {
-          success: false,
-          message: MessageDialog.__('error.default.emptyData', { item: 'work unit' }),
-          record: result
-        }
-      }
+      const pagination: I_ResponsePagination = setPagination(rows, count, paging.page, paging.limit);
 
 
       return {
         success: true,
         message: MessageDialog.__('success.masterMenu.fetch'),
-        record: result
+        record: pagination
       }
     } catch (error: any) {
       return this.setupErrorMessage(error)

@@ -12,5 +12,42 @@
         "type": "object"
       }
     }
+  },
+  "DefaultResponsePaginationSchema": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean"
+      },
+      "message": {
+        "type": "string"
+      },
+      "data": {
+        "type": "object",
+        "properties": {
+          "records": {
+            "type": "array"
+          },
+          "next_page": {
+            "type": "number"
+          },
+          "prev_page": {
+            "type": "number"
+          },
+          "total_page": {
+            "type": "number"
+          },
+          "total_row": {
+            "type": "number"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          }
+        }
+      }
+    }
   }
 }

@@ -14,7 +14,7 @@ class MasterIdentityValidation {
     if (errors.length > 0) {
       sendErrorResponse(
         res,
-        400,
+        422,
         errors
           .map((err) => {
             console.log({ err })
@@ -36,7 +36,7 @@ class MasterIdentityValidation {
     if (errors.length > 0) {
       sendErrorResponse(
         res,
-        400,
+        422,
         errors
           .map((err) => {
             console.log({ err })

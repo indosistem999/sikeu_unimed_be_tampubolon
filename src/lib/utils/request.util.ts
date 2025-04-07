@@ -23,6 +23,30 @@ export const defineRequestQuery = (req: Request, columns: string[]): { [key: str
   }
 };
 
+export const defineRequestOrderORM = (
+  req: Request | any,
+  defaultOrder: string[],
+  sortColumn: Record<string, string> = {}
+): any => {
+  let orderOption: { [key: string]: any } = {}
+  const direction = req?.query?.direction_name || defaultOrder[0];
+  const orders = req?.query?.order_name?.toUpperCase() || defaultOrder[1]?.toUpperCase();
+
+  if (typeof orders === 'string' && typeof direction === 'string') {
+    orderOption[sortColumn?.[direction]] = orders
+  } else {
+    const content: { [key: string]: any } = {}
+    for (let index = 0; index < direction.length; index += 1) {
+      if (sortColumn[direction[index]]) {
+        content[sortColumn[direction[index]]] = orders[index]
+      }
+      orderOption = content;
+    }
+  }
+
+  return orderOption;
+}
+
 export const defineRequestOrder = (
   req: Request | any,
   defaultOrder: string[],

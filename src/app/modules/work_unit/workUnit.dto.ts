@@ -1,25 +1,27 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import { MessageDialog } from '../../../lang';
 
-export class DTO_ValidationMasterIdentity {
+export class DTO_ValidationWorkUnitCreate {
+  @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Unit code' }) })
+  unit_code!: string;
+
+  @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Abbreviation' }) })
+  unit_type!: string;
+
+  @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Unit name' }) })
+  unit_name!: string;
+}
+
+export class DTO_ValidationWorkUnitUpdate {
   @IsOptional()
-  @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Name' }) })
-  name!: string;
+  @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Unit code' }) })
+  unit_code!: string;
 
   @IsOptional()
-  @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Phone' }) })
-  phone!: string;
+  @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Abbreviation' }) })
+  unit_type!: string;
 
   @IsOptional()
-  @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Email' }) })
-  email!: string;
-
-  @IsOptional()
-  @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Address' }) })
-  address!: string;
-
-
-  @IsOptional()
-  @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Website' }) })
-  website!: string;
+  @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Unit name' }) })
+  unit_name!: string;
 }

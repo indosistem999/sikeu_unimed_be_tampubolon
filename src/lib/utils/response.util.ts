@@ -19,7 +19,7 @@ export const sendSuccessResponse = (
   code: number,
   message: string,
   data: any = {}
-) => {
+): Response => {
   return res.status(code).json(setResponse(true, message, data));
 };
 
@@ -34,6 +34,6 @@ export const sendErrorResponse = (
   code: number,
   message: string,
   data: any = null
-) => {
+): Response => {
   return res.status(code).json(setResponse(false, message, data));
 };

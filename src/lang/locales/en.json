@@ -53,6 +53,7 @@
     },
     "existed": {
       "slugItem": "{{item}} with {{slug}} already exists",
+      "workUnit": "{{item}} already existed",
       "orderNumber": "Order number {{value}} already exists in the database."
     },
     "missing": {

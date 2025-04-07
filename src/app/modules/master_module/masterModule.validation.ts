@@ -14,7 +14,7 @@ class MasterModuleValidation {
         if (errors.length > 0) {
             sendErrorResponse(
                 res,
-                400,
+                422,
                 errors
                     .map((err) => {
                         console.log({ err })
@@ -27,7 +27,7 @@ class MasterModuleValidation {
         }
 
         if (!req?.file) {
-            sendErrorResponse(res, 400, MessageDialog.__('error.missing.fileUpload'), req.file);
+            sendErrorResponse(res, 422, MessageDialog.__('error.missing.fileUpload'), req.file);
         }
 
         next();
@@ -44,7 +44,7 @@ class MasterModuleValidation {
         if (errors.length > 0) {
             sendErrorResponse(
                 res,
-                400,
+                422,
                 errors
                     .map((err) => {
                         console.log({ err })

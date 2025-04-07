@@ -5,7 +5,7 @@ import { sortDefault, sortRequest, workUnitSchema } from './workUnit.constanta';
 import { standartDateISO } from '../../../lib/utils/common.util';
 import path from 'path';
 import { getFileFromStorage } from '../../../config/storages';
-import { defineRequestOrder } from '../../../lib/utils/request.util';
+import { defineRequestOrder, defineRequestOrderORM, defineRequestPaginateArgs } from '../../../lib/utils/request.util';
 import { I_WorkUnitService } from '../../../interfaces/workUnit.interface';
 import WorkUnitRepository from './workUnit.repository';
 
@@ -34,8 +34,8 @@ class WorkUnitService implements I_WorkUnitService {
   /** Fetch Data */
   async fetch(req: Request, res: Response): Promise<Response> {
     const filters: Record<string, any> = {
-      sorting: defineRequestOrder(req, sortDefault, sortRequest),
-      search: (req?.query?.search as string) || null
+      paging: defineRequestPaginateArgs(req),
+      sorting: defineRequestOrderORM(req, sortDefault, sortRequest),
     }
 
     const result = await this.repository.fetch(filters)
