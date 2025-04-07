@@ -26,9 +26,9 @@
         "description": "Choose your gender"
       },
       "has_work_unit": {
-        "type": "boolean",
-        "enum": [true, false],
-        "description": "Yes = true;  No = false"
+        "type": "number",
+        "enum": [1, 0],
+        "description": "Yes = 1;  No = 0"
       },
       "unit_id": {
         "type": "string",
@@ -65,9 +65,9 @@
       "description": "Choose your gender"
     },
     "has_work_unit": {
-      "type": "boolean",
-      "enum": [true, false],
-      "description": "Yes = true;  No = false"
+      "type": "number",
+      "enum": [1, 0],
+      "description": "Yes = 1;  No = 0"
     },
     "unit_id": {
       "type": "string",

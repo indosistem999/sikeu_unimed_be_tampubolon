@@ -16,4 +16,5 @@ export interface I_UserService {
     store?(req: I_RequestCustom, res: Response): Promise<Response>
     update?(req: I_RequestCustom, res: Response): Promise<Response>
     softDelete?(req: Request, res: Response): Promise<Response>
+    showFile?(req: Request, res: Response): Response | any
 }

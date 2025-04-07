@@ -3,6 +3,7 @@ import MainRoutes from '../../../config/mainRoute';
 import { adminAuthMiddleware } from '../../middlewares/auth.middleware';
 import { I_RequestCustom } from '../../../interfaces/app.interface';
 import Services from './user.service'
+import { uploadImageToStorage } from '../../../config/storages';
 
 
 class UserController extends MainRoutes {
@@ -16,27 +17,34 @@ class UserController extends MainRoutes {
         this.router.post(
             '/',
             adminAuthMiddleware,
+            uploadImageToStorage.single('file_image'),
             async (req: I_RequestCustom, res: Response) => {
                 await Services.store(req, res);
             }
         );
 
+        /** [GET] - Get File Logo */
+        this.router.get('/files/:type/:filename', async (req: Request, res: Response) => {
+            await Services.showFile(req, res);
+        });
+
         /** [GET] - Find By Id  */
-        this.router.get('/:unit_id', adminAuthMiddleware, async (req: Request, res: Response) => {
+        this.router.get('/:user_id', adminAuthMiddleware, async (req: Request, res: Response) => {
             await Services.fetchById(req, res);
         });
 
         /** [PUT] - Update Data */
         this.router.put(
-            '/:unit_id',
+            '/:user_id',
             adminAuthMiddleware,
+            uploadImageToStorage.single('file_image'),
             async (req: I_RequestCustom, res: Response) => {
                 await Services.update(req, res);
             }
         );
 
         /** [DELETE] - Delete Data */
-        this.router.delete('/:unit_id', adminAuthMiddleware, async (req: Request, res: Response) => {
+        this.router.delete('/:user_id', adminAuthMiddleware, async (req: Request, res: Response) => {
             await Services.softDelete(req, res);
         });
     }

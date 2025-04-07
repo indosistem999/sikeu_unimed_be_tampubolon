@@ -54,6 +54,7 @@ export const Config = {
 
   // Secret
   JwtSecretKey: process.env.JWT_SECRET_KEY?.toString() || 'defaultJwtSecret',
+  UserDefaultPassword: process.env.USER_DEFAULT_PASSWORD?.toString() || 'password123',
 
   // Redis
   RedisHost: process.env.REDIS_HOST?.toString() || 'localhost',
@@ -77,6 +78,8 @@ export const Config = {
   // Customer
   CustomerPhone: process.env.CUSTOMER_PHONE ?? '0612234556',
   CustomerEmail: process.env.CUSTOMER_EMAIL ?? 'cs@support.com'
+
+
 };
 
 
@@ -104,5 +107,20 @@ export const optionalEmail = {
   additional: {
     customer_phone: Config.CustomerPhone,
     customer_email: Config.CustomerEmail
+  }
+}
+
+export const allSchema = {
+  user: {
+    primaryKey: 'user_id',
+    tableName: 'users'
+  },
+  role: {
+    primaryKey: 'role_id',
+    tableName: 'roles'
+  },
+  work_unit: {
+    tableName: 'master_work_unit',
+    primaryKey: 'unit_id',
   }
 }
