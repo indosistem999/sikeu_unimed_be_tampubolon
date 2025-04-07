@@ -1,7 +1,7 @@
 {
-  "/master-menu": {
+  "/user": {
     "get": {
-      "tags": ["Master Menu"],
+      "tags": ["User"],
       "security": [
         {
           "bearerAuth": []
@@ -10,12 +10,39 @@
       "parameters": [
         {
           "in": "query",
-          "name": "module_id",
-          "required": true,
+          "name": "page",
+          "required": false,
           "schema": {
-            "type": "string"
+            "type": "number"
           },
-          "description": "Required to enter module_id."
+          "description": "Page value is number. ex : ?page=1"
+        },
+        {
+          "in": "query",
+          "name": "limit",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "Limit value is number by default limit is 10. ex : ?limit=100"
+        },
+        {
+          "in": "query",
+          "name": "direction_name",
+          "required": false,
+          "schema": {
+            "type": "array or string"
+          },
+          "description": "Example --> direction_name=module_name, direction_name=order_number"
+        },
+        {
+          "in": "query",
+          "name": "order_name",
+          "required": false,
+          "schema": {
+            "type": "array or string"
+          },
+          "description": "Example --> order_name=asc, order_name=desc"
         },
         {
           "in": "query",
@@ -24,7 +51,7 @@
           "schema": {
             "type": "string"
           },
-          "description": "Optional search menu. Example search=Laporan"
+          "description": "Example --> search=Pengaturan"
         }
       ],
       "responses": {
@@ -33,7 +60,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DefaultResponseSchema"
+                "$ref": "#/components/schemas/DefaultResponsePaginationSchema"
               }
             }
           }
@@ -41,7 +68,7 @@
       }
     },
     "post": {
-      "tags": ["Master Menu"],
+      "tags": ["User"],
       "security": [
         {
           "bearerAuth": []
@@ -52,39 +79,7 @@
         "content": {
           "multipart/form-data": {
             "schema": {
-              "$ref": "#/components/schemas/SchemaCreateForMasterMenu"
-            }
-          }
-        }
-      },
-      "responses": {
-        "200": {
-          "description": "OK",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DefaultResponseSchema"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "/master-menu/sub-menu": {
-    "post": {
-      "tags": ["Master Menu"],
-      "security": [
-        {
-          "bearerAuth": []
-        }
-      ],
-      "requestBody": {
-        "required": false,
-        "content": {
-          "multipart/form-data": {
-            "schema": {
-              "$ref": "#/components/schemas/SchemaCreateForSubMenu"
+              "$ref": "#/components/schemas/SchemaCreateForUser"
             }
           }
         }
@@ -104,9 +99,9 @@
     }
   },
 
-  "/master-menu/{menu_id}": {
+  "/user/{user_id}": {
     "get": {
-      "tags": ["Master Menu"],
+      "tags": ["User"],
       "security": [
         {
           "bearerAuth": []
@@ -115,7 +110,7 @@
       "parameters": [
         {
           "in": "path",
-          "name": "menu_id",
+          "name": "user_id",
           "required": true,
           "schema": {
             "type": "string"
@@ -136,7 +131,7 @@
       }
     },
     "put": {
-      "tags": ["Master Menu"],
+      "tags": ["User"],
       "security": [
         {
           "bearerAuth": []
@@ -145,7 +140,7 @@
       "parameters": [
         {
           "in": "path",
-          "name": "menu_id",
+          "name": "user_id",
           "required": true,
           "schema": {
             "type": "string"
@@ -157,7 +152,7 @@
         "content": {
           "multipart/form-data": {
             "schema": {
-              "$ref": "#/components/schemas/SchemaUpdateForMasterMenu"
+              "$ref": "#/components/schemas/SchemaUpdateForUser"
             }
           }
         }
@@ -176,7 +171,7 @@
       }
     },
     "delete": {
-      "tags": ["Master Menu"],
+      "tags": ["User"],
       "security": [
         {
           "bearerAuth": []
@@ -185,7 +180,7 @@
       "parameters": [
         {
           "in": "path",
-          "name": "menu_id",
+          "name": "user_id",
           "required": true,
           "schema": {
             "type": "string"

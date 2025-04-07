@@ -146,7 +146,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SchemaResponse"
+                "$ref": "#/components/schemas/DefaultResponseSchema"
               }
             }
           }
