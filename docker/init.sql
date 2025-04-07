@@ -3,6 +3,6 @@ CREATE USER 'admin'@'%' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON *.* TO 'admin'@'%' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 
-CREATE DATABASE db_financial;
-GRANT ALL PRIVILEGES ON db_financial.* TO 'admin'@'%';
+CREATE DATABASE sikeu_unimed;
+GRANT ALL PRIVILEGES ON sikeu_unimed.* TO 'admin'@'%';
 FLUSH PRIVILEGES;

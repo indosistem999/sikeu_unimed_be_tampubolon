@@ -32,9 +32,16 @@
     },
     "masterMenu": {
       "fetch": "Get master menu successfully",
-      "store": "Master Menu {{item}} added successfully",
+      "storeMenu": "Master Menu added successfully",
+      "storeSubMenu": "Add sub menu added successfully",
       "update": "Master Menu edited successfully",
       "softDelete": "Master Menu deleted successfully"
+    },
+    "workUnit": {
+      "fetch": "Get work unit successfully",
+      "store": "Work unit added successfully",
+      "update": "Work unit edited successfully",
+      "softDelete": "Work unit deleted successfully"
     }
   },
   "error": {
@@ -61,7 +68,8 @@
       "verifyAccount": "Failed to verify account",
       "storeUserLog": "Failed to store user log",
       "storeIdentity": "Failed to store master identity",
-      "storeMenu": "Failed to store menu"
+      "storeMenu": "Failed to store menu",
+      "storeWorkUnit": "Failed to store work unit"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",

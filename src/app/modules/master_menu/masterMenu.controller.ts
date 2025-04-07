@@ -16,7 +16,6 @@ class MasterMenuController extends MainRoutes {
 
     /** [POST] - Login Account */
     this.router.post('/', adminAuthMiddleware, uploadImageToStorage.single('file_icon'), async (req: I_RequestCustom, res: Response) => {
-      console.log({ body: req?.body })
       await Services.store(req, res, 'parent');
     });
 
@@ -32,14 +31,11 @@ class MasterMenuController extends MainRoutes {
 
     /** [GET] - Find By Id  */
     this.router.get('/:menu_id', adminAuthMiddleware, async (req: Request, res: Response) => {
-      console.log(`Parameter id`, req?.params)
       await Services.fetchById(req, res);
     });
 
     /** [PUT] - Update */
-    this.router.put('/:menu_id', adminAuthMiddleware, uploadImageToStorage.single('file_logo'), async (req: I_RequestCustom, res: Response) => {
-
-      console.log({ body: req?.param, result: req?.body })
+    this.router.put('/:menu_id', adminAuthMiddleware, uploadImageToStorage.single('file_icon'), async (req: I_RequestCustom, res: Response) => {
       await Services.update(req, res);
     });
 

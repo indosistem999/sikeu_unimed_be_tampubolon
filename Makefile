@@ -1,4 +1,4 @@
-migration-file=CreateUsersTable
+migration-file=CreateUserProfile
 entity-name=Users
 compose-file=docker-compose.dev.yaml
 app-container-name=finance_core_app:
@@ -30,7 +30,7 @@ app-deploy-watch:
 	docker compose -f $(compose-file) up --build  --remove-orphans --force-recreate
 
 app-down:
-	docker compose -f $(compose-file) down -v
+	docker compose -f $(compose-file) down
 
 app-logs:
 	docker logs -f $(app-container-name)
@@ -47,3 +47,6 @@ migration-run:
 
 seed:
 	docker exec -it finance_core_app yarn run seed
+
+create-migration:
+	docker exec -it finance_core_app yarn run typeorm-ts-node-commonjs migration:create ./src/database/migrations/$(migration-file)

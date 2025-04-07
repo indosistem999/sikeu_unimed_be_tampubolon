@@ -21,5 +21,10 @@ Restart MySQL Container Server
 
 ```docker
   docker restart finance_mysql
+```
 
+Restart Service Core Api
+
+```docker
+  docker restart finance_core_app
 ```

@@ -1,40 +1,31 @@
 import { Request, Response } from 'express';
 import { sendErrorResponse, sendSuccessResponse } from '../../../lib/utils/response.util';
 import { I_RequestCustom } from '../../../interfaces/app.interface';
-import { I_MasterIdentityService } from '../../../interfaces/masterIdentity.interface';
-import MasterMenuRepository from './masterMenu.repository';
-import { menuSchema, sortDefault, sortRequest } from './masterMenu.constanta';
+import { sortDefault, sortRequest, workUnitSchema } from './workUnit.constanta';
 import { standartDateISO } from '../../../lib/utils/common.util';
 import path from 'path';
 import { getFileFromStorage } from '../../../config/storages';
-import { I_MasterMenuService } from '../../../interfaces/masterMenu.interface';
 import { defineRequestOrder } from '../../../lib/utils/request.util';
+import { I_WorkUnitService } from '../../../interfaces/workUnit.interface';
+import WorkUnitRepository from './workUnit.repository';
 
 
-class MasterMenuService implements I_MasterMenuService {
-  private readonly repository = new MasterMenuRepository();
+class WorkUnitService implements I_WorkUnitService {
+  private readonly repository = new WorkUnitRepository();
 
   bodyValidation(req: Request): Record<string, any> {
     const payload: Record<string, any> = {};
 
-    if (req?.body?.module_id) {
-      payload.module_id = req?.body?.module_id
+    if (req?.body?.unit_code) {
+      payload.unit_code = req?.body?.unit_code
     }
 
-    if (req?.body?.name) {
-      payload.name = req?.body?.name
+    if (req?.body?.unit_type) {
+      payload.unit_type = req?.body?.unit_type
     }
 
-    if (req?.body?.slug) {
-      payload.slug = req?.body?.slug
-    }
-
-    if (req?.body?.order_number) {
-      payload.order_number = req?.body?.order_number
-    }
-
-    if (req?.body?.parent_id) {
-      payload.parent_id = req?.body?.parent_id
+    if (req?.body?.unit_name) {
+      payload.unit_name = req?.body?.unit_name
     }
 
     return payload;
@@ -57,7 +48,7 @@ class MasterMenuService implements I_MasterMenuService {
 
   /** Fetch By Id */
   async fetchById(req: Request, res: Response): Promise<Response> {
-    const id: string = req?.params?.[menuSchema.primaryKey]
+    const id: string = req?.params?.[workUnitSchema.primaryKey]
     const result = await this.repository.fetchById(id)
 
     if (!result?.success) {
@@ -68,19 +59,12 @@ class MasterMenuService implements I_MasterMenuService {
   }
 
   /** Store Identity */
-  async store(req: I_RequestCustom, res: Response, type_store: string = 'parent'): Promise<Response> {
+  async store(req: I_RequestCustom, res: Response): Promise<Response> {
     const today: Date = new Date(standartDateISO())
     let payload: Record<string, any> = {
       created_at: today,
       created_by: req?.user?.user_id,
       ...this.bodyValidation(req),
-      type_store
-    }
-
-
-    if (req?.file) {
-      const fileName = req?.file ? req?.file?.filename : null
-      payload.logo = fileName !== null ? path.join('icon', fileName) : null
     }
 
 
@@ -96,22 +80,12 @@ class MasterMenuService implements I_MasterMenuService {
   /** Update By Id */
   async update(req: I_RequestCustom, res: Response): Promise<Response> {
     const today: Date = new Date(standartDateISO())
-    const id: string = req?.params?.[menuSchema.primaryKey];
+    const id: string = req?.params?.[workUnitSchema.primaryKey];
     let payload: Record<string, any> = {
       updated_at: today,
       updated_by: req?.user?.user_id,
       ...this.bodyValidation(req)
     }
-
-
-    if (req?.file) {
-      const fileName = req?.file ? req?.file?.filename : null
-      payload = {
-        ...payload,
-        icon: fileName !== null ? path.join('icon', fileName) : null,
-      }
-    }
-
 
     const result = await this.repository.update(id, payload)
     if (!result?.success) {
@@ -125,7 +99,7 @@ class MasterMenuService implements I_MasterMenuService {
   /** Soft Delete By Id */
   async softDelete(req: I_RequestCustom, res: Response): Promise<Response> {
     const today: Date = new Date(standartDateISO())
-    const id: string = req?.params?.[menuSchema.primaryKey];
+    const id: string = req?.params?.[workUnitSchema.primaryKey];
     let payload: Record<string, any> = {
       deleted_at: today,
       deleted_by: req?.user?.user_id,
@@ -138,19 +112,6 @@ class MasterMenuService implements I_MasterMenuService {
 
     return sendSuccessResponse(res, 200, result.message, result.record);
   }
-
-  /** Show File */
-  showFile(req: Request, res: Response): Response | any {
-    const { type, filename } = req.params;
-    const result = getFileFromStorage(type, filename);
-
-    if (!result?.success) {
-      sendErrorResponse(res, 400, result.message, result.record);
-    }
-    else {
-      res.sendFile(result.record);
-    }
-  }
 }
 
-export default new MasterMenuService();
+export default new WorkUnitService();

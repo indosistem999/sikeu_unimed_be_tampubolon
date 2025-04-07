@@ -22,20 +22,6 @@ export const selectDetailMenu: Record<string, any> = {
     menu_id: true,
     name: true,
     slug: true,
-    parent: {
-      menu_id: true,
-      name: true,
-      slug: true,
-      created_at: true,
-      created_by: true
-    },
-    children: {
-      menu_id: true,
-      name: true,
-      slug: true,
-      created_at: true,
-      created_by: true
-    },
     created_at: true,
     created_by: true
   },
@@ -43,20 +29,6 @@ export const selectDetailMenu: Record<string, any> = {
     menu_id: true,
     name: true,
     slug: true,
-    parent: {
-      menu_id: true,
-      name: true,
-      slug: true,
-      created_at: true,
-      created_by: true
-    },
-    children: {
-      menu_id: true,
-      name: true,
-      slug: true,
-      created_at: true,
-      created_by: true
-    },
     created_at: true,
     created_by: true
   },
@@ -64,6 +36,25 @@ export const selectDetailMenu: Record<string, any> = {
     module_id: true,
     module_name: true,
     module_path: true
+  },
+  created_at: true,
+  updated_at: true
+}
+
+export const selectOnlyChildMenu: Record<string, any> = {
+  menu_id: true,
+  name: true,
+  slug: true,
+  children: {
+    menu_id: true,
+    name: true,
+    slug: true,
+    created_at: true,
+    created_by: true,
+    updated_at: true,
+    updated_by: true,
+    deleted_at: true,
+    deleted_by: true
   },
   created_at: true,
   updated_at: true

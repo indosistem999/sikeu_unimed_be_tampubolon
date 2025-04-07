@@ -1,15 +1,12 @@
 import AppDataSource from '../../../config/dbconfig';
-import { Request } from 'express';
 import { I_ResultService } from '../../../interfaces/app.interface';
 import { IsNull } from 'typeorm';
 import { MessageDialog } from '../../../lang';
-import { makeFullUrlFile, removeFileInStorage } from '../../../config/storages';
-import { I_MasterMenuRepository } from '../../../interfaces/masterMenu.interface';
-import { MasterMenu } from '../../../database/models/MasterMenu';
-import { selectDetailMenu, selectOnlyChildMenu } from './masterMenu.constanta';
+import { I_WorkUnitRepository } from '../../../interfaces/workUnit.interface';
+import { MasterWorkUnit } from '../../../database/models/MasterWorkUnit';
 
-class MasterMenuRepository implements I_MasterMenuRepository {
-  private repository = AppDataSource.getRepository(MasterMenu);
+class WorkUnitRepository implements I_WorkUnitRepository {
+  private repository = AppDataSource.getRepository(MasterWorkUnit);
 
   setupErrorMessage(error: any): I_ResultService {
     return {
@@ -26,18 +23,12 @@ class MasterMenuRepository implements I_MasterMenuRepository {
         where: {
           deleted_at: IsNull(),
         },
-        relations: [
-          'parent',
-          'children',
-          'master_module'
-        ],
-        select: selectDetailMenu
       })
 
       if (!result) {
         return {
           success: false,
-          message: MessageDialog.__('error.default.emptyData', { item: 'Master Menu' }),
+          message: MessageDialog.__('error.default.emptyData', { item: 'work unit' }),
           record: result
         }
       }
@@ -60,29 +51,21 @@ class MasterMenuRepository implements I_MasterMenuRepository {
       const result = await this.repository.findOne({
         where: {
           deleted_at: IsNull(),
-          menu_id: id
+          unit_id: id
         },
-        relations: [
-          'parent',
-          'children',
-          'master_module'
-        ],
-        select: selectDetailMenu
       });
 
       if (!result) {
         return {
           success: false,
-          message: MessageDialog.__('error.default.notFoundItem', { item: 'Master Menu' }),
+          message: MessageDialog.__('error.default.notFoundItem', { item: 'work unit' }),
           record: result
         }
       }
 
-      result.icon = makeFullUrlFile(result?.icon)
-
       return {
         success: true,
-        message: MessageDialog.__('success.masterMenu.fetch'),
+        message: MessageDialog.__('success.workUnit.fetch'),
         record: result
       }
     } catch (error: any) {
@@ -93,28 +76,21 @@ class MasterMenuRepository implements I_MasterMenuRepository {
   /** Store Data */
   async store(payload: Record<string, any>): Promise<I_ResultService> {
     try {
-      const { type_store, ...rest } = payload
-      const result = await this.repository.save(this.repository.create(rest));
+      const result = await this.repository.save(this.repository.create(payload));
 
       if (!result) {
         return {
           success: false,
-          message: MessageDialog.__('error.storeMenu.store'),
+          message: MessageDialog.__('error.failed.storeWorkUnit'),
           record: result
         }
       }
 
-      let optMsg: string = MessageDialog.__('success.masterMenu.storeMenu')
-
-      if (type_store == 'child') {
-        optMsg = MessageDialog.__('success.masterMenu.storeSubMenu')
-      }
-
       return {
         success: true,
-        message: optMsg,
+        message: MessageDialog.__('success.workUnit.store'),
         record: {
-          menu_id: result.menu_id
+          unit_id: result.unit_id
         }
       }
     } catch (error: any) {
@@ -129,44 +105,28 @@ class MasterMenuRepository implements I_MasterMenuRepository {
       let result = await this.repository.findOne({
         where: {
           deleted_at: IsNull(),
-          menu_id: id
+          unit_id: id
         }
       });
 
       if (!result) {
         return {
           success: false,
-          message: MessageDialog.__('error.default.notFoundItem', { item: 'Master Menu' }),
+          message: MessageDialog.__('error.default.notFoundItem', { item: 'Work unit' }),
           record: result
         }
       }
-
-      const fileName: string = result?.icon
 
       result = { ...result, ...payload }
 
       await this.repository.save(result);
 
 
-      if (fileName !== null && fileName !== '') {
-        const removeFile = removeFileInStorage(fileName)
-
-        if (!removeFile.success) {
-          return {
-            success: true,
-            message: `${MessageDialog.__('success.masterMenu.update')}. But ${removeFile.message}.`,
-            record: {
-              menu_id: result?.menu_id,
-            }
-          }
-        }
-      }
-
       return {
         success: true,
-        message: MessageDialog.__('success.masterMenu.update'),
+        message: MessageDialog.__('success.workUnit.update'),
         record: {
-          menu_id: result?.menu_id,
+          unit_id: result?.unit_id,
         }
       }
 
@@ -180,28 +140,17 @@ class MasterMenuRepository implements I_MasterMenuRepository {
     try {
       let result = await this.repository.findOne({
         where: {
-          menu_id: id,
+          unit_id: id,
           deleted_at: IsNull()
-        },
-        relations: [
-          'children',
-        ],
+        }
       })
 
       if (!result) {
         return {
           success: false,
-          message: MessageDialog.__('error.default.notFoundItem', { item: 'Master Menu' }),
+          message: MessageDialog.__('error.default.notFoundItem', { item: 'work unit' }),
           record: result
         }
-      }
-
-
-      if (result?.children && result?.children?.length > 0) {
-        result.children.forEach(child => {
-          child.deleted_at = payload.deleted_at;
-          child.deleted_by = payload.deleted_by;
-        });
       }
 
       result = {
@@ -210,13 +159,12 @@ class MasterMenuRepository implements I_MasterMenuRepository {
       }
 
       await this.repository.save(result);
-      await this.repository.save(result.children);
 
       return {
         success: true,
-        message: MessageDialog.__('success.masterMenu.softDelete'),
+        message: MessageDialog.__('success.workUnit.softDelete'),
         record: {
-          menu_id: id
+          unit_id: id
         }
       }
     } catch (error: any) {
@@ -228,4 +176,4 @@ class MasterMenuRepository implements I_MasterMenuRepository {
 
 }
 
-export default MasterMenuRepository;
+export default WorkUnitRepository;

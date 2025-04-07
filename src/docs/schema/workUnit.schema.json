@@ -1,0 +1,42 @@
+{
+  "SchemaCreateWorkUnit": {
+    "type": "object",
+    "properties": {
+      "unit_code": {
+        "type": "string",
+        "summary": "Kode Unit",
+        "default": "FAK-001"
+      },
+      "unit_type": {
+        "type": "string",
+        "summary": "Singkatan",
+        "default": "FIB"
+      },
+      "unit_name": {
+        "type": "string",
+        "summary": "Nama Satker",
+        "default": "Fakultas Ilmu Budaya"
+      }
+    }
+  },
+  "SchemaUpdateWorkUnit": {
+    "type": "object",
+    "properties": {
+      "unit_code": {
+        "type": "string",
+        "summary": "Kode Unit",
+        "default": "FAK-001"
+      },
+      "unit_type": {
+        "type": "string",
+        "summary": "Singkatan",
+        "default": "FIB"
+      },
+      "unit_name": {
+        "type": "string",
+        "summary": "Nama Satker",
+        "default": "Fakultas Ilmu Budaya"
+      }
+    }
+  }
+}

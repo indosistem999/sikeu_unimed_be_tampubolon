@@ -17,7 +17,6 @@ class MasterIdentityValidation {
         400,
         errors
           .map((err) => {
-            console.log({ err })
             return Object.values(err.constraints!).join(', ')
           })
           .flat()

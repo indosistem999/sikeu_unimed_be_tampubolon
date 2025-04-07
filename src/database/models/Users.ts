@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { UserLog } from './UserLog';
 import { Roles } from './Roles';
+import { UserProfile } from './UserProfile';
 
 @Entity({ name: 'users' })
 export class Users {
@@ -101,4 +102,7 @@ export class Users {
 
   @OneToMany(() => UserLog, (value) => value.user)
   log_user!: UserLog[];
+
+  @OneToOne(() => UserProfile, (value) => value.user)
+  profile!: UserProfile;
 }

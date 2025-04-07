@@ -23,8 +23,6 @@ export const authMiddleware = (req: I_RequestCustom, res: Response, next: NextFu
 export const adminAuthMiddleware = (req: I_RequestCustom, res: Response, next: NextFunction): void => {
   const authHeader = req?.headers?.authorization;
 
-  console.log({ authHeader })
-
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     sendErrorResponse(res, 401, MessageDialog.__('error.denied.tokenAccess'), authHeader);
   } else {
@@ -32,8 +30,6 @@ export const adminAuthMiddleware = (req: I_RequestCustom, res: Response, next: N
     try {
       req.user = verifiedToken(token);
       const roleSlug: any = req?.user?.role?.role_slug;
-
-      console.log({ userReq: req?.user })
 
       if (['admin', 'developer'].includes(roleSlug)) {
         next();
