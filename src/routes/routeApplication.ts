@@ -11,6 +11,7 @@ import MasterModuleController from '../app/modules/master_module/masterModule.co
 import MasterIdentityController from '../app/modules/master_identity/masterIdentity.controller';
 import MasterMenuController from '../app/modules/master_menu/masterMenu.controller'
 import WorkUnitController from '../app/modules/work_unit/workUnit.controller';
+import UserController from '../app/modules/user/user.controller';
 
 const tagVersionOne: string = '/api/v1';
 
@@ -40,6 +41,9 @@ class RouteApplication extends MainRoutes {
 
     // API Master Work Unit
     this.router.use(`${tagVersionOne}/work-unit`, WorkUnitController)
+
+    // API Master Work Unit
+    this.router.use(`${tagVersionOne}/user`, UserController)
   }
 }
 

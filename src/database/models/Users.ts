@@ -8,15 +8,19 @@ import {
   DeleteDateColumn,
   PrimaryGeneratedColumn,
   OneToMany,
+  ManyToOne,
 } from 'typeorm';
 import { UserLog } from './UserLog';
 import { Roles } from './Roles';
-import { UserProfile } from './UserProfile';
+import { MasterWorkUnit } from './MasterWorkUnit';
 
 @Entity({ name: 'users' })
 export class Users {
   @PrimaryGeneratedColumn('uuid')
   user_id!: string;
+
+  @Column({ name: 'role_id', type: 'uuid', default: null, nullable: true })
+  role_id!: string
 
   @OneToOne(() => Roles, (value) => value.user)
   @JoinColumn({ name: 'role_id' })
@@ -103,6 +107,34 @@ export class Users {
   @OneToMany(() => UserLog, (value) => value.user)
   log_user!: UserLog[];
 
-  @OneToOne(() => UserProfile, (value) => value.user)
-  profile!: UserProfile;
+  // Additonal
+  @Column({ type: 'tinyint', default: 0 })
+  has_work_unit!: number
+
+  @Column({ name: 'unit_id', type: 'uuid', default: null, nullable: true })
+  unit_id?: string
+
+  @ManyToOne(() => MasterWorkUnit, (value) => value.users)
+  @JoinColumn({ name: 'unit_id' })
+  work_unit!: MasterWorkUnit
+
+
+  @Column({ type: 'varchar', length: 255, default: null, name: 'gender' })
+  gender!: string;
+
+  @Column({ type: 'varchar', length: 50, name: 'nip', default: null })
+  nip!: string;
+
+  @Column({ type: 'varchar', length: 255, name: 'job_position', default: null })
+  job_position!: string;
+
+
+  @Column({ type: 'timestamp', nullable: true, default: null })
+  start_work_at!: Date | null;
+
+  @Column({ type: 'timestamp', nullable: true, default: null })
+  end_work_at!: Date | null;
+
+  @Column({ type: 'tinyint', default: false })
+  has_determined!: number;
 }

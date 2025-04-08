@@ -9,6 +9,7 @@ import {
     PrimaryGeneratedColumn,
     OneToMany,
 } from 'typeorm';
+import { Users } from './Users';
 
 @Entity({ name: 'master_work_unit' })
 export class MasterWorkUnit {
@@ -41,4 +42,7 @@ export class MasterWorkUnit {
 
     @Column({ name: 'deleted_by', type: 'uuid' })
     deleted_by!: string;
+
+    @OneToMany(() => Users, (value) => value.work_unit)
+    users!: Users[]
 }

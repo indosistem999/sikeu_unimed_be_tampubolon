@@ -145,10 +145,10 @@ class MasterMenuService implements I_MasterMenuService {
     const result = getFileFromStorage(type, filename);
 
     if (!result?.success) {
-      sendErrorResponse(res, 400, result.message, result.record);
+      return sendErrorResponse(res, 400, result.message, result.record);
     }
     else {
-      res.sendFile(result.record);
+      return res.sendFile(result.record);
     }
   }
 }

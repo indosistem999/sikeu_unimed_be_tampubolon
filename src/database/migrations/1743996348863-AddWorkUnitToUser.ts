@@ -4,7 +4,7 @@ export class AddWorkUnitToUser1743996348863 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.addColumn("users", new TableColumn({
-            name: "has_unit",  // Name of the new column
+            name: "has_work_unit",  // Name of the new column
             type: "tinyint",   // Data type for TINYINT
             width: 1,          // Optional, display width (this doesn't affect storage size)
             isNullable: false, // Set to false if this column should not allow null values

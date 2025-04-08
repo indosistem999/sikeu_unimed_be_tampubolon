@@ -1,4 +1,4 @@
-migration-file=CreateUserProfile
+migration-file=AddGenderToUserTable
 entity-name=Users
 compose-file=docker-compose.dev.yaml
 app-container-name=finance_core_app:
@@ -30,7 +30,7 @@ app-deploy-watch:
 	docker compose -f $(compose-file) up --build  --remove-orphans --force-recreate
 
 app-down:
-	docker compose -f $(compose-file) down
+	docker compose -f $(compose-file) down 
 
 app-logs:
 	docker logs -f $(app-container-name)

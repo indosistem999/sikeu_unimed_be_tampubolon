@@ -5,7 +5,11 @@ import { I_UserService } from '../../../interfaces/user.interface';
 import { defineRequestOrderORM, defineRequestPaginateArgs } from '../../../lib/utils/request.util';
 import UserRepository from './user.repository';
 import { sortDefault, sortRequest, userSchema } from './user.constanta';
-import { standartDateISO } from '../../../lib/utils/common.util';
+import { splitFullName, standartDateISO } from '../../../lib/utils/common.util';
+import path from 'path';
+import { encryptPassword } from '../../../lib/utils/bcrypt.util';
+import { Config } from '../../../constanta';
+import { getFileFromStorage } from '../../../config/storages';
 
 
 
@@ -13,19 +17,41 @@ class UserService implements I_UserService {
     private readonly repository = new UserRepository();
 
     bodyValidation(req: Request): Record<string, any> {
-        const payload: Record<string, any> = {};
+        let payload: Record<string, any> = {};
 
-        if (req?.body?.unit_code) {
-            payload.unit_code = req?.body?.unit_code
+        if (req?.body?.name) {
+            payload = { ...splitFullName(req?.body?.name) }
         }
 
-        if (req?.body?.unit_type) {
-            payload.unit_type = req?.body?.unit_type
+        if (req?.body?.email) {
+            payload.email = req?.body?.email
         }
 
-        if (req?.body?.unit_name) {
-            payload.unit_name = req?.body?.unit_name
+        if (req?.body?.phone_number) {
+            payload.phone_number = req?.body?.phone_number
         }
+
+        if (req?.body?.gender) {
+            payload.gender = req?.body?.gender
+        }
+
+        if (req?.body?.has_work_unit) {
+            const condition = Number(req?.body?.has_work_unit)
+            payload.has_work_unit = condition
+        }
+
+
+        if (req?.body?.role_id) {
+            payload.role_id = req?.body?.role_id
+        }
+
+
+        if (req?.body?.unit_id) {
+            payload.unit_id = req?.body?.unit_id
+        }
+
+
+
 
         return payload;
     }
@@ -60,12 +86,24 @@ class UserService implements I_UserService {
     /** Store Identity */
     async store(req: I_RequestCustom, res: Response): Promise<Response> {
         const today: Date = new Date(standartDateISO())
+        const { salt, password_hash } = await encryptPassword(Config.UserDefaultPassword);
+
         let payload: Record<string, any> = {
             created_at: today,
             created_by: req?.user?.user_id,
             ...this.bodyValidation(req),
+            salt,
+            password: password_hash,
+            registered_date: today,
+            verified_at: today
         }
 
+        if (req?.file) {
+            const fileName = req?.file ? req?.file?.filename : null
+            payload.photo = fileName !== null ? path.join('images', fileName) : null
+        }
+
+        console.log({ payload })
 
         const result = await this.repository.store(payload);
 
@@ -84,6 +122,15 @@ class UserService implements I_UserService {
             updated_at: today,
             updated_by: req?.user?.user_id,
             ...this.bodyValidation(req)
+        }
+
+
+        if (req?.file) {
+            const fileName = req?.file ? req?.file?.filename : null
+            payload = {
+                ...payload,
+                photo: fileName !== null ? path.join('images', fileName) : null,
+            }
         }
 
         const result = await this.repository.update(id, payload)
@@ -110,6 +157,19 @@ class UserService implements I_UserService {
         }
 
         return sendSuccessResponse(res, 200, result.message, result.record);
+    }
+
+    /** Show File */
+    showFile(req: Request, res: Response): Response | any {
+        const { type, filename } = req.params;
+        const result = getFileFromStorage(type, filename);
+
+        if (!result?.success) {
+            return sendErrorResponse(res, 400, result.message, result.record);
+        }
+        else {
+            return res.sendFile(result.record);
+        }
     }
 }
 

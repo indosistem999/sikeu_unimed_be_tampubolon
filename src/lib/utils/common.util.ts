@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { Config as cfg } from '../../constanta';
 import { Request } from 'express';
 import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
-import {randomInt} from 'crypto'
+import { randomInt } from 'crypto'
 
 /**
  * Generates a new UUID v4.
@@ -44,10 +44,10 @@ export const generateSlug = (name: string): string | null => {
   if (name != null && name != undefined) {
     return name
       .toLowerCase()                      // Convert to lowercase
-        .trim()                              // Remove any leading or trailing spaces
-        .replace(/\s+/g, '-')                // Replace spaces with hyphens
-        .replace(/[^a-z0-9\-]/g, '')         // Remove any non-alphanumeric characters except hyphens
-        .replace(/--+/g, '-');
+      .trim()                              // Remove any leading or trailing spaces
+      .replace(/\s+/g, '-')                // Replace spaces with hyphens
+      .replace(/[^a-z0-9\-]/g, '')         // Remove any non-alphanumeric characters except hyphens
+      .replace(/--+/g, '-');
   }
 
   return null;
@@ -119,7 +119,7 @@ export const generateOTPCode = (length: number = 6): string => {
 }
 
 export const getTotalDays = (start: Date, end: Date): number => {
-  const startTimestamp:number = new Date(start).getTime();
+  const startTimestamp: number = new Date(start).getTime();
   const endTimestamp: number = new Date(end).getTime();
   const millisecondsPerDay = 1000 * 60 * 60 * 24;
   return Math.abs(endTimestamp - startTimestamp) / millisecondsPerDay;
@@ -127,9 +127,28 @@ export const getTotalDays = (start: Date, end: Date): number => {
 
 
 export const getTotalMinutes = (start: Date, end: Date): number => {
-  const startTimestamp:number = new Date(start).getTime();
+  const startTimestamp: number = new Date(start).getTime();
   const endTimestamp: number = new Date(end).getTime();
 
   const millisecondsPerMinute = 1000 * 60;
   return Math.abs(endTimestamp - startTimestamp) / millisecondsPerMinute;
+}
+
+
+export const splitFullName = (fullName: string): { [key: string]: any } => {
+
+  if (fullName != '' && fullName != null) {
+    const parts = fullName.trim().split(/\s+/);
+    const lastName = parts.pop(); // remove and get the last element
+    const firstName = parts.join(' '); // join the rest as first name
+    return {
+      first_name: firstName,
+      last_name: lastName
+    };
+  }
+
+  return {
+    first_name: null,
+    last_name: null
+  }
 }

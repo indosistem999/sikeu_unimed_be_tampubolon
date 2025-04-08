@@ -3,12 +3,16 @@ import { I_ResultService } from '../../../interfaces/app.interface';
 import { IsNull, Like } from 'typeorm';
 import { MessageDialog } from '../../../lang';
 import { I_UserRepository } from '../../../interfaces/user.interface';
-import { MasterWorkUnit } from '../../../database/models/MasterWorkUnit';
 import { I_ResponsePagination } from '../../../interfaces/pagination.interface';
 import { setPagination } from '../../../lib/utils/pagination.util';
+import { Users } from '../../../database/models/Users';
+import { allSchema as sc } from '../../../constanta';
+import { Roles } from '../../../database/models/Roles';
+import { makeFullUrlFile } from '../../../config/storages';
+import { MasterWorkUnit } from '../../../database/models/MasterWorkUnit';
 
 class UserRepository implements I_UserRepository {
-    private repository = AppDataSource.getRepository(MasterWorkUnit);
+    private repository = AppDataSource.getRepository(Users);
 
     setupErrorMessage(error: any): I_ResultService {
         return {
@@ -58,12 +62,57 @@ class UserRepository implements I_UserRepository {
     async fetchById(id: string): Promise<I_ResultService> {
         try {
 
-            const result = await this.repository.findOne({
-                where: {
-                    deleted_at: IsNull(),
-                    unit_id: id
-                },
-            });
+            const result = await this.repository.createQueryBuilder(sc.user.tableName)
+                .leftJoin(Roles, sc.role.tableName, `${sc.role.tableName}.${sc.role.primaryKey} = ${sc.user.tableName}.${sc.role.primaryKey}`)
+
+                .leftJoin(MasterWorkUnit, sc.work_unit.tableName, `${sc.work_unit.tableName}.${sc.work_unit.primaryKey} = ${sc.user.tableName}.${sc.work_unit.primaryKey}`)
+
+                .where(`${sc.user.tableName}.deleted_at IS NULL`)
+                .andWhere(`${sc.user.tableName}.${sc.user.primaryKey} = :id`, { id })
+                .select([
+                    `${sc.user.tableName}.${sc.user.primaryKey}`,
+                    `${sc.user.tableName}.first_name`,
+                    `${sc.user.tableName}.last_name`,
+                    `CONCAT(${sc.user.tableName}.first_name, ' ', ${sc.user.tableName}.last_name) as name`,
+                    `${sc.user.tableName}.email`,
+                    `${sc.user.tableName}.nip`,
+                    `${sc.user.tableName}.job_position`,
+                    `${sc.user.tableName}.start_work_at`,
+                    `${sc.user.tableName}.end_work_at`,
+                    `${sc.user.tableName}.photo`,
+                    `${sc.user.tableName}.phone_number`,
+                    `${sc.user.tableName}.gender`,
+                    `${sc.user.tableName}.has_work_unit`,
+                    `(
+                        CASE
+                            WHEN ${sc.user.tableName}.${sc.role.primaryKey} IS NULL
+                            THEN NULL
+                            ELSE JSON_OBJECT(
+                                'role_id', ${sc.role.tableName}.${sc.role.primaryKey}, 
+                                'role_name', ${sc.role.tableName}.role_name, 
+                                'role_slug', ${sc.role.tableName}.role_slug, 
+                                'created_at', ${sc.role.tableName}.created_at, 
+                                'created_by', ${sc.role.tableName}.created_by 
+                            )
+                        END
+                    ) AS role`,
+                    `(
+                        CASE
+                            WHEN ${sc.user.tableName}.${sc.work_unit.primaryKey} IS NULL
+                            THEN NULL
+                            ELSE JSON_OBJECT(
+                                'user_id', ${sc.work_unit.tableName}.${sc.work_unit.primaryKey}, 
+                                'unit_name', ${sc.work_unit.tableName}.unit_name, 
+                                'unit_code', ${sc.work_unit.tableName}.unit_code, 
+                                'unit_type', ${sc.work_unit.tableName}.unit_type, 
+                                'created_at', ${sc.work_unit.tableName}.created_at, 
+                                'created_by', ${sc.work_unit.tableName}.created_by 
+                            )
+                        END
+                    ) AS work_unit`
+                ])
+                .getRawOne();
+
 
             if (!result) {
                 return {
@@ -72,6 +121,8 @@ class UserRepository implements I_UserRepository {
                     record: result
                 }
             }
+
+            result.photo = makeFullUrlFile(result?.photo)
 
             return {
                 success: true,
@@ -86,6 +137,7 @@ class UserRepository implements I_UserRepository {
     /** Store Data */
     async store(payload: Record<string, any>): Promise<I_ResultService> {
         try {
+
             const result = await this.repository.save(this.repository.create(payload));
 
             if (!result) {
@@ -100,7 +152,7 @@ class UserRepository implements I_UserRepository {
                 success: true,
                 message: MessageDialog.__('success.user.store'),
                 record: {
-                    unit_id: result.unit_id
+                    user_id: result.user_id
                 }
             }
         } catch (error: any) {
@@ -115,7 +167,7 @@ class UserRepository implements I_UserRepository {
             let result = await this.repository.findOne({
                 where: {
                     deleted_at: IsNull(),
-                    unit_id: id
+                    user_id: id
                 }
             });
 
@@ -136,7 +188,7 @@ class UserRepository implements I_UserRepository {
                 success: true,
                 message: MessageDialog.__('success.user.update'),
                 record: {
-                    unit_id: result?.unit_id,
+                    user_id: result?.user_id,
                 }
             }
 
@@ -150,7 +202,7 @@ class UserRepository implements I_UserRepository {
         try {
             let result = await this.repository.findOne({
                 where: {
-                    unit_id: id,
+                    user_id: id,
                     deleted_at: IsNull()
                 }
             })
@@ -174,7 +226,7 @@ class UserRepository implements I_UserRepository {
                 success: true,
                 message: MessageDialog.__('success.user.softDelete'),
                 record: {
-                    unit_id: id
+                    user_id: id
                 }
             }
         } catch (error: any) {
