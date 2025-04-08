@@ -4,13 +4,14 @@ import { I_RequestCustom } from '../../../interfaces/app.interface';
 import { I_UserService } from '../../../interfaces/user.interface';
 import { defineRequestOrderORM, defineRequestPaginateArgs } from '../../../lib/utils/request.util';
 import UserRepository from './user.repository';
-import { sortDefault, sortRequest, userSchema } from './user.constanta';
+import { sortDefault, sortRequest } from './user.constanta';
 import { splitFullName, standartDateISO } from '../../../lib/utils/common.util';
 import path from 'path';
 import { encryptPassword } from '../../../lib/utils/bcrypt.util';
 import { Config } from '../../../constanta';
 import { getFileFromStorage } from '../../../config/storages';
-
+import { allSchema as sc } from '../../../constanta'
+import { I_PaginateArgs } from '../../../interfaces/pagination.interface';
 
 
 class UserService implements I_UserService {
@@ -73,7 +74,7 @@ class UserService implements I_UserService {
 
     /** Fetch By Id */
     async fetchById(req: Request, res: Response): Promise<Response> {
-        const id: string = req?.params?.[userSchema.primaryKey]
+        const id: string = req?.params?.[sc.user.primaryKey]
         const result = await this.repository.fetchById(id)
 
         if (!result?.success) {
@@ -103,7 +104,6 @@ class UserService implements I_UserService {
             payload.photo = fileName !== null ? path.join('images', fileName) : null
         }
 
-        console.log({ payload })
 
         const result = await this.repository.store(payload);
 
@@ -117,7 +117,7 @@ class UserService implements I_UserService {
     /** Update By Id */
     async update(req: I_RequestCustom, res: Response): Promise<Response> {
         const today: Date = new Date(standartDateISO())
-        const id: string = req?.params?.[userSchema.primaryKey];
+        const id: string = req?.params?.[sc.user.primaryKey];
         let payload: Record<string, any> = {
             updated_at: today,
             updated_by: req?.user?.user_id,
@@ -145,7 +145,7 @@ class UserService implements I_UserService {
     /** Soft Delete By Id */
     async softDelete(req: I_RequestCustom, res: Response): Promise<Response> {
         const today: Date = new Date(standartDateISO())
-        const id: string = req?.params?.[userSchema.primaryKey];
+        const id: string = req?.params?.[sc.user.primaryKey];
         let payload: Record<string, any> = {
             deleted_at: today,
             deleted_by: req?.user?.user_id,

@@ -18,5 +18,8 @@
   // "terminal.integrated.defaultProfile.osx": "zsh",
   "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[sql]": {
+    "editor.defaultFormatter": "cweijan.vscode-mysql-client2"
   }
 }

@@ -10,6 +10,7 @@ export const setPagination = (
   page = Math.max(page, 1);
   limit = Math.max(limit, 1);
 
+
   const totalPage = Math.ceil(totalRow / limit);
   const nextPage = page < totalPage ? page + 1 : null;
   const prevPage = page > 1 ? page - 1 : null;

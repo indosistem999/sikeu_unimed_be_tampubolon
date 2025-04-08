@@ -1,6 +1,6 @@
 import AppDataSource from '../../../config/dbconfig';
 import { I_ResultService } from '../../../interfaces/app.interface';
-import { IsNull, Like } from 'typeorm';
+import { Brackets, IsNull, Like } from 'typeorm';
 import { MessageDialog } from '../../../lang';
 import { I_UserRepository } from '../../../interfaces/user.interface';
 import { I_ResponsePagination } from '../../../interfaces/pagination.interface';
@@ -22,41 +22,74 @@ class UserRepository implements I_UserRepository {
         }
     }
 
-    /** Fetch Data */
+
     async fetch(filters: Record<string, any>): Promise<I_ResultService> {
         try {
             const { paging, sorting } = filters
-            let whereConditions: Record<string, any>[] = []
 
+            const queryBuilder = this.repository.createQueryBuilder("user")
+                .leftJoinAndSelect("user.role", "role")
+                .leftJoinAndSelect("user.work_unit", "work_unit");
 
-            if (paging?.search && paging?.search != '' && paging?.search != null) {
-                const searchTerm: string = paging?.search
-                whereConditions = [
-                    { unit_name: Like(`%${searchTerm}%`), deleted_at: IsNull() }, // Partial match
-                    { unit_type: Like(`%${searchTerm}%`), deleted_at: IsNull() }, // Partial match
-                    { unit_code: Like(`%${searchTerm}%`), deleted_at: IsNull() },             // Exact match
-                ];
+            // Where Condition
+            if (paging?.search) {
+                const searchTerm: string = `%${paging.search}%`;
+                queryBuilder.andWhere(
+                    new Brackets(qb => {
+                        qb.where("concat(user.first_name, ' ', user.last_name) LIKE :searchTerm", { searchTerm })
+                            .orWhere("role.role_name LIKE :searchTerm", { searchTerm })
+                            .orWhere("work_unit.unit_name LIKE :searchTerm", { searchTerm })
+                            .orWhere("user.email LIKE :searchTerm", { searchTerm })
+                            .orWhere("user.phone_number LIKE :searchTerm", { searchTerm })
+                            .orWhere("user.gender LIKE :searchTerm", { searchTerm });
+                    })
+                ).andWhere("user.deleted_at IS NULL");
             }
 
-            let [rows, count] = await this.repository.findAndCount({
-                where: whereConditions,
-                skip: paging?.skip,
-                take: paging?.limit,
-                order: sorting
-            })
+            // Select fields
+            queryBuilder.select([
+                "user.user_id",
+                "user.email",
+                `concat(user.first_name, ' ', user.last_name) as name`,
+                "user.phone_number",
+                "user.gender",
+                "user.created_at",
+                "role.role_id",
+                "role.role_name",
+                "work_unit.unit_id",
+                "work_unit.unit_name"
+            ]);
 
-            const pagination: I_ResponsePagination = setPagination(rows, count, paging.page, paging.limit);
 
+            if (sorting) {
+                for (const [key, value] of Object.entries(sorting)) {
+                    queryBuilder.addOrderBy(key, value as 'ASC' | 'DESC');
+                }
+            }
+
+            // Pagination
+            if (paging?.limit) {
+                queryBuilder.take(paging.limit);
+            }
+            if (paging?.skip) {
+                queryBuilder.skip(paging.skip);
+            }
+
+            const [rows, count] = await queryBuilder.getManyAndCount();
+
+            const pagination: I_ResponsePagination = setPagination(rows, count, paging?.page, paging?.limit);
 
             return {
                 success: true,
                 message: MessageDialog.__('success.masterMenu.fetch'),
                 record: pagination
-            }
+            };
         } catch (error: any) {
-            return this.setupErrorMessage(error)
+            return this.setupErrorMessage(error);
         }
     }
+
+
 
     /** Fetch By Id */
     async fetchById(id: string): Promise<I_ResultService> {
@@ -64,9 +97,7 @@ class UserRepository implements I_UserRepository {
 
             const result = await this.repository.createQueryBuilder(sc.user.tableName)
                 .leftJoin(Roles, sc.role.tableName, `${sc.role.tableName}.${sc.role.primaryKey} = ${sc.user.tableName}.${sc.role.primaryKey}`)
-
                 .leftJoin(MasterWorkUnit, sc.work_unit.tableName, `${sc.work_unit.tableName}.${sc.work_unit.primaryKey} = ${sc.user.tableName}.${sc.work_unit.primaryKey}`)
-
                 .where(`${sc.user.tableName}.deleted_at IS NULL`)
                 .andWhere(`${sc.user.tableName}.${sc.user.primaryKey} = :id`, { id })
                 .select([
@@ -233,6 +264,82 @@ class UserRepository implements I_UserRepository {
             return this.setupErrorMessage(error)
         }
     }
+
+
+
+    /** Fetch Data */
+    // async fetch(filters: Record<string, any>): Promise<I_ResultService> {
+    //     try {
+    //         const { paging, sorting } = filters
+    //         let whereConditions: Record<string, any> = []
+
+    //         // Where Condition
+    //         if (paging?.search) {
+    //             const searchTerm: string = paging?.search;
+    //             whereConditions = [
+    //                 {
+    //                     role: {
+    //                         role_name: Like(`%${searchTerm}%`)
+    //                     },
+    //                     deleted_at: IsNull()
+    //                 },
+    //                 {
+    //                     work_unit: {
+    //                         unit_name: Like(`%${searchTerm}%`)
+    //                     },
+    //                     deleted_at: IsNull()
+    //                 },
+    //                 {
+    //                     email: Like(`%${searchTerm}%`),
+    //                     deleted_at: IsNull()
+    //                 },
+    //                 {
+    //                     phone_number: Like(`%${searchTerm}%`),
+    //                     deleted_at: IsNull()
+    //                 }
+    //             ]
+    //         }
+
+    //         let [rows, count] = await this.repository.findAndCount({
+    //             where: whereConditions,
+    //             relations: [
+    //                 'role',
+    //                 'work_unit'
+    //             ],
+    //             select: {
+    //                 user_id: true,
+    //                 email: true,
+    //                 first_name: true,
+    //                 last_name: true,
+    //                 role: {
+    //                     role_id: true,
+    //                     role_name: true
+    //                 },
+    //                 work_unit: {
+    //                     unit_id: true,
+    //                     unit_name: true
+    //                 },
+    //                 phone_number: true,
+    //                 gender: true,
+    //                 created_at: true
+    //             },
+    //             skip: paging?.skip,
+    //             take: paging?.limit,
+    //         })
+
+    //         const pagination: I_ResponsePagination = setPagination(rows, count, paging?.page, paging?.limit);
+
+
+    //         return {
+    //             success: true,
+    //             message: MessageDialog.__('success.masterMenu.fetch'),
+    //             record: pagination
+    //         }
+    //     } catch (error: any) {
+    //         return this.setupErrorMessage(error)
+    //     }
+    // }
+
 
 
 

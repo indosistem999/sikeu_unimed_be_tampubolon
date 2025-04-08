@@ -22,7 +22,7 @@
           "name": "limit",
           "required": false,
           "schema": {
-            "type": "integer"
+            "type": "number"
           },
           "description": "Limit value is number by default limit is 10. ex : ?limit=100"
         },

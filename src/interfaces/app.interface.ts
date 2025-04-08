@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { I_AuthUserPayload } from './auth.interface';
+import { I_PaginateArgs } from './pagination.interface';
 
 export interface I_RequestCustom extends Request {
   [key: string]: any; // Or specify more precise types
@@ -66,4 +67,10 @@ export interface I_FileOptionInterface {
   mime_allowed: string[];
   extension_allowed: string[];
   size: number;
+}
+
+
+export interface I_FilterPagination {
+  paging: I_PaginateArgs,
+  sorting: any
 }

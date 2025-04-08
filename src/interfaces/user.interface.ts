@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { I_RequestCustom, I_ResultService } from './app.interface'
+import { I_FilterPagination, I_RequestCustom, I_ResultService } from './app.interface'
 
 
 export interface I_UserRepository {

@@ -137,4 +137,5 @@ export class Users {
 
   @Column({ type: 'tinyint', default: false })
   has_determined!: number;
+
 }
