@@ -50,3 +50,9 @@ seed:
 
 create-migration:
 	docker exec -it finance_core_app yarn run typeorm-ts-node-commonjs migration:create ./src/database/migrations/$(migration-file)
+
+restart-app:
+	docker restart finance_core_app 
+
+restart-db:
+	docker restart finance_mysql 
