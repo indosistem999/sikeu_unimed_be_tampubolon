@@ -48,3 +48,48 @@ Restart Service Core Api
 ```docker
   docker restart finance_core_app
 ```
+
+# Credential User
+
+1. Login user as admin
+
+```
+ {
+  "email": "admin@example.com",
+  "password": "oracle123",
+}
+```
+
+2. Login user as developer
+
+```
+  {
+  "email": "ruben@example.com",
+  "password": "test123",
+}
+
+```
+
+# Run Migration Command Using Docker
+
+```
+  make migration-run
+```
+
+# Run Migration Command Local
+
+```
+  npm run typeorm-ts-node-commonjs migration:run -- -d ./src/config/dbconfig.ts
+```
+
+# Run Seeder Command Using Docker
+
+```
+  make seed
+```
+
+# Run Seed Command Local
+
+```
+  ts-node src/database/seeders/index.ts
+```
