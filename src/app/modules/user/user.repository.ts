@@ -50,16 +50,21 @@ class UserRepository implements I_UserRepository {
             queryBuilder.select([
                 "user.user_id",
                 "user.email",
-                `concat(user.first_name, ' ', user.last_name) as name`,
+                "user.first_name",
+                "user.last_name",
                 "user.phone_number",
                 "user.gender",
                 "user.created_at",
                 "role.role_id",
                 "role.role_name",
                 "work_unit.unit_id",
-                "work_unit.unit_name"
+                "work_unit.unit_name",
+                'CONCAT(user.first_name, " ", user.last_name) as "full_name"'
             ]);
 
+            // queryBuilder.addSelect("CONCAT(user.first_name, ' ', user.last_name)", 'full_name')
+
+            // queryBuilder.addSelect("CONCAT(user.first_name, ' ', user.last_name)", 'full_name')
 
             if (sorting) {
                 for (const [key, value] of Object.entries(sorting)) {
@@ -195,7 +200,7 @@ class UserRepository implements I_UserRepository {
     /** Update Data By Id */
     async update(id: string, payload: Record<string, any>): Promise<I_ResultService> {
         try {
-            let result = await this.repository.findOne({
+            const result = await this.repository.findOne({
                 where: {
                     deleted_at: IsNull(),
                     user_id: id
@@ -210,9 +215,10 @@ class UserRepository implements I_UserRepository {
                 }
             }
 
-            result = { ...result, ...payload }
 
-            await this.repository.save(result);
+            const { full_name, ...rest } = result;
+
+            await this.repository.save({ ...rest, ...payload });
 
 
             return {
@@ -231,7 +237,7 @@ class UserRepository implements I_UserRepository {
     /** Soft Delete Data By Id */
     async softDelete(id: string, payload: Record<string, any>): Promise<I_ResultService> {
         try {
-            let result = await this.repository.findOne({
+            const result = await this.repository.findOne({
                 where: {
                     user_id: id,
                     deleted_at: IsNull()
@@ -246,12 +252,12 @@ class UserRepository implements I_UserRepository {
                 }
             }
 
-            result = {
-                ...result,
-                ...payload
-            }
+            const { full_name, ...rest } = result
 
-            await this.repository.save(result);
+            await this.repository.save({
+                ...rest,
+                ...payload
+            });
 
             return {
                 success: true,

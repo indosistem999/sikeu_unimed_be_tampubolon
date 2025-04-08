@@ -133,6 +133,8 @@ class UserService implements I_UserService {
             }
         }
 
+        console.log({ payload })
+
         const result = await this.repository.update(id, payload)
         if (!result?.success) {
             return sendErrorResponse(res, 400, result.message, result.record);

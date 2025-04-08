@@ -13,6 +13,7 @@ import {
 import { UserLog } from './UserLog';
 import { Roles } from './Roles';
 import { MasterWorkUnit } from './MasterWorkUnit';
+import { Expose } from 'class-transformer';
 
 @Entity({ name: 'users' })
 export class Users {
@@ -138,4 +139,10 @@ export class Users {
   @Column({ type: 'tinyint', default: false })
   has_determined!: number;
 
+
+  // Virtual property to concatenate firstName and lastName
+  @Expose()
+  get full_name(): string {
+    return `${this.first_name} ${this.last_name}`;
+  }
 }

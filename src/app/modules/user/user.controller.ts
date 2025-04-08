@@ -4,6 +4,7 @@ import { adminAuthMiddleware } from '../../middlewares/auth.middleware';
 import { I_RequestCustom } from '../../../interfaces/app.interface';
 import Services from './user.service'
 import { uploadImageToStorage } from '../../../config/storages';
+import ReqValidation from './user.validation';
 
 
 class UserController extends MainRoutes {
@@ -18,6 +19,7 @@ class UserController extends MainRoutes {
             '/',
             adminAuthMiddleware,
             uploadImageToStorage.single('file_image'),
+            ReqValidation.createModuleValidation,
             async (req: I_RequestCustom, res: Response) => {
                 await Services.store(req, res);
             }
@@ -29,7 +31,7 @@ class UserController extends MainRoutes {
         });
 
         /** [GET] - Find By Id  */
-        this.router.get('/:user_id', adminAuthMiddleware, async (req: Request, res: Response) => {
+        this.router.get('/:user_id', adminAuthMiddleware, ReqValidation.paramValidation, async (req: Request, res: Response) => {
             await Services.fetchById(req, res);
         });
 
@@ -38,13 +40,15 @@ class UserController extends MainRoutes {
             '/:user_id',
             adminAuthMiddleware,
             uploadImageToStorage.single('file_image'),
+            ReqValidation.paramValidation,
+            ReqValidation.updateModuleValidation,
             async (req: I_RequestCustom, res: Response) => {
                 await Services.update(req, res);
             }
         );
 
         /** [DELETE] - Delete Data */
-        this.router.delete('/:user_id', adminAuthMiddleware, async (req: Request, res: Response) => {
+        this.router.delete('/:user_id', adminAuthMiddleware, ReqValidation.paramValidation, async (req: Request, res: Response) => {
             await Services.softDelete(req, res);
         });
     }
