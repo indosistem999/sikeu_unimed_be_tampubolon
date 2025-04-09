@@ -1,0 +1,22 @@
+services:
+  sikeu_core_app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: sikeu_core_app
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - '${APP_PORT}:${APP_PORT}'
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - sikeu_core_network
+    command: ['pm2-runtime', 'dist/server.js']
+
+networks:
+  sikeu_core_network:
+    name: sikeu_core_network
+    driver: bridge
