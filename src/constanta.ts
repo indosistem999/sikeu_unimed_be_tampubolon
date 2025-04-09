@@ -37,6 +37,7 @@ export const Config = {
   AppEnv: process.env.NODE_ENV?.toString() || 'development',
   AppAuthor: process.env.APP_AUTHOR?.toString() || 'Ruben Alpredo Tampubolon',
   AppDebug: Boolean(process.env.APP_DEBUG?.toString().toLowerCase()) || true,
+  AppDomain: process.env.APP_DOMAIN || 'http://dev-sikeu-unimed.avnet.id',
   AppPermissionPolicy: process?.env?.APP_PERMISSION_POLICY ?? '',
   AppProtection: process?.env?.APP_PROTECTION ?? '',
   AppContentSecurityPolicy: getContentSecurePolice(),

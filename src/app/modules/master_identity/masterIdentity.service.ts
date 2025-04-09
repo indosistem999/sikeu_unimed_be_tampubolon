@@ -6,7 +6,6 @@ import MasterIdentityRepository from './masterIdentity.repository';
 import { identitySchema } from './masterIdentity.constanta';
 import { standartDateISO } from '../../../lib/utils/common.util';
 import path from 'path';
-import { getFileFromStorage } from '../../../config/storages';
 
 
 class MasterIdentityService implements I_MasterIdentityService {
@@ -134,19 +133,6 @@ class MasterIdentityService implements I_MasterIdentityService {
     }
 
     return sendSuccessResponse(res, 200, result.message, result.record);
-  }
-
-  /** Show File */
-  showFile(req: Request, res: Response): Response | any {
-    const { type, filename } = req.params;
-    const result = getFileFromStorage(type, filename);
-
-    if (!result?.success) {
-      return sendErrorResponse(res, 400, result.message, result.record);
-    }
-    else {
-      return res.sendFile(result.record);
-    }
   }
 }
 

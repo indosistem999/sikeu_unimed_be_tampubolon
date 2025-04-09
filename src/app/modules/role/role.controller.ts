@@ -3,7 +3,6 @@ import MainRoutes from '../../../config/mainRoute';
 import { adminAuthMiddleware } from '../../middlewares/auth.middleware';
 import { I_RequestCustom } from '../../../interfaces/app.interface';
 import Services from './role.service';
-import { uploadImageToStorage } from '../../../config/storages';
 import ReqValidation from './role.validation';
 
 class RoleController extends MainRoutes {

@@ -3,7 +3,7 @@ import MainRoutes from '../../../config/mainRoute';
 import { adminAuthMiddleware, } from '../../middlewares/auth.middleware';
 import { I_RequestCustom } from '../../../interfaces/app.interface';
 import MasterIdentityService from './masterIdentity.service';
-import { uploadImageToStorage } from '../../../config/storages';
+import { showFile, uploadImageToStorage } from '../../../config/storages';
 import MasterIdentityValidation from './masterIdentity.validation';
 
 class MasterIdentityController extends MainRoutes {
@@ -23,7 +23,7 @@ class MasterIdentityController extends MainRoutes {
 
     /** [GET] - Get File Logo */
     this.router.get('/files/:type/:filename', async (req: Request, res: Response) => {
-      await MasterIdentityService.showFile(req, res);
+      await showFile(req, res);
     });
 
     /** [GET] - Find By Id  */

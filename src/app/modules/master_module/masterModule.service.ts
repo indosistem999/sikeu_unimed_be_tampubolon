@@ -13,18 +13,6 @@ import { getFileFromStorage } from "../../../config/storages";
 class MasterModuleService implements I_MasterModuleService {
     private readonly repository = new MasterModuleRepository();
 
-    showFile(req: Request, res: Response): Response | any {
-        const { type, filename } = req.params;
-        const result = getFileFromStorage(type, filename);
-
-        if (!result?.success) {
-            return sendErrorResponse(res, 400, result.message, result.record);
-        }
-        else {
-            return res.sendFile(result.record);
-        }
-
-    }
 
     /** Create New Module */
     async store(req: I_RequestCustom, res: Response): Promise<Response> {

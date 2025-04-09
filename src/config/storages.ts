@@ -1,10 +1,11 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs'
 import crypto from 'crypto'
 import { Config as cfg } from '../constanta';
 import { I_ResultService } from '../interfaces/app.interface';
+import { sendErrorResponse } from '../lib/utils/response.util';
 
 
 const BASE_URL = `${cfg.AppHost}:${cfg.AppPort}`
@@ -122,5 +123,19 @@ export const removeFileInStorage = (fileName: string): I_ResultService => {
             record: filePath
         }
     }
+}
+
+
+export const showFile = (req: Request, res: Response): Response | any => {
+    const { type, filename } = req.params;
+    const result = getFileFromStorage(type, filename);
+
+    if (!result?.success) {
+        return sendErrorResponse(res, 400, result.message, result.record);
+    }
+    else {
+        return res.sendFile(result.record);
+    }
+
 }
 

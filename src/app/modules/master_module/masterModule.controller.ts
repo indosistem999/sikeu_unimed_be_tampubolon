@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import MainRoutes from '../../../config/mainRoute';
 import MasterModuleService from './masterModule.service';
 import { adminAuthMiddleware, authMiddleware } from '../../middlewares/auth.middleware';
-import { uploadImageToStorage } from '../../../config/storages';
+import { showFile, uploadImageToStorage } from '../../../config/storages';
 import ReqValidation from './masterModule.validation';
 
 class MasterModuleController extends MainRoutes {
@@ -24,7 +24,7 @@ class MasterModuleController extends MainRoutes {
         });
 
         this.router.get('/files/:type/:filename', async (req: Request, res: Response) => {
-            await MasterModuleService.showFile(req, res);
+            await showFile(req, res);
         });
 
         /** Find Module */

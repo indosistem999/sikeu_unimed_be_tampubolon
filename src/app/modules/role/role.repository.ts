@@ -1,5 +1,4 @@
 import { IsNull, Like } from 'typeorm';
-import AppDataSource from '../../../config/ormconfig';
 import { Roles } from '../../../database/models/Roles';
 import { I_ResultService } from '../../../interfaces/app.interface';
 import { I_RoleRepository } from '../../../interfaces/role.interface';
@@ -7,6 +6,7 @@ import { I_RoleRepository } from '../../../interfaces/role.interface';
 import { MessageDialog } from '../../../lang';
 import { I_ResponsePagination } from '../../../interfaces/pagination.interface';
 import { setPagination } from '../../../lib/utils/pagination.util';
+import AppDataSource from '../../../config/dbconfig';
 
 class RoleRepository implements I_RoleRepository {
     private repository = AppDataSource.getRepository(Roles);
@@ -70,9 +70,10 @@ class RoleRepository implements I_RoleRepository {
                     updated_at: true
                 },
                 skip: Number(paging?.skip),
-                take: Number(paging?.take),
+                take: Number(paging?.limit),
                 order: sorting
             });
+
 
             const pagination: I_ResponsePagination = setPagination(rows, count, paging?.page, paging?.limit);
 

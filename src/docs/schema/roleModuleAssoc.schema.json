@@ -1,0 +1,12 @@
+{
+  "SchemaRoleAssignedModule": {
+    "type": "object",
+    "properties": {
+      "module_id": {
+        "type": "string",
+        "summary": "Module Id (UUID)",
+        "default": "8ddd8c8c-6d81-4243-87e9-52b2c71c3c2b"
+      }
+    }
+  }
+}

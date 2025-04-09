@@ -3,7 +3,7 @@ import MainRoutes from '../../../config/mainRoute';
 import { adminAuthMiddleware } from '../../middlewares/auth.middleware';
 import { I_RequestCustom } from '../../../interfaces/app.interface';
 import Services from './masterMenu.service';
-import { uploadImageToStorage } from '../../../config/storages';
+import { showFile, uploadImageToStorage } from '../../../config/storages';
 import ReqValidation from './masterMenu.validation';
 
 class MasterMenuController extends MainRoutes {
@@ -35,7 +35,7 @@ class MasterMenuController extends MainRoutes {
 
     /** [GET] - Get File Logo */
     this.router.get('/files/:type/:filename', async (req: Request, res: Response) => {
-      await Services.showFile(req, res);
+      await showFile(req, res);
     });
 
     /** [GET] - Find By Id  */

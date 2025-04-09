@@ -48,12 +48,28 @@ export class App {
     // header protection
     this.app.use(setHeaderProtection);
 
+
+    const whitelist = [
+      /^http:\/\/localhost:\d+$/, // Allow all localhost ports
+      cfg.AppDomain,  // Replace with your production domain
+    ];
+
     // cors
     this.app.use(
       cors({
-        methods: cfg.AppMethod,
-        allowedHeaders: cfg.AppAllowHeader,
-        exposedHeaders: cfg.AppExposeHeader,
+        origin: (origin, callback) => {
+          if (!origin || whitelist.some((rule) =>
+            typeof rule === 'string' ? rule === origin : rule.test(origin)
+          )) {
+            callback(null, true);
+          } else {
+            callback(new Error('Not allowed by CORS'));
+          }
+        },
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        exposedHeaders: ['Authorization'],
+        credentials: true,
       })
     );
 

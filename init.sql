@@ -1,8 +1,4 @@
-USE mysql;
-CREATE USER 'admin'@'%' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON *.* TO 'admin'@'%' WITH GRANT OPTION;
-FLUSH PRIVILEGES;
-
-CREATE DATABASE IF EXISTS sikeu_unimed;
+SELECT user, host FROM mysql.user;
+SHOW GRANTS FOR 'admin'@'%';
 GRANT ALL PRIVILEGES ON sikeu_unimed.* TO 'admin'@'%';
 FLUSH PRIVILEGES;

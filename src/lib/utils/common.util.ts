@@ -152,3 +152,9 @@ export const splitFullName = (fullName: string): { [key: string]: any } => {
     last_name: null
   }
 }
+
+export const getHostProtocol = (req: Request): string => {
+  const protocol = req.protocol;
+  const host = req.get('host'); // includes hostname and port
+  return `${protocol}://${host}`;
+}

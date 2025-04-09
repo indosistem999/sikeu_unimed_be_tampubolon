@@ -48,10 +48,15 @@
     },
     "role": {
       "findItem": "Get role {{item}} successfully",
-      "fetch": "Get user successfully",
+      "fetch": "Get role successfully",
       "store": "User added successfully",
       "update": "User edited successfully",
       "softDelete": "User deleted successfully"
+    },
+    "roleModule": {
+      "assigned": "Assigned module to role successfully",
+      "softDelete": "Delete module and role from role module association successfully",
+      "showModule": "Get modules successfully"
     }
   },
   "error": {
@@ -83,7 +88,9 @@
       "storeMenu": "Failed to store menu",
       "storeWorkUnit": "Failed to store work unit",
       "storeUser": "Failed to store user",
-      "storeRole": "Failed to store role"
+      "storeRole": "Failed to store role",
+      "assignRoleModule": "Assign role to module fail",
+      "unassignedRoleModule": "Unassigned module to role"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",

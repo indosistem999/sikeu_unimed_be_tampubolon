@@ -161,18 +161,6 @@ class UserService implements I_UserService {
         return sendSuccessResponse(res, 200, result.message, result.record);
     }
 
-    /** Show File */
-    showFile(req: Request, res: Response): Response | any {
-        const { type, filename } = req.params;
-        const result = getFileFromStorage(type, filename);
-
-        if (!result?.success) {
-            return sendErrorResponse(res, 400, result.message, result.record);
-        }
-        else {
-            return res.sendFile(result.record);
-        }
-    }
 }
 
 export default new UserService();
