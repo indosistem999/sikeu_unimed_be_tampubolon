@@ -14,7 +14,7 @@ services:
       - /app/node_modules
     networks:
       - sikeu_core_network
-    command: ['pm2-runtime', 'dist/server.js']
+    command: ['yarn', 'pm2:start']
 
 networks:
   sikeu_core_network:
