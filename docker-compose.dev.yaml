@@ -22,7 +22,7 @@ services:
 
   finance_mysql:
     build:
-      context: ./docker
+      context: .
       dockerfile: Dockerfile.mysql
     container_name: finance_mysql
     restart: on-failure

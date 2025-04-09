@@ -5,9 +5,27 @@ import { validate } from 'class-validator';
 import { DTO_ValidationModule, DTO_ValidationModuleUpdate } from "./masterModule.dto";
 import { sendErrorResponse } from "../../../lib/utils/response.util";
 import { MessageDialog } from "../../../lang";
+import { allSchema as sc } from '../../../constanta'
+
+
 
 class MasterModuleValidation {
-    async createModuleValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
+    async paramValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
+        if (!req?.params?.[sc.module.primaryKey]) {
+            sendErrorResponse(
+                res,
+                422,
+                MessageDialog.__('error.missing.requiredEntry', { label: 'Module id' }),
+                null
+            );
+        }
+        else {
+            next()
+        }
+
+    }
+
+    async createValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
         const dtoInstance = plainToClass(DTO_ValidationModule, req?.body);
         const errors = await validate(dtoInstance);
 
@@ -32,7 +50,7 @@ class MasterModuleValidation {
         next();
     }
 
-    async updateModuleValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
+    async updateValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
 
         const dtoInstance = plainToInstance(DTO_ValidationModuleUpdate, req.body);
         (dtoInstance as any).req = req;

@@ -2,45 +2,30 @@ import { Request, Response } from 'express';
 import MainRoutes from '../../../config/mainRoute';
 import { adminAuthMiddleware } from '../../middlewares/auth.middleware';
 import { I_RequestCustom } from '../../../interfaces/app.interface';
-import Services from './masterMenu.service';
+import Services from './role.service';
 import { uploadImageToStorage } from '../../../config/storages';
-import ReqValidation from './masterMenu.validation';
+import ReqValidation from './role.validation';
 
-class MasterMenuController extends MainRoutes {
+class RoleController extends MainRoutes {
   public routes(): void {
     /** [GET] - Fetch Data */
     this.router.get('/', adminAuthMiddleware, async (req: Request, res: Response) => {
       await Services.fetch(req, res);
     });
 
-    /** [POST] - Login Account */
+    /** [POST] - Create Data */
     this.router.post(
       '/',
       adminAuthMiddleware,
-      uploadImageToStorage.single('file_icon'),
       ReqValidation.createValidation,
       async (req: I_RequestCustom, res: Response) => {
-        await Services.store(req, res, 'parent');
+        await Services.store(req, res);
       }
     );
-
-    this.router.post(
-      '/sub-menu',
-      adminAuthMiddleware,
-      uploadImageToStorage.single('file_icon'),
-      async (req: I_RequestCustom, res: Response) => {
-        await Services.store(req, res, 'child');
-      }
-    );
-
-    /** [GET] - Get File Logo */
-    this.router.get('/files/:type/:filename', async (req: Request, res: Response) => {
-      await Services.showFile(req, res);
-    });
 
     /** [GET] - Find By Id  */
     this.router.get(
-      '/:menu_id',
+      '/:role_id',
       adminAuthMiddleware,
       ReqValidation.paramValidation,
       async (req: Request, res: Response) => {
@@ -48,11 +33,10 @@ class MasterMenuController extends MainRoutes {
       }
     );
 
-    /** [PUT] - Update */
+    /** [PUT] - Update Data */
     this.router.put(
-      '/:menu_id',
+      '/:role_id',
       adminAuthMiddleware,
-      uploadImageToStorage.single('file_icon'),
       ReqValidation.paramValidation,
       ReqValidation.updateValidation,
       async (req: I_RequestCustom, res: Response) => {
@@ -60,9 +44,9 @@ class MasterMenuController extends MainRoutes {
       }
     );
 
-    /** [DELETE] - Verification OTP */
+    /** [DELETE] - Delete Data */
     this.router.delete(
-      '/:menu_id',
+      '/:role_id',
       adminAuthMiddleware,
       ReqValidation.paramValidation,
       async (req: Request, res: Response) => {
@@ -72,4 +56,4 @@ class MasterMenuController extends MainRoutes {
   }
 }
 
-export default new MasterMenuController().router;
+export default new RoleController().router;

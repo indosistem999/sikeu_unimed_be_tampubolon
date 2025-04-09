@@ -19,7 +19,7 @@ class UserController extends MainRoutes {
             '/',
             adminAuthMiddleware,
             uploadImageToStorage.single('file_image'),
-            ReqValidation.createModuleValidation,
+            ReqValidation.createValidation,
             async (req: I_RequestCustom, res: Response) => {
                 await Services.store(req, res);
             }
@@ -41,7 +41,7 @@ class UserController extends MainRoutes {
             adminAuthMiddleware,
             uploadImageToStorage.single('file_image'),
             ReqValidation.paramValidation,
-            ReqValidation.updateModuleValidation,
+            ReqValidation.updateValidation,
             async (req: I_RequestCustom, res: Response) => {
                 await Services.update(req, res);
             }

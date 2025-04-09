@@ -14,9 +14,6 @@
     "log": {
       "storeUserLog": "Success to store user log"
     },
-    "role": {
-      "findItem": "Get role {{item}} successfully"
-    },
     "masterModule": {
       "create": "New Master module added successfully",
       "fetchAll": "Get modules successfully",
@@ -44,6 +41,13 @@
       "softDelete": "Work unit deleted successfully"
     },
     "user": {
+      "fetch": "Get user successfully",
+      "store": "User added successfully",
+      "update": "User edited successfully",
+      "softDelete": "User deleted successfully"
+    },
+    "role": {
+      "findItem": "Get role {{item}} successfully",
       "fetch": "Get user successfully",
       "store": "User added successfully",
       "update": "User edited successfully",
@@ -78,7 +82,8 @@
       "storeIdentity": "Failed to store master identity",
       "storeMenu": "Failed to store menu",
       "storeWorkUnit": "Failed to store work unit",
-      "storeUser": "Failed to store user"
+      "storeUser": "Failed to store user",
+      "storeRole": "Failed to store role"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",

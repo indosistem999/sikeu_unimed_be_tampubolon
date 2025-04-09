@@ -1,0 +1,22 @@
+{
+  "SchemaCreateForRole": {
+    "type": "object",
+    "properties": {
+      "role_name": {
+        "type": "string",
+        "summary": "Role name",
+        "default": "Staff"
+      }
+    }
+  },
+  "SchemaUpdateForRole": {
+    "type": "object",
+    "properties": {
+      "role_name": {
+        "type": "string",
+        "summary": "Role name",
+        "default": "Staff"
+      }
+    }
+  }
+}

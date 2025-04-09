@@ -122,5 +122,13 @@ export const allSchema = {
   work_unit: {
     tableName: 'master_work_unit',
     primaryKey: 'unit_id',
+  },
+  menu: {
+    tableName: 'master_menu',
+    primaryKey: 'menu_id',
+  },
+  module: {
+    tableName: 'master_module',
+    primaryKey: 'module_id',
   }
 }

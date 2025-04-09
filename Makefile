@@ -1,7 +1,8 @@
 migration-file=AddGenderToUserTable
 entity-name=Users
 compose-file=docker-compose.dev.yaml
-app-container-name=finance_core_app:
+app-container-name=finance_core_app
+app-pm-name=sikeu-dev
 
 local-migration-create:
 	yarn typeorm migration:create  ./src/database/migrations/$(migration-file)
@@ -30,7 +31,7 @@ app-deploy-watch:
 	docker compose -f $(compose-file) up --build  --remove-orphans --force-recreate
 
 app-down:
-	docker compose -f $(compose-file) down 
+	docker compose -f $(compose-file) down -v
 
 app-logs:
 	docker logs -f $(app-container-name)
@@ -56,3 +57,9 @@ restart-app:
 
 restart-db:
 	docker restart finance_mysql 
+
+pm-dev:
+	pm2 start npm --name sikeu-dev -- run dev
+
+pm-log:
+	pm2 logs $(app-pm-name)

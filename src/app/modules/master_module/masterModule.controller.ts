@@ -3,7 +3,7 @@ import MainRoutes from '../../../config/mainRoute';
 import MasterModuleService from './masterModule.service';
 import { adminAuthMiddleware, authMiddleware } from '../../middlewares/auth.middleware';
 import { uploadImageToStorage } from '../../../config/storages';
-import MasterModuleValidation from './masterModule.validation';
+import ReqValidation from './masterModule.validation';
 
 class MasterModuleController extends MainRoutes {
     public routes(): void {
@@ -12,7 +12,7 @@ class MasterModuleController extends MainRoutes {
             '/',
             adminAuthMiddleware,
             uploadImageToStorage.single('file_icon'),
-            MasterModuleValidation.createModuleValidation,
+            ReqValidation.createValidation,
             async (req: Request, res: Response) => {
                 await MasterModuleService.store(req, res);
             }
@@ -28,7 +28,7 @@ class MasterModuleController extends MainRoutes {
         });
 
         /** Find Module */
-        this.router.get('/:module_id', authMiddleware, async (req: Request, res: Response) => {
+        this.router.get('/:module_id', authMiddleware, ReqValidation.paramValidation, async (req: Request, res: Response) => {
             await MasterModuleService.fetchById(req, res);
         });
 
@@ -37,14 +37,15 @@ class MasterModuleController extends MainRoutes {
             '/:module_id',
             authMiddleware,
             uploadImageToStorage.single('file_icon'),
-            MasterModuleValidation.updateModuleValidation,
+            ReqValidation.paramValidation,
+            ReqValidation.updateValidation,
             async (req: Request, res: Response) => {
                 await MasterModuleService.update(req, res);
             }
         );
 
         /** Delete Module */
-        this.router.delete('/:module_id', authMiddleware, async (req: Request, res: Response) => {
+        this.router.delete('/:module_id', authMiddleware, ReqValidation.paramValidation, async (req: Request, res: Response) => {
             await MasterModuleService.softDelete(req, res);
         });
     }

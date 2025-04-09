@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import { MessageDialog } from '../../../lang';
-import { IsOrderNumberModuleExisted, IsOrderNumberModuleUnique } from '../../middlewares/validation.middleware';
+import { IsOrderNumberModuleExisted, IsOrderNumberModuleUnique } from './masterModule.custom';
 
 export class DTO_ValidationModule {
     @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Module Name' }) })

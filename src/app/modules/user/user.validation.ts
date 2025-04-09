@@ -26,7 +26,7 @@ class UserValidation {
 
     }
 
-    async createModuleValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
+    async createValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
         const dtoInstance = plainToClass(DTO_ValidationUserCreate, req?.body);
         const errors = await validate(dtoInstance);
 
@@ -58,7 +58,7 @@ class UserValidation {
         next();
     }
 
-    async updateModuleValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
+    async updateValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
 
         const dtoInstance = plainToInstance(DTO_ValidationUserUpdate, req.body);
         (dtoInstance as any).req = req;

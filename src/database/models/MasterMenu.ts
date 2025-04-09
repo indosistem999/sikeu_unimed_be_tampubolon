@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 import { MasterModule } from "./MasterModule";
 
-@Entity({ name: '' })
+@Entity({ name: 'master_menu' })
 export class MasterMenu {
   @PrimaryGeneratedColumn('uuid')
   menu_id!: string;

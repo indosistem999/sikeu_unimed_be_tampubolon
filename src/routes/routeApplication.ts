@@ -12,6 +12,7 @@ import MasterIdentityController from '../app/modules/master_identity/masterIdent
 import MasterMenuController from '../app/modules/master_menu/masterMenu.controller'
 import WorkUnitController from '../app/modules/work_unit/workUnit.controller';
 import UserController from '../app/modules/user/user.controller';
+import RoleController from '../app/modules/role/role.controller'
 
 const tagVersionOne: string = '/api/v1';
 
@@ -42,8 +43,11 @@ class RouteApplication extends MainRoutes {
     // API Master Work Unit
     this.router.use(`${tagVersionOne}/work-unit`, WorkUnitController)
 
-    // API Master Work Unit
+    // API User
     this.router.use(`${tagVersionOne}/user`, UserController)
+
+    // API Role
+    this.router.use(`${tagVersionOne}/role`, RoleController)
   }
 }
 
