@@ -6,11 +6,6 @@ import Service from './featureAccess.service'
 
 class FeatureAccessController extends MainRoutes {
   public routes(): void {
-
-    this.router.get('/:role_id/:module_id', adminAuthMiddleware, async (req: I_RequestCustom, res: Response) => {
-      await Service.fetch(req, res)
-    })
-
     /** [POST] - Insert or update features (menu access module for role) */
     this.router.post(
       '/:role_id',
@@ -19,6 +14,11 @@ class FeatureAccessController extends MainRoutes {
         await Service.store(req, res)
       }
     );
+
+
+    this.router.get('/:role_id/:module_id', adminAuthMiddleware, async (req: I_RequestCustom, res: Response) => {
+      await Service.fetch(req, res)
+    })
   }
 }
 

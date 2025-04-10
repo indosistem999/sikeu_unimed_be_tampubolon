@@ -3,7 +3,7 @@ import { I_MasterModuleService } from "../../../interfaces/masterModule.interfac
 import MasterModuleRepository from "./masterModule.repository";
 import { I_RequestCustom } from "../../../interfaces/app.interface";
 import { sendErrorResponse, sendSuccessResponse } from "../../../lib/utils/response.util";
-import { getHostProtocol, standartDateISO } from "../../../lib/utils/common.util";
+import { getBaseUrl, getHostProtocol, standartDateISO } from "../../../lib/utils/common.util";
 import { defineRequestOrder } from "../../../lib/utils/request.util";
 import { propSchema, sortDefault, sortRequest } from "./masterModule.constanta";
 import path from "path";
@@ -43,7 +43,7 @@ class MasterModuleService implements I_MasterModuleService {
         const filters: Record<string, any> = {
             sorting: defineRequestOrder(req, sortDefault, sortRequest),
             search: (req?.query?.search as string) || null,
-            base_url: `${getHostProtocol(req)}/api/v1/master-module/files`
+            base_url: getBaseUrl(req, 'master-module')
         }
 
         console.log({ filters })

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { sendErrorResponse, sendSuccessResponse } from '../../../lib/utils/response.util';
-import { getHostProtocol, standartDateISO } from '../../../lib/utils/common.util';
+import { getBaseUrl, getHostProtocol, standartDateISO } from '../../../lib/utils/common.util';
 import { I_RequestCustom, I_ResultService } from '../../../interfaces/app.interface';
 
 import { allSchema as sc } from '../../../constanta'
@@ -22,9 +22,13 @@ class FeatureAccessService implements I_FeatureAccessService {
   }
 
   async fetch(req: I_RequestCustom, res: Response): Promise<Response> {
-    const roleId: string = req?.params?.[sc.role.primaryKey]
-    const moduleId: string = req?.params?.[sc.module.primaryKey]
-    const result = await this.repository.fetch(roleId, moduleId);
+    const filters: Record<string, any> = {
+      role_id: req?.params?.[sc.role.primaryKey],
+      module_id: req?.params?.[sc.module.primaryKey],
+      base_url: getBaseUrl(req, 'master-menu'),
+    }
+
+    const result = await this.repository.fetch(filters);
 
     if (!result?.success) {
       return sendErrorResponse(res, 400, result.message, result.record);
@@ -44,7 +48,7 @@ class FeatureAccessService implements I_FeatureAccessService {
       ...this.bodyValidation(req),
     }
 
-    console.log({ payload })
+    console.log({ AktifitasFeatures: payload?.features })
 
     const result = await this.repository.store(roleId, payload);
 

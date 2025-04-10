@@ -55,6 +55,7 @@ export class validateOrderNumberMenuExisted implements ValidatorConstraintInterf
     const rows = await this.repository.find({
       where: { order_number, deleted_at: IsNull(), parent: IsNull() },
     });
+    console.log({ rowResult: rows })
 
     if (rows?.length > 0) {
       const find = rows?.find((f: any) => {

@@ -158,3 +158,7 @@ export const getHostProtocol = (req: Request): string => {
   const host = req.get('host'); // includes hostname and port
   return `${protocol}://${host}`;
 }
+
+export const getBaseUrl = (req: Request, path: string): string => {
+  return `${getHostProtocol(req)}/api/v1/${path}/files`
+}

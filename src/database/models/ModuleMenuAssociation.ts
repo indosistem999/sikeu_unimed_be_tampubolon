@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 import { RoleModuleAssociation } from "./RoleModuleAssociation";
 import { MasterMenu } from "./MasterMenu";
 
@@ -18,7 +18,7 @@ export class ModuleMenuAssociation {
   @JoinColumn({ name: 'module_access_id' })
   module_menus!: RoleModuleAssociation;
 
-  @OneToOne(() => MasterMenu, (value) => value.access_menu)
+  @ManyToOne(() => MasterMenu, (value) => value.access_menu)
   @JoinColumn({ name: 'menu_id' })
   menu!: MasterMenu;
 

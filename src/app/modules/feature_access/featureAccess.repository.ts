@@ -1,4 +1,4 @@
-import { IsNull } from 'typeorm';
+import { getConnection, IsNull } from 'typeorm';
 import { Roles } from '../../../database/models/Roles';
 import { I_ResultService } from '../../../interfaces/app.interface';
 import { MessageDialog } from '../../../lang';
@@ -42,7 +42,6 @@ class FeatureAccessRepository implements I_FeatureAccessRepository {
 
     try {
       const result = await this.featureRepo.insert(payload);
-      console.log({ ResultRow: result })
       return {
         success: true,
         record: {
@@ -115,9 +114,16 @@ class FeatureAccessRepository implements I_FeatureAccessRepository {
     }
   }
 
-  async fetch(roleId: string, moduleId: string): Promise<I_ResultService> {
+  async fetch(filters: Record<string, any>): Promise<I_ResultService> {
     try {
-      const role = await this.roleRepo.findOne({ where: { deleted_at: IsNull(), role_id: roleId }, select: { role_id: true, role_name: true, role_slug: true } });
+      // Check Role
+      const role = await this.roleRepo.findOne({
+        where: {
+          deleted_at: IsNull(),
+          role_id: filters?.role_id
+        },
+        select: { role_id: true, role_name: true, role_slug: true }
+      });
 
       if (!role) {
         return {
@@ -127,8 +133,9 @@ class FeatureAccessRepository implements I_FeatureAccessRepository {
         }
       }
 
+      // Check Module
       const module = await this.moduleRepo.findOne({
-        where: { deleted_at: IsNull(), module_id: moduleId },
+        where: { deleted_at: IsNull(), module_id: filters?.module_id },
         select: {
           module_id: true,
           module_name: true,
@@ -144,17 +151,101 @@ class FeatureAccessRepository implements I_FeatureAccessRepository {
         }
       }
 
-      const results = await this.menuRepo.find({
+
+      // Check Role Module
+      const findAccess = await this.assocRepo.findOne({
         where: {
-          deleted_at: IsNull()
+          deleted_at: IsNull(),
+          role: {
+            role_id: filters?.role_id
+          },
+          master_module: {
+            module_id: filters?.module_id
+          }
         },
-        relations: {
-          access_menu: true,
-          master_module: true,
-
+        relations: ['role', 'master_module'],
+        select: {
+          module_access_id: true
         }
-
       })
+
+      if (!findAccess) {
+        return {
+          success: false,
+          message: MessageDialog.__('error.default.notFoundItem', { item: `Role ${filters?.role_id} and Module ${filters?.module_id}` }),
+          record: findAccess
+        }
+      }
+
+      // const results = await this.menuRepo.find({
+      //   where: {
+      //     deleted_at: IsNull(),
+      //     access_menu: [
+      //       { module_access_id: findAccess?.module_access_id }
+      //     ]
+      //   },
+      //   relations: {
+      //     access_menu: true
+      //   },
+      //   select: {
+      //     menu_id: true,
+      //     name: true,
+      //     icon: true,
+      //     access_menu: {
+      //       module_access_id: true,
+      //       access_name: true,
+      //       access_status: true,
+      //       created_at: true,
+      //       updated_at: true
+      //     },
+      //     created_at: true,
+      //     updated_at: true,
+      //     children: {
+      //       menu_id: true,
+      //       name: true,
+      //       icon: true,
+      //     },
+      //     parent: {
+      //       menu_id: true,
+      //       name: true,
+      //       icon: true,
+      //     }
+      //   }
+      // })
+
+      const queryBuilder = this.menuRepo.createQueryBuilder('menu')
+        .leftJoinAndSelect('menu.access_menu', 'access_menu')
+        .leftJoinAndSelect('menu.children', 'children')
+        .leftJoinAndSelect('menu.parent', 'parent')
+        .where('menu.deleted_at IS NULL')
+        .andWhere('access_menu.module_access_id = :moduleAccessId', { moduleAccessId: findAccess?.module_access_id })
+        .select([
+          'menu.menu_id as menu_id',
+          'menu.name as name',
+          `CASE
+            WHEN menu.icon IS NULL THEN NULL
+            WHEN menu.icon = '' THEN NULL
+            ELSE CONCAT(:baseUrl, '/', menu.icon)
+          END as icon`,
+          'menu.created_at as created_at',
+          'menu.updated_at as updated_at',
+          `json_object(
+            'module_access_id',access_menu.module_access_id, 
+            'access_name',access_menu.access_name,
+            'access_status',access_menu.access_status,
+            'created_at', access_menu.created_at, 
+            'updated_at', access_menu.updated_at
+          ) as access_menu`,
+          `json_object(
+            'menu_id', children.menu_id, 
+            'name', children.name
+            
+          ) as children`,
+
+        ])
+        .setParameter('baseUrl', filters?.base_url);
+
+      const results = await queryBuilder.getRawMany();
 
 
       return {
@@ -163,7 +254,7 @@ class FeatureAccessRepository implements I_FeatureAccessRepository {
         record: {
           role,
           module,
-
+          results
         }
       }
 

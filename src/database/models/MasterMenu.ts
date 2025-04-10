@@ -63,6 +63,6 @@ export class MasterMenu {
   deleted_by!: string;
 
 
-  @OneToOne(() => ModuleMenuAssociation, (value) => value.menu, { eager: true })
-  access_menu!: ModuleMenuAssociation;
+  @OneToMany(() => ModuleMenuAssociation, (value) => value.menu, { eager: true })
+  access_menu!: ModuleMenuAssociation[];
 }

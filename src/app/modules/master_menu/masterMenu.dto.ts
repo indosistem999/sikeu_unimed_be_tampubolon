@@ -26,6 +26,6 @@ export class DTO_ValidationMenuUpdate {
 
   @IsOptional()
   @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Order number' }) })
-  @IsOrderNumberMenuUpdate()
+  // @IsOrderNumberMenuUpdate()
   order_number!: number;
 }
