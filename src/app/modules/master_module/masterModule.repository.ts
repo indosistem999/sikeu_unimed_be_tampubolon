@@ -48,31 +48,49 @@ class MasterModuleRepository implements I_MasterModuleRepository {
     async fetchAll(payload: Record<string, any>): Promise<I_ResultService> {
         try {
 
-            const queryBuilder = this.moduleRepo.createQueryBuilder(propSchema.tableName)
-                .where('master_module.deleted_at is null');
+            const queryBuilder = this.moduleRepo.createQueryBuilder(`${propSchema.alias}`)
+                .select([
+                    `${propSchema.alias}.module_id as module_id`,
+                    `${propSchema.alias}.module_name as module_name`,
+                    `${propSchema.alias}.module_path as module_path`,
+                    `${propSchema.alias}.order_number as order_number`,
+                    `CASE
+                            WHEN ${propSchema.alias}.icon IS NULL
+                            THEN NULL
+                            WHEN ${propSchema.alias}.icon = ''
+                            THEN NULL
+                            ELSE CONCAT('${payload?.base_url}', '/', ${propSchema.alias}.icon)
+                        END
+                    as icon`,
+                    `${propSchema.alias}.created_at as created_at`,
+                    `${propSchema.alias}.created_by as created_by`,
+                    `${propSchema.alias}.updated_at as updated_at`,
+                    `${propSchema.alias}.updated_by as updated_by`,
+                ])
+                .where(`${propSchema.alias}.deleted_at is null`);
 
             if (payload?.search !== null) {
                 const { search } = payload;
                 queryBuilder.andWhere(
-                    '(master_module.module_name LIKE :search OR master_module.module_path LIKE :search)',
+                    `(${propSchema.alias}.module_name LIKE :search OR ${propSchema.alias}.module_path LIKE :search)`,
                     { search: `%${search}%` }
                 );
             }
 
             if (payload?.sorting && payload?.sorting?.length > 0) {
                 payload?.sorting.forEach((sort: any) => {
-                    queryBuilder.addOrderBy(`master_module.${sort.column}`, sort.order);
+                    queryBuilder.addOrderBy(`${propSchema.alias}.${sort.column}`, sort.order);
                 });
             }
 
-            const [rows, count] = await queryBuilder.getManyAndCount()
+            const rows = await queryBuilder.getRawMany()
 
             return {
                 success: true,
                 message: MessageDialog.__('success.masterModule.fetchAll'),
                 record: {
                     rows,
-                    total_row: count
+                    total_row: rows.length
                 }
             }
         } catch (err: any) {

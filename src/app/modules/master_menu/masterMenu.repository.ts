@@ -25,6 +25,7 @@ class MasterMenuRepository implements I_MasterMenuRepository {
       let result = await this.repository.find({
         where: {
           deleted_at: IsNull(),
+          module_id: filters?.module_id
         },
         relations: [
           'parent',

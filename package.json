@@ -15,6 +15,7 @@
     "typeorm": "typeorm-ts-node-commonjs -d ./src/config/dbconfig.ts",
     "migration:generate": "npm run typeorm migration:generate",
     "migration:show": "npm run typeorm migration:show",
+    "migration:revert": "npm run typeorm migration:revert",
     "migration:run": "npm run typeorm migration:run",
     "seed": "ts-node src/database/seeders/index.ts"
   },

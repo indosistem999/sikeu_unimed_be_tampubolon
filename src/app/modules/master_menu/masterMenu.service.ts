@@ -44,7 +44,8 @@ class MasterMenuService implements I_MasterMenuService {
   async fetch(req: Request, res: Response): Promise<Response> {
     const filters: Record<string, any> = {
       sorting: defineRequestOrder(req, sortDefault, sortRequest),
-      search: (req?.query?.search as string) || null
+      search: (req?.query?.search as string) || null,
+      module_id: req?.query?.module_id
     }
 
     const result = await this.repository.fetch(filters)

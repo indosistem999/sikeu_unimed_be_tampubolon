@@ -18,7 +18,7 @@ export class ModuleMenuAssociation {
   @JoinColumn({ name: 'module_access_id' })
   module_menus!: RoleModuleAssociation;
 
-  @OneToOne(() => MasterMenu, (value) => value.access_menu, { eager: true })
+  @OneToOne(() => MasterMenu, (value) => value.access_menu)
   @JoinColumn({ name: 'menu_id' })
   menu!: MasterMenu;
 

@@ -42,7 +42,7 @@ class FeatureAccessRepository implements I_FeatureAccessRepository {
 
     try {
       const result = await this.featureRepo.insert(payload);
-
+      console.log({ ResultRow: result })
       return {
         success: true,
         record: {

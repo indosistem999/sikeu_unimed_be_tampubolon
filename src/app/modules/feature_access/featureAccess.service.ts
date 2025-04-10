@@ -44,6 +44,8 @@ class FeatureAccessService implements I_FeatureAccessService {
       ...this.bodyValidation(req),
     }
 
+    console.log({ payload })
+
     const result = await this.repository.store(roleId, payload);
 
     if (!result?.success) {
