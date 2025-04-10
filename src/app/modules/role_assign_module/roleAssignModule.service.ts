@@ -36,7 +36,6 @@ class RoleAssignModuleService implements I_RoleAssignModuleService {
   }
 
 
-
   /** Store Identity */
   async store(req: I_RequestCustom, res: Response): Promise<Response> {
     const today: Date = new Date(standartDateISO())
@@ -49,8 +48,6 @@ class RoleAssignModuleService implements I_RoleAssignModuleService {
       updated_by: req?.user?.user_id,
       ...this.bodyValidation(req),
     }
-
-    console.log({ roleId, payload })
 
     const result = await this.repository.store(roleId, payload);
 

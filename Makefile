@@ -59,7 +59,7 @@ restart-db:
 	docker restart finance_mysql 
 
 pm-dev:
-	pm2 start npm --name sikeu-dev -- run dev
+	pm2 start npm --name sikeu-api -- run dev
 
 pm-log:
 	pm2 logs $(app-pm-name)

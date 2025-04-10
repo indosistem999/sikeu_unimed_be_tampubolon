@@ -31,9 +31,8 @@ class RoleAssignModuleRepository implements I_RoleAssignModuleRepository {
           'association.module_id = module.module_id'
         )
         .select([
-          "module.module_id",
-          "module.module_name",
-          "module.icon",
+          "module.module_id as module_id",
+          "module.module_name as module_name",
           `(
             CASE
               WHEN module.icon IS NULL
@@ -43,9 +42,9 @@ class RoleAssignModuleRepository implements I_RoleAssignModuleRepository {
               ELSE CONCAT('${payload?.base_url}', '/', module.icon)
             END
           ) AS icon`,
-          "module.order_number",
-          "association.role_id",
-          "association.module_access_id",
+          "module.order_number as order_number",
+          "association.role_id as role_id",
+          "association.module_access_id as module_access_id",
           `(
             CASE 
               WHEN association.role_id = :role_id 
@@ -97,6 +96,41 @@ class RoleAssignModuleRepository implements I_RoleAssignModuleRepository {
         }
       }
 
+      const findAssoc = await this.assocRepo.findOne({
+        where: {
+          deleted_at: IsNull(),
+          master_module: {
+            module_id: module_id
+          },
+          role: {
+            role_id: roleId
+          }
+        },
+        relations: [
+          'role',
+          'master_module'
+        ],
+        select: {
+          module_access_id: true,
+          role: {
+            role_id: true,
+            role_name: true,
+          },
+          master_module: {
+            module_id: true,
+            module_name: true
+          }
+        }
+      })
+
+      if (findAssoc) {
+        return {
+          success: false,
+          message: MessageDialog.__('error.existed.roleModule'),
+          record: findAssoc
+        }
+      }
+
       const result = await this.assocRepo.save(this.assocRepo.create({
         role: rowRole as Roles,
         master_module: rowModule as MasterModule,
@@ -114,6 +148,7 @@ class RoleAssignModuleRepository implements I_RoleAssignModuleRepository {
         success: true,
         message: MessageDialog.__('success.roleModule.assigned'),
         record: {
+          module_access_id: result?.module_access_id,
           role_id: roleId,
           module_id: payload?.module_id,
           created_at: payload?.created_at

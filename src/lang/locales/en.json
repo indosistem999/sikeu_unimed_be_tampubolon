@@ -73,7 +73,8 @@
       "slugItem": "{{item}} with {{slug}} already exists",
       "workUnit": "{{item}} already existed",
       "orderNumber": "Order number {{value}} already exists in the database.",
-      "hasRegistered": "{{item}} already registered"
+      "hasRegistered": "{{item}} already registered",
+      "roleModule": "Data already existed. The Module had assigned to role"
     },
     "missing": {
       "tokenAuth": "Unauthorized: Token is missing",
