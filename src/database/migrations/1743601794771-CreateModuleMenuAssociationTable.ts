@@ -4,7 +4,8 @@ export class CreateModuleMenuAssociationTable1743601794771 implements MigrationI
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`CREATE TABLE module_menu_association (
       menu_access_id CHAR(36) PRIMARY KEY,
-      module_access_id CHAR(36),
+      module_access_id CHAR(36) DEFAULT NULL,
+      menu_id CHAR(36) DEFAULT NULL,
       access_name VARCHAR(255),  
       access_status TINYINT(1) DEFAULT 0,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -13,6 +14,8 @@ export class CreateModuleMenuAssociationTable1743601794771 implements MigrationI
       updated_by CHAR(36) NULL,
       deleted_at TIMESTAMP NULL,
       deleted_by CHAR(36) NULL,
+      CONSTRAINT fk_association_menu_id FOREIGN KEY (menu_id) 
+          REFERENCES master_menu(menu_id) ON DELETE SET NULL,
       CONSTRAINT fk_association_module_access_id FOREIGN KEY (module_access_id) 
           REFERENCES role_module_association(module_access_id) ON DELETE SET NULL
     );`);

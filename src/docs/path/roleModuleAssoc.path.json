@@ -1,7 +1,7 @@
 {
   "/role-assign-module/{role_id}": {
     "get": {
-      "tags": ["Assigned Module By Role"],
+      "tags": ["Hak Akses - Assigned Module To Role"],
       "security": [
         {
           "bearerAuth": []
@@ -31,7 +31,7 @@
       }
     },
     "post": {
-      "tags": ["Assigned Module By Role"],
+      "tags": ["Hak Akses - Assigned Module To Role"],
       "security": [
         {
           "bearerAuth": []
@@ -73,7 +73,7 @@
   },
   "/role-assign-module/{role_id}/{module_id}": {
     "delete": {
-      "tags": ["Assigned Module By Role"],
+      "tags": ["Hak Akses - Assigned Module To Role"],
       "security": [
         {
           "bearerAuth": []

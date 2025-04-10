@@ -1,14 +1,27 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 import { RoleModuleAssociation } from "./RoleModuleAssociation";
+import { MasterMenu } from "./MasterMenu";
 
 @Entity({ name: 'module_menu_association' })
 export class ModuleMenuAssociation {
   @PrimaryGeneratedColumn('uuid')
   menu_access_id!: string;
 
+  @Column({ name: 'module_access_id', type: 'uuid', default: null, nullable: true })
+  module_access_id!: string
+
+
+  @Column({ name: 'menu_id', type: 'uuid', default: null, nullable: true })
+  menu_id!: string
+
   @OneToOne(() => RoleModuleAssociation, (value) => value.role_module_access, { eager: true })
   @JoinColumn({ name: 'module_access_id' })
   module_menus!: RoleModuleAssociation;
+
+  @OneToOne(() => MasterMenu, (value) => value.access_menu, { eager: true })
+  @JoinColumn({ name: 'menu_id' })
+  menu!: MasterMenu;
+
 
   @Column({ type: 'text', default: null, nullable: true })
   access_name!: string;

@@ -14,6 +14,7 @@ import WorkUnitController from '../app/modules/work_unit/workUnit.controller';
 import UserController from '../app/modules/user/user.controller';
 import RoleController from '../app/modules/role/role.controller';
 import RoleAssignModuleController from '../app/modules/role_assign_module/roleAssignModule.controller'
+import FeatureAccessController from '../app/modules/feature_access/featureAccess.controller'
 
 const tagVersionOne: string = '/api/v1';
 
@@ -52,6 +53,9 @@ class RouteApplication extends MainRoutes {
 
     // API Assigned Module To Role
     this.router.use(`${tagVersionOne}/role-assign-module`, RoleAssignModuleController)
+
+    // API Feature Access
+    this.router.use(`${tagVersionOne}/feature-access`, FeatureAccessController)
   }
 }
 

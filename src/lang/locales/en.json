@@ -57,6 +57,9 @@
       "assigned": "Assigned module to role successfully",
       "softDelete": "Delete module and role from role module association successfully",
       "showModule": "Get modules successfully"
+    },
+    "accessMenu": {
+      "assigned": "Assigned access menu to role successfully"
     }
   },
   "error": {
@@ -90,7 +93,9 @@
       "storeUser": "Failed to store user",
       "storeRole": "Failed to store role",
       "assignRoleModule": "Assign role to module fail",
-      "unassignedRoleModule": "Unassigned module to role"
+      "unassignedRoleModule": "Unassigned module to role",
+      "featureList": "Your list feature are empty",
+      "assignMenuAccess": "Menu access has been assigned to the role. Some processes may fail."
     },
     "invalid": {
       "emailEntry": "Invalid email entry",

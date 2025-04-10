@@ -1,0 +1,86 @@
+{
+  "SchemaAssignFeatureAccess": {
+    "type": "object",
+    "properties": {
+      "features": {
+        "type": "array",
+        "summary": "Module Id (UUID)",
+        "default": {
+          "features": [
+            {
+              "module_access_id": "5f27b91d-d803-4b34-a155-3075b3b1b30f",
+              "list_menu": [
+                {
+                  "menu_id": "e5b640a8-ae86-4c4b-92d5-3c7bab4c938c",
+                  "list_access": [
+                    {
+                      "access_name": "read",
+                      "access_status": 1
+                    },
+                    {
+                      "access_name": "add",
+                      "access_status": 1
+                    },
+                    {
+                      "access_name": "edit",
+                      "access_status": 1
+                    },
+                    {
+                      "access_name": "delete",
+                      "access_status": 0
+                    },
+                    {
+                      "access_name": "print",
+                      "access_status": 0
+                    },
+                    {
+                      "access_name": "import",
+                      "access_status": 1
+                    },
+                    {
+                      "access_name": "export",
+                      "access_status": 1
+                    }
+                  ]
+                },
+                {
+                  "menu_id": "cb888767-9f47-436d-be0a-839d835727ea",
+                  "list_access": [
+                    {
+                      "access_name": "read",
+                      "access_status": 1
+                    },
+                    {
+                      "access_name": "add",
+                      "access_status": 1
+                    },
+                    {
+                      "access_name": "edit",
+                      "access_status": 1
+                    },
+                    {
+                      "access_name": "delete",
+                      "access_status": 0
+                    },
+                    {
+                      "access_name": "print",
+                      "access_status": 0
+                    },
+                    {
+                      "access_name": "import",
+                      "access_status": 0
+                    },
+                    {
+                      "access_name": "export",
+                      "access_status": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

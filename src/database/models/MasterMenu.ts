@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 import { MasterModule } from "./MasterModule";
+import { ModuleMenuAssociation } from "./ModuleMenuAssociation";
 
 @Entity({ name: 'master_menu' })
 export class MasterMenu {
@@ -60,4 +61,8 @@ export class MasterMenu {
 
   @Column({ name: 'deleted_by', type: 'uuid' })
   deleted_by!: string;
+
+
+  @OneToOne(() => ModuleMenuAssociation, (value) => value.menu, { eager: true })
+  access_menu!: ModuleMenuAssociation;
 }

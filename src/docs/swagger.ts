@@ -3,9 +3,9 @@ import createSwaggerSchema from './schema';
 
 const swaggerDocInfo: object = {
   description:
-    'Restfull API documentation for the Finance Core App.',
+    'Dokumentasi Restfull API Sistem Informasi Keuangan (Unimed)',
   version: '1.0.0',
-  title: 'Finance Core API',
+  title: 'SIKEU CORE API',
   contact: {
     email: '',
   },
