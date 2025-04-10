@@ -45,7 +45,7 @@ class MasterMenuService implements I_MasterMenuService {
     const filters: Record<string, any> = {
       sorting: defineRequestOrder(req, sortDefault, sortRequest),
       search: (req?.query?.search as string) || null,
-      module_id: req?.query?.module_id
+      module_id: req?.query?.module_id ? req?.query?.module_id : null
     }
 
     const result = await this.repository.fetch(filters)

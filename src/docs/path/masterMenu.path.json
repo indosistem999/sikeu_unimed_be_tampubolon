@@ -11,11 +11,11 @@
         {
           "in": "query",
           "name": "module_id",
-          "required": true,
+          "required": false,
           "schema": {
             "type": "string"
           },
-          "description": "Required to enter module_id."
+          "description": "Enter module_id to filter menu by module id"
         },
         {
           "in": "query",

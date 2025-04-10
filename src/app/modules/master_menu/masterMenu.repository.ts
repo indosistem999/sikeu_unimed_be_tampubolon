@@ -1,7 +1,7 @@
 import AppDataSource from '../../../config/dbconfig';
 import { Request } from 'express';
 import { I_ResultService } from '../../../interfaces/app.interface';
-import { IsNull } from 'typeorm';
+import { FindOptionsWhere, IsNull } from 'typeorm';
 import { MessageDialog } from '../../../lang';
 import { makeFullUrlFile, removeFileInStorage } from '../../../config/storages';
 import { I_MasterMenuRepository } from '../../../interfaces/masterMenu.interface';
@@ -22,13 +22,18 @@ class MasterMenuRepository implements I_MasterMenuRepository {
   /** Fetch Data */
   async fetch(filters: Record<string, any>): Promise<I_ResultService> {
     try {
+      let whereCondition: FindOptionsWhere<MasterMenu> = {
+        deleted_at: IsNull()
+      }
+
+      if (filters?.module_id != null && filters?.module_id != '') {
+        const moduleId: string = filters?.module_id
+        whereCondition = { ...whereCondition, master_module: { module_id: moduleId } }
+      }
+
+
       let result = await this.repository.find({
-        where: {
-          deleted_at: IsNull(),
-          master_module: {
-            module_id: filters?.module_id
-          }
-        },
+        where: whereCondition,
         relations: [
           'parent',
           'children',
