@@ -6,18 +6,18 @@ import { sendErrorResponse } from "../../../lib/utils/response.util";
 import { allSchema as sc } from "../../../constanta";
 import { MessageDialog } from "../../../lang";
 import AppDataSource from "../../../config/dbconfig";
-import { DTO_ValidationCreate, DTO_ValidationUpdate } from "./sppdPangkat.dto";
-import { SPPDPangkat } from "../../../database/models/SPPDPangkat";
+import { DTO_ValidationCreate, DTO_ValidationUpdate } from "./sppdJenisBiaya.dto";
+import { SPPDJenisBiaya } from "../../../database/models/SPPDJenisBiaya";
 
-class SPPDPangkatValidation {
+class SPPDJenisBiayaValidation {
 
 
     async paramValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
-        if (!req?.params?.[sc.sppd_pangkat.primaryKey]) {
+        if (!req?.params?.[sc.sppd_cost.primaryKey]) {
             sendErrorResponse(
                 res,
                 422,
-                MessageDialog.__('error.missing.requiredEntry', { label: 'Pangkat id' }),
+                MessageDialog.__('error.missing.requiredEntry', { label: 'Jenis biaya id' }),
                 null
             );
         }
@@ -27,7 +27,6 @@ class SPPDPangkatValidation {
 
     }
 
-    // Create
     async createValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
         const dtoInstance = plainToClass(DTO_ValidationCreate, req?.body);
         const errors = await validate(dtoInstance);
@@ -43,28 +42,24 @@ class SPPDPangkatValidation {
             );
         }
 
-        const row = await AppDataSource.getRepository(SPPDPangkat)
+        const row = await AppDataSource.getRepository(SPPDJenisBiaya)
             .createQueryBuilder('p')
-            .where(`p.golongan_romawi LIKE :GR`, { GR: `%${req.body.golongan_romawi || ''}%` })
-            .andWhere(`p.golongan_angka LIKE :GA`, { GA: `%${req.body.golongan_angka || ''}%` })
-            .andWhere(`p.pangkat LIKE :PP`, { PP: `%${req.body.pangkat || ''}%` })
+            .where(`p.code = :CODE`, { CODE: req?.body?.code })
+            .andWhere(`p.name LIKE :NAME`, { NAME: `%${req.body.name || ''}%` })
             .andWhere(`p.deleted_at IS NULL`)
-            .select([
-                `p.${sc.sppd_pangkat.primaryKey}`
-            ])
+            .select([`p.${sc.sppd_cost.primaryKey}`, 'p.code'])
             .getOne();
 
         if (row) {
-            sendErrorResponse(res, 400, MessageDialog.__('error.existed.sppdPangkat'), row)
+            sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Jenis transportasi ${row?.code}` }), row)
         }
 
         next()
 
     }
 
-    // Update
     async updateValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
-        const id: string = req?.params?.[sc.sppd_pangkat.primaryKey]
+        const id: string = req?.params?.[sc.sppd_cost.primaryKey]
         const dtoInstance = plainToInstance(DTO_ValidationUpdate, req.body);
         (dtoInstance as any).req = req;
 
@@ -86,29 +81,27 @@ class SPPDPangkatValidation {
         }
         else {
 
-            const row = await AppDataSource.getRepository(SPPDPangkat)
+            const row = await AppDataSource.getRepository(SPPDJenisBiaya)
                 .createQueryBuilder('p')
-                .where(`p.golongan_romawi LIKE :GR`, { GR: `%${req.body.golongan_romawi || ''}%` })
-                .andWhere(`p.golongan_angka LIKE :GA`, { GA: `%${req.body.golongan_angka || ''}%` })
-                .andWhere(`p.pangkat LIKE :PP`, { PP: `%${req.body.pangkat || ''}%` })
+                .where(`p.code = :CODE`, { CODE: req?.body?.code })
+                .andWhere(`p.name LIKE :NAME`, { NAME: `%${req.body.name || ''}%` })
                 .andWhere(`p.deleted_at IS NULL`)
                 .andWhere(
-                    `p.${sc.sppd_pangkat.primaryKey} != :id`, { id }
+                    `p.${sc.sppd_cost.primaryKey} != :id`, { id }
                 )
                 .select([
-                    `p.${sc.sppd_pangkat.primaryKey}`
+                    `p.${sc.sppd_cost.primaryKey}`,
+                    'p.code'
                 ])
                 .getOne()
 
 
-            const strMessage = `Data ${req.body.golongan_romawi}, ${req.body.golongan_angka} and ${req.body.pangkat} `
-
             if (row) {
                 sendErrorResponse(
                     res,
-                    422,
+                    400,
                     MessageDialog.__('error.existed.universal'),
-                    { item: strMessage }
+                    { item: `Jenis transportasi ${row?.cost_type_id} and ${row?.code}` }
                 );
             }
 
@@ -117,4 +110,4 @@ class SPPDPangkatValidation {
     }
 }
 
-export default new SPPDPangkatValidation();
+export default new SPPDJenisBiayaValidation();

@@ -1,4 +1,4 @@
-migration-file=CreateSppdJenisTransportasiTable
+migration-file=CreateSppdJenisBiayaTable
 entity-name=Users
 compose-file=docker-compose.local.yaml
 app-container-name=finance_core_app

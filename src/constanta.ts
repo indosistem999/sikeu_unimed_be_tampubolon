@@ -133,11 +133,15 @@ export const allSchema = {
     primaryKey: 'module_id',
   },
   sppd_pangkat: {
-    tableName: 'spd_pangkat_golongan',
+    tableName: 'sppd_pangkat_golongan',
     primaryKey: 'pangkat_id',
   },
   sppd_transportation: {
     tableName: 'sppd_jenis_transportasi',
     primaryKey: 'transportation_type_id',
+  },
+  sppd_cost: {
+    tableName: 'sppd_jenis_biaya',
+    primaryKey: 'cost_type_id',
   }
 }

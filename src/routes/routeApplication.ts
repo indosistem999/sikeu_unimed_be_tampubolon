@@ -18,7 +18,8 @@ import FeatureAccessController from '../app/modules/feature_access/featureAccess
 
 // SPPD
 import SPPDPangkatController from '../app/modules/sppd_pangkat/sppdPangkat.controller';
-import SPPDJenisTransportasiController from '../app/modules/sppd_jenis_transportasi/sppdJenisTransportasi.controller'
+import SPPDJenisTransportasiController from '../app/modules/sppd_jenis_transportasi/sppdJenisTransportasi.controller';
+import SPPDJenisBiayaController from '../app/modules/sppd_jenis_biaya/sppdJenisBiaya.controller'
 
 const tagVersionOne: string = '/api/v1';
 
@@ -69,6 +70,9 @@ class RouteApplication extends MainRoutes {
 
     // SPPD Jenis Transportasi
     this.router.use(`${tagVersionOne}/sppd-jenis-transportasi`, SPPDJenisTransportasiController)
+
+    // SPPD Jeni Biaya
+    this.router.use(`${tagVersionOne}/sppd-jenis-biaya`, SPPDJenisBiayaController)
 
   }
 }

@@ -45,9 +45,9 @@ class SPPDJenisTransportasiValidation {
         const row = await AppDataSource.getRepository(SPPDJenisTransportasi)
             .createQueryBuilder('p')
             .where(`p.code = :CODE`, { CODE: req?.body?.code })
-            .andWhere(`p.name LIKE :NAME`, { NAME: `%${req.body.golongan_angka || ''}%` })
+            .andWhere(`p.name LIKE :NAME`, { NAME: `%${req.body.name || ''}%` })
             .andWhere(`p.deleted_at IS NULL`)
-            .select(['p.transportation_type_id', 'p.code'])
+            .select([`p.${sc.sppd_transportation.primaryKey}`, 'p.code'])
             .getOne();
 
         if (row) {
@@ -84,13 +84,13 @@ class SPPDJenisTransportasiValidation {
             const row = await AppDataSource.getRepository(SPPDJenisTransportasi)
                 .createQueryBuilder('p')
                 .where(`p.code = :CODE`, { CODE: req?.body?.code })
-                .andWhere(`p.name LIKE :NAME`, { NAME: `%${req.body.golongan_angka || ''}%` })
+                .andWhere(`p.name LIKE :NAME`, { NAME: `%${req.body.name || ''}%` })
                 .andWhere(`p.deleted_at IS NULL`)
                 .andWhere(
-                    'transportation_type_id != :id', { id }
+                    `p.${sc.sppd_transportation.primaryKey} != :id`, { id }
                 )
                 .select([
-                    'p.transportation_type_id',
+                    `p.${sc.sppd_transportation.primaryKey}`,
                     'p.code'
                 ])
                 .getOne()

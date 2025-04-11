@@ -1,0 +1,32 @@
+{
+  "SchemaCreateSppdJenisBiaya": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "string",
+        "summary": "Kode Jenis Biaya",
+        "default": "B"
+      },
+      "name": {
+        "type": "string",
+        "summary": "Jenis Biaya",
+        "default": "Uang harian"
+      }
+    }
+  },
+  "SchemaUpdateSppdJenisBiaya": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "string",
+        "summary": "Kode Jenis Biaya",
+        "default": "B"
+      },
+      "name": {
+        "type": "string",
+        "summary": "Jenis Biaya",
+        "default": "Uang harian"
+      }
+    }
+  }
+}

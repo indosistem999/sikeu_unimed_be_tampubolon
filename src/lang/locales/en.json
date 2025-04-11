@@ -62,18 +62,25 @@
       "assigned": "Assigned access menu to role successfully"
     },
     "sppdPangkat": {
-      "findItem": "Get spd pangkat {{item}} successfully",
-      "fetch": "Get spd pangkat successfully",
+      "findItem": "Get Sppd Pangkat {{item}} successfully",
+      "fetch": "Get Sppd Pangkat successfully",
       "store": "Sppd Pangkat added successfully",
       "update": "Sppd Pangkat edited successfully",
       "softDelete": "Sppd Pangkat deleted successfully"
     },
     "sppdJenisTransportasi": {
-      "findItem": "Get spd pangkat {{item}} successfully",
-      "fetch": "Get spd pangkat successfully",
+      "findItem": "Get Sppd Jenis Transportasi {{item}} successfully",
+      "fetch": "Get Sppd Jenis Transportasi successfully",
       "store": "Sppd Jenis Transportasi added successfully",
       "update": "Sppd Jenis Transportasi edited successfully",
       "softDelete": "Sppd Jenis Transportasi deleted successfully"
+    },
+    "sppdJenisBiaya": {
+      "findItem": "Get Sppd Jenis Biaya {{item}} successfully",
+      "fetch": "Get Sppd Jenis Biaya successfully",
+      "store": "Sppd Jenis Biaya added successfully",
+      "update": "Sppd Jenis Biaya edited successfully",
+      "softDelete": "Sppd Jenis Biaya deleted successfully"
     }
   },
   "error": {
@@ -113,7 +120,9 @@
       "unassignedRoleModule": "Unassigned module to role",
       "featureList": "Your list feature are empty",
       "assignMenuAccess": "Menu access has been assigned to the role. Some processes may fail.",
-      "storeSppdPangkat": "Failed to store spd pangkat"
+      "storeSppdPangkat": "Failed to store spd pangkat",
+      "storeSppdJenisTransportasi": "Failed to store spd jenis transportasi",
+      "storeSppdJenisBiaya": "Failed to store spd jenis biaya"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",
