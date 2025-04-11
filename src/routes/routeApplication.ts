@@ -16,6 +16,9 @@ import RoleController from '../app/modules/role/role.controller';
 import RoleAssignModuleController from '../app/modules/role_assign_module/roleAssignModule.controller'
 import FeatureAccessController from '../app/modules/feature_access/featureAccess.controller'
 
+// SPPD
+import SPPDPangkatController from '../app/modules/sppd_pangkat/sppdPangkat.controller'
+
 const tagVersionOne: string = '/api/v1';
 
 class RouteApplication extends MainRoutes {
@@ -56,6 +59,13 @@ class RouteApplication extends MainRoutes {
 
     // API Feature Access
     this.router.use(`${tagVersionOne}/feature-access`, FeatureAccessController)
+
+
+    /** SPPD */
+
+    // SPPD Pangkat dan Golongan
+    this.router.use(`${tagVersionOne}/sppd-pangkat-golongan`, SPPDPangkatController)
+
   }
 }
 

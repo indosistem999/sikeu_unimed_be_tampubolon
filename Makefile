@@ -1,6 +1,6 @@
 migration-file=CreateSPDPangkatGolonganTable
 entity-name=Users
-compose-file=docker-compose.dev.yaml
+compose-file=docker-compose.local.yaml
 app-container-name=finance_core_app
 app-pm-name=sikeu-dev
 

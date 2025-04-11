@@ -8,7 +8,7 @@ import {
     OneToMany,
 } from 'typeorm';
 import { Users } from './Users';
-import { SPDPegawai } from './SPDPegawai';
+import { SPPDPegawai } from './SPPDPegawai';
 
 
 @Entity({ name: 'master_work_unit' })
@@ -47,6 +47,6 @@ export class MasterWorkUnit {
     users!: Users[]
 
 
-    @OneToMany(() => SPDPegawai, (value: any) => value.work_unit, { eager: true })
-    pegawai!: SPDPegawai[]
+    @OneToMany(() => SPPDPegawai, (value: any) => value.work_unit, { eager: true })
+    pegawai!: SPPDPegawai[]
 }

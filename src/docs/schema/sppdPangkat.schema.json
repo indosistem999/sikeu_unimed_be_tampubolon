@@ -1,0 +1,42 @@
+{
+  "SchemaCreateSppdPangkat": {
+    "type": "object",
+    "properties": {
+      "golongan_romawi": {
+        "type": "string",
+        "summary": "Golongan Romawi",
+        "default": "II/a"
+      },
+      "golongan_angka": {
+        "type": "string",
+        "summary": "Golongan Angka",
+        "default": "2"
+      },
+      "pangkat": {
+        "type": "string",
+        "summary": "Pangkat",
+        "default": "Pengatur Muda Tingkat I"
+      }
+    }
+  },
+  "SchemaUpdateSppdPangkat": {
+    "type": "object",
+    "properties": {
+      "golongan_romawi": {
+        "type": "string",
+        "summary": "Golongan Romawi",
+        "default": "II/a"
+      },
+      "golongan_angka": {
+        "type": "string",
+        "summary": "Golongan Angka",
+        "default": "2"
+      },
+      "pangkat": {
+        "type": "string",
+        "summary": "Pangkat",
+        "default": "Pengatur Muda Tingkat I"
+      }
+    }
+  }
+}

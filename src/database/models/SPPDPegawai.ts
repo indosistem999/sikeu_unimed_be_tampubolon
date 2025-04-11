@@ -11,10 +11,10 @@ import {
     ManyToOne,
 } from 'typeorm';
 import { MasterWorkUnit } from './MasterWorkUnit';
-import { SPDPangkat } from './SPDPangkat';
+import { SPPDPangkat } from './SPPDPangkat';
 
-@Entity({ name: 'spd_pegawai' })
-export class SPDPegawai {
+@Entity({ name: 'sppd_pegawai' })
+export class SPPDPegawai {
     @PrimaryGeneratedColumn('uuid')
     pegawai_id!: string;
 
@@ -87,7 +87,7 @@ export class SPDPegawai {
     pangkat_id!: string
 
 
-    @OneToOne(() => SPDPangkat, (value: any) => value.pegawai)
+    @OneToOne(() => SPPDPangkat, (value: any) => value.pegawai)
     @JoinColumn({ name: 'pangkat_id' })
-    pangkat_golongan!: SPDPangkat
+    pangkat_golongan!: SPPDPangkat
 }

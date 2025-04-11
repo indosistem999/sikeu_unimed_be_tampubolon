@@ -131,5 +131,9 @@ export const allSchema = {
   module: {
     tableName: 'master_module',
     primaryKey: 'module_id',
+  },
+  spd_pangkat: {
+    tableName: 'spd_pangkat_golongan',
+    primaryKey: 'pangkat_id',
   }
 }

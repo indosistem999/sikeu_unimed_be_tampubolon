@@ -3,7 +3,7 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 export class CreateSPDEmployeeTable1744336380190 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`CREATE TABLE spd_pegawai (
+        await queryRunner.query(`CREATE TABLE sppd_pegawai (
           pegawai_id CHAR(36) PRIMARY KEY,
           nik VARCHAR(255) UNIQUE,
           nip VARCHAR(255) UNIQUE,
@@ -26,13 +26,13 @@ export class CreateSPDEmployeeTable1744336380190 implements MigrationInterface {
           updated_by CHAR(36) NULL,
           deleted_at TIMESTAMP NULL,
           deleted_by CHAR(36) NULL,
-          CONSTRAINT fk_pegawai_pangkat_id FOREIGN KEY (pangkat_id) REFERENCES spd_pangkat_golongan(pangkat_id) ON DELETE SET NULL,
+          CONSTRAINT fk_pegawai_pangkat_id FOREIGN KEY (pangkat_id) REFERENCES sppd_pangkat_golongan(pangkat_id) ON DELETE SET NULL,
           CONSTRAINT fk_pegawai_unit_id FOREIGN KEY (unit_id) REFERENCES master_work_unit(unit_id) ON DELETE SET NULL
         );`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`DROP TABLE spd_pegawai`);
+        await queryRunner.query(`DROP TABLE sppd_pegawai`);
     }
 
 }

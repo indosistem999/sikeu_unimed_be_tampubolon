@@ -60,6 +60,13 @@
     },
     "accessMenu": {
       "assigned": "Assigned access menu to role successfully"
+    },
+    "spdPangkat": {
+      "findItem": "Get spd pangkat {{item}} successfully",
+      "fetch": "Get spd pangkat successfully",
+      "store": "Spd Pangkat added successfully",
+      "update": "Spd Pangkat edited successfully",
+      "softDelete": "Spd Pangkat deleted successfully"
     }
   },
   "error": {
@@ -74,7 +81,8 @@
       "workUnit": "{{item}} already existed",
       "orderNumber": "Order number {{value}} already exists in the database.",
       "hasRegistered": "{{item}} already registered",
-      "roleModule": "Data already existed. The Module had assigned to role"
+      "roleModule": "Data already existed. The Module had assigned to role",
+      "spdPangkat": "Data spd pangkat already existed"
     },
     "missing": {
       "tokenAuth": "Unauthorized: Token is missing",
@@ -96,7 +104,8 @@
       "assignRoleModule": "Assign role to module fail",
       "unassignedRoleModule": "Unassigned module to role",
       "featureList": "Your list feature are empty",
-      "assignMenuAccess": "Menu access has been assigned to the role. Some processes may fail."
+      "assignMenuAccess": "Menu access has been assigned to the role. Some processes may fail.",
+      "storeSpdPangkat": "Failed to store spd pangkat"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",
