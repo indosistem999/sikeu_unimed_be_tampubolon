@@ -19,7 +19,7 @@ class SPPDJenisTransportasi implements I_SPPDJenisTransportasiService {
         }
 
         if (req?.body?.name) {
-            payload.name = req?.body?.golonganname_angka
+            payload.name = req?.body?.name
         }
 
 

@@ -7,7 +7,8 @@ export class CreateSppdJenisTransportasiTable1743601665297 implements MigrationI
         await queryRunner.query(`CREATE TABLE sppd_jenis_transportasi (
             transportation_type_id CHAR(36) PRIMARY KEY,
             code VARCHAR(200) DEFAULT NULL,
-            nama TEXT DEFAULT NULL,
+            name TEXT DEFAULT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
             created_by CHAR(36) NULL,
             updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
             updated_by CHAR(36) NULL,

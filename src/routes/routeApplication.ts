@@ -17,7 +17,8 @@ import RoleAssignModuleController from '../app/modules/role_assign_module/roleAs
 import FeatureAccessController from '../app/modules/feature_access/featureAccess.controller'
 
 // SPPD
-import SPPDPangkatController from '../app/modules/sppd_pangkat/sppdPangkat.controller'
+import SPPDPangkatController from '../app/modules/sppd_pangkat/sppdPangkat.controller';
+import SPPDJenisTransportasiController from '../app/modules/sppd_jenis_transportasi/sppdJenisTransportasi.controller'
 
 const tagVersionOne: string = '/api/v1';
 
@@ -65,6 +66,9 @@ class RouteApplication extends MainRoutes {
 
     // SPPD Pangkat dan Golongan
     this.router.use(`${tagVersionOne}/sppd-pangkat-golongan`, SPPDPangkatController)
+
+    // SPPD Jenis Transportasi
+    this.router.use(`${tagVersionOne}/sppd-jenis-transportasi`, SPPDJenisTransportasiController)
 
   }
 }

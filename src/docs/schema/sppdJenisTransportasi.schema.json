@@ -1,0 +1,32 @@
+{
+  "SchemaCreateSppdJenisTransportasi": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "string",
+        "summary": "Kode Jenis Transportasi",
+        "default": "A"
+      },
+      "name": {
+        "type": "string",
+        "summary": "Jenis Transportasi",
+        "default": "Pesawat Terbang"
+      }
+    }
+  },
+  "SchemaUpdateSppdJenisTransportasi": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "string",
+        "summary": "Kode Jenis Transportasi",
+        "default": "A"
+      },
+      "name": {
+        "type": "string",
+        "summary": "Jenis Transportasi",
+        "default": "Pesawat Terbang"
+      }
+    }
+  }
+}
