@@ -44,3 +44,5 @@ uploads
 .git
 .gitignore
 .config
+
+yarn.lock

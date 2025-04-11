@@ -10,11 +10,14 @@ services:
     ports:
       - '${APP_PORT}:${APP_PORT}'
     volumes:
-      - .:/app
-      - /app/node_modules
+      - './logs/:/app/logs/'
     networks:
       - sikeu_core_network
-    command: ['yarn', 'pm2:start']
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '100m'
+        max-file: '5'
 
 networks:
   sikeu_core_network:

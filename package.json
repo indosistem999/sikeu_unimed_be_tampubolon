@@ -8,7 +8,7 @@
     "lint:fix": "eslint --max-warnings=0 --cache --cache-location ./.eslintcache --fix ./src --ext .js,.ts -c ./.eslintrc.js",
     "format": "eslint src/**/*.ts --fix",
     "pretty": "prettier --write \"src/**/*.ts\"",
-    "dev": "cross-env NODE_ENV=development ts-node-dev --poll --files --respawn src/server.ts",
+    "dev": "cross-env NODE_ENV=development ts-node-dev src/server.ts",
     "build": "rimraf dist && tsc --module NodeNext && mkdir dist\\lang\\locales",
     "start:prod": "NODE_ENV=production node --import tsx dist/server.js",
     "pm2:start": "pm2 start dist/server.js --name sikeu-api --interpreter node -- --import tsx",

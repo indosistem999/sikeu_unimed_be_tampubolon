@@ -2,7 +2,6 @@
 FROM node:22.14.0-alpine
 
 # Set timezone and install necessary packages efficiently
-RUN npm install -g npm
 RUN apk update && apk add --no-cache \
     yarn \
     tzdata \
@@ -28,12 +27,10 @@ RUN yarn add --dev ts-node nodemon
 # Copy remaining application files
 COPY . .
 
-# Ensure logs directory exists and is owned by the app user
-# RUN mkdir -p /app/logs && chown -R app:app /app/logs && chmod -R 777 /app/logs
+RUN rm -rf .env
 
+RUN cp .env.example .env
 
-# Switch to non-root user for execution
-# USER app
 
 # Define default command for development
 CMD ["yarn", "dev"]

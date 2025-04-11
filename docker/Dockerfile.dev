@@ -2,7 +2,6 @@
 FROM node:22.14.0-alpine
 
 # Set timezone and install necessary packages efficiently
-RUN npm install -g npm
 RUN apk update && apk add --no-cache \
     yarn \
     tzdata \
@@ -17,7 +16,7 @@ RUN apk update && apk add --no-cache \
 WORKDIR /app
 
 # Copy essential files first to optimize caching
-COPY package.json yarn.lock ./
+COPY package.json ./
 
 # Install dependencies before copying source code (leverages Docker layer caching)
 RUN yarn install --frozen-lockfile
@@ -28,12 +27,6 @@ RUN yarn add --dev ts-node nodemon
 # Copy remaining application files
 COPY . .
 
-# Ensure logs directory exists and is owned by the app user
-# RUN mkdir -p /app/logs && chown -R app:app /app/logs && chmod -R 777 /app/logs
-
-
-# Switch to non-root user for execution
-# USER app
 
 # Define default command for development
 CMD ["yarn", "dev"]
