@@ -6,18 +6,18 @@ import { sendErrorResponse } from "../../../lib/utils/response.util";
 import { allSchema as sc } from "../../../constanta";
 import { MessageDialog } from "../../../lang";
 import AppDataSource from "../../../config/dbconfig";
-import { DTO_ValidationCreate, DTO_ValidationUpdate } from "./sppdPangkat.dto";
-import { SPPDPangkat } from "../../../database/models/SPPDPangkat";
+import { DTO_ValidationCreate, DTO_ValidationUpdate } from "./sppdJenisTransportasi.dto";
+import { SPPDJenisTransportasi } from "../../../database/models/SPPDJenisTransportasi";
 
-class SPPDPangkatValidation {
+class SPPDJenisTransportasiValidation {
 
 
     async paramValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
-        if (!req?.params?.[sc.sppd_pangkat.primaryKey]) {
+        if (!req?.params?.[sc.sppd_transportation.primaryKey]) {
             sendErrorResponse(
                 res,
                 422,
-                MessageDialog.__('error.missing.requiredEntry', { label: 'Pangkat id' }),
+                MessageDialog.__('error.missing.requiredEntry', { label: 'Jenis transportasi id' }),
                 null
             );
         }
@@ -27,7 +27,6 @@ class SPPDPangkatValidation {
 
     }
 
-    // Create
     async createValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
         const dtoInstance = plainToClass(DTO_ValidationCreate, req?.body);
         const errors = await validate(dtoInstance);
@@ -43,26 +42,24 @@ class SPPDPangkatValidation {
             );
         }
 
-        const row = await AppDataSource.getRepository(SPPDPangkat)
+        const row = await AppDataSource.getRepository(SPPDJenisTransportasi)
             .createQueryBuilder('p')
-            .where(`p.golongan_romawi LIKE :GR`, { GR: `%${req.body.golongan_romawi || ''}%` })
-            .andWhere(`p.golongan_angka LIKE :GA`, { GA: `%${req.body.golongan_angka || ''}%` })
-            .andWhere(`p.pangkat LIKE :PP`, { PP: `%${req.body.pangkat || ''}%` })
+            .where(`p.code = :CODE`, { CODE: req?.body?.code })
+            .andWhere(`p.name LIKE :NAME`, { NAME: `%${req.body.golongan_angka || ''}%` })
             .andWhere(`p.deleted_at IS NULL`)
-            .select(['p.pangkat_id'])
+            .select(['p.transportation_type_id', 'p.code'])
             .getOne();
 
         if (row) {
-            sendErrorResponse(res, 400, MessageDialog.__('error.existed.sppdPangkat'), row)
+            sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Jenis transportasi ${row?.code}` }), row)
         }
 
         next()
 
     }
 
-    // Update
     async updateValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
-        const pangkat_id: string = req?.params?.[sc.sppd_pangkat.primaryKey]
+        const id: string = req?.params?.[sc.sppd_transportation.primaryKey]
         const dtoInstance = plainToInstance(DTO_ValidationUpdate, req.body);
         (dtoInstance as any).req = req;
 
@@ -84,29 +81,27 @@ class SPPDPangkatValidation {
         }
         else {
 
-            const row = await AppDataSource.getRepository(SPPDPangkat)
+            const row = await AppDataSource.getRepository(SPPDJenisTransportasi)
                 .createQueryBuilder('p')
-                .where(`p.golongan_romawi LIKE :GR`, { GR: `%${req.body.golongan_romawi || ''}%` })
-                .andWhere(`p.golongan_angka LIKE :GA`, { GA: `%${req.body.golongan_angka || ''}%` })
-                .andWhere(`p.pangkat LIKE :PP`, { PP: `%${req.body.pangkat || ''}%` })
+                .where(`p.code = :CODE`, { CODE: req?.body?.code })
+                .andWhere(`p.name LIKE :NAME`, { NAME: `%${req.body.golongan_angka || ''}%` })
                 .andWhere(`p.deleted_at IS NULL`)
                 .andWhere(
-                    'pangkat_id != :pangkat_id', { pangkat_id }
+                    'transportation_type_id != :id', { id }
                 )
                 .select([
-                    'p.pangkat_id'
+                    'p.transportation_type_id',
+                    'p.code'
                 ])
                 .getOne()
 
 
-            const strMessage = `Data ${req.body.golongan_romawi}, ${req.body.golongan_angka} and ${req.body.pangkat} `
-
             if (row) {
                 sendErrorResponse(
                     res,
-                    422,
+                    400,
                     MessageDialog.__('error.existed.universal'),
-                    { item: strMessage }
+                    { item: `Jenis transportasi ${row?.transportation_type_id} and ${row?.code}` }
                 );
             }
 
@@ -115,4 +110,4 @@ class SPPDPangkatValidation {
     }
 }
 
-export default new SPPDPangkatValidation();
+export default new SPPDJenisTransportasiValidation();

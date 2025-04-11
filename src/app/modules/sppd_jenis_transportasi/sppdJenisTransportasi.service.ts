@@ -2,29 +2,26 @@ import { Request, Response } from 'express';
 import { sendErrorResponse, sendSuccessResponse } from '../../../lib/utils/response.util';
 import { I_RequestCustom } from '../../../interfaces/app.interface';
 import { standartDateISO } from '../../../lib/utils/common.util';
-import { SPPDPangkatRepository } from './sppdPangkat.repository';
-import { I_SPPDPangkatService } from '../../../interfaces/sppdPangkat.interface';
 import { defineRequestOrderORM, defineRequestPaginateArgs } from '../../../lib/utils/request.util';
-import { sortDefault, sortRequest } from './sppdPangkat.constanta';
+import { sortDefault, sortRequest } from './sppdJenisTransportasi.constanta';
 import { allSchema as sc } from '../../../constanta'
+import { I_SPPDJenisTransportasiService } from '../../../interfaces/sppdJenisTransportasi.transportasi';
+import { SPPDJenisTransportasiRepository } from './sppdJenisTransportasi.repository';
 
-class SPPDPangkatService implements I_SPPDPangkatService {
-    private readonly repository = new SPPDPangkatRepository();
+class SPPDJenisTransportasi implements I_SPPDJenisTransportasiService {
+    private readonly repository = new SPPDJenisTransportasiRepository();
 
     bodyValidation(req: Request): Record<string, any> {
         const payload: Record<string, any> = {};
 
-        if (req?.body?.golongan_romawi) {
-            payload.golongan_romawi = req?.body?.golongan_romawi
+        if (req?.body?.code) {
+            payload.code = req?.body?.code
         }
 
-        if (req?.body?.golongan_angka) {
-            payload.golongan_angka = req?.body?.golongan_angka
+        if (req?.body?.name) {
+            payload.name = req?.body?.golonganname_angka
         }
 
-        if (req?.body?.pangkat) {
-            payload.pangkat = req?.body?.pangkat
-        }
 
         return payload;
     }
@@ -46,7 +43,7 @@ class SPPDPangkatService implements I_SPPDPangkatService {
 
     /** Fetch By Id */
     async fetchById(req: Request, res: Response): Promise<Response> {
-        const id: string = req?.params?.[sc.sppd_pangkat.primaryKey]
+        const id: string = req?.params?.[sc.sppd_transportation.primaryKey]
         const result = await this.repository.fetchById(id)
 
         if (!result?.success) {
@@ -78,7 +75,7 @@ class SPPDPangkatService implements I_SPPDPangkatService {
     /** Update By Id */
     async update(req: I_RequestCustom, res: Response): Promise<Response> {
         const today: Date = new Date(standartDateISO())
-        const id: string = req?.params?.[sc.sppd_pangkat.primaryKey];
+        const id: string = req?.params?.[sc.sppd_transportation.primaryKey];
         let payload: Record<string, any> = {
             updated_at: today,
             updated_by: req?.user?.user_id,
@@ -97,7 +94,7 @@ class SPPDPangkatService implements I_SPPDPangkatService {
     /** Soft Delete By Id */
     async softDelete(req: I_RequestCustom, res: Response): Promise<Response> {
         const today: Date = new Date(standartDateISO())
-        const id: string = req?.params?.[sc.sppd_pangkat.primaryKey];
+        const id: string = req?.params?.[sc.sppd_transportation.primaryKey];
         let payload: Record<string, any> = {
             deleted_at: today,
             deleted_by: req?.user?.user_id,
@@ -112,4 +109,4 @@ class SPPDPangkatService implements I_SPPDPangkatService {
     }
 }
 
-export default new SPPDPangkatService();
+export default new SPPDJenisTransportasi();

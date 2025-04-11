@@ -1,15 +1,15 @@
 import { IsNull, Like } from "typeorm";
 import AppDataSource from "../../../config/dbconfig";
-import { SPPDPangkat } from "../../../database/models/SPPDPangkat";
 import { I_ResultService } from "../../../interfaces/app.interface";
-import { I_SPPDPangkatRepository } from "../../../interfaces/sppdPangkat.interface";
 import { MessageDialog } from "../../../lang";
 import { I_ResponsePagination } from "../../../interfaces/pagination.interface";
 import { setPagination } from "../../../lib/utils/pagination.util";
+import { I_SPPDJenisTransportasiRepository } from "../../../interfaces/sppdJenisTransportasi.transportasi";
+import { SPPDJenisTransportasi } from "../../../database/models/SPPDJenisTransportasi";
 
 
-export class SPPDPangkatRepository implements I_SPPDPangkatRepository {
-    private repository = AppDataSource.getRepository(SPPDPangkat);
+export class SPPDJenisTransportasiRepository implements I_SPPDJenisTransportasiRepository {
+    private repository = AppDataSource.getRepository(SPPDJenisTransportasi);
 
     setupErrorMessage(error: any): I_ResultService {
         return {
@@ -28,9 +28,8 @@ export class SPPDPangkatRepository implements I_SPPDPangkatRepository {
             if (paging?.search && paging?.search != '' && paging?.search != null) {
                 const searchTerm: string = paging?.search
                 whereConditions = [
-                    { golongan_romawi: Like(`%${searchTerm}%`), deleted_at: IsNull() }, // Partial match
-                    { golongan_angka: Like(`%${searchTerm}%`), deleted_at: IsNull() }, // Partial match
-                    { pangkat: Like(`%${searchTerm}%`), deleted_at: IsNull() },             // Exact match
+                    { code: Like(`%${searchTerm}%`), deleted_at: IsNull() },
+                    { name: Like(`%${searchTerm}%`), deleted_at: IsNull() },
                 ];
             }
 
@@ -46,7 +45,7 @@ export class SPPDPangkatRepository implements I_SPPDPangkatRepository {
 
             return {
                 success: true,
-                message: MessageDialog.__('success.sppdPangkat.fetch'),
+                message: MessageDialog.__('success.spdPangkat.fetch'),
                 record: pagination
             }
         } catch (error: any) {
@@ -60,21 +59,21 @@ export class SPPDPangkatRepository implements I_SPPDPangkatRepository {
             const result = await this.repository.findOne({
                 where: {
                     deleted_at: IsNull(),
-                    pangkat_id: id
+                    transportation_type_id: id
                 },
             });
 
             if (!result) {
                 return {
                     success: false,
-                    message: MessageDialog.__('error.default.notFoundItem', { item: 'Sppd Pangkat' }),
+                    message: MessageDialog.__('error.default.notFoundItem', { item: 'Jenis Transportasi' }),
                     record: result
                 }
             }
 
             return {
                 success: true,
-                message: MessageDialog.__('success.sppdPangkat.fetch'),
+                message: MessageDialog.__('success.sppdJenisTransportasi.fetch'),
                 record: result
             }
         } catch (error: any) {
@@ -89,14 +88,14 @@ export class SPPDPangkatRepository implements I_SPPDPangkatRepository {
             if (!result) {
                 return {
                     success: false,
-                    message: MessageDialog.__('error.failed.storeSppdPangkat'),
+                    message: MessageDialog.__('error.failed.storeSpdPangkat'),
                     record: result
                 }
             }
 
             return {
                 success: true,
-                message: MessageDialog.__('success.sppdPangkat.store'),
+                message: MessageDialog.__('success.sppdJenisTransportasi.store'),
                 record: result
             }
         } catch (err: any) {
@@ -109,14 +108,14 @@ export class SPPDPangkatRepository implements I_SPPDPangkatRepository {
             let result = await this.repository.findOne({
                 where: {
                     deleted_at: IsNull(),
-                    pangkat_id: id
+                    transportation_type_id: id
                 }
             });
 
             if (!result) {
                 return {
                     success: false,
-                    message: MessageDialog.__('error.default.notFoundItem', { item: 'Sppd Pangkat' }),
+                    message: MessageDialog.__('error.default.notFoundItem', { item: 'Spd Pangkat' }),
                     record: result
                 }
             }
@@ -128,9 +127,9 @@ export class SPPDPangkatRepository implements I_SPPDPangkatRepository {
 
             return {
                 success: true,
-                message: MessageDialog.__('success.sppdPangkat.update'),
+                message: MessageDialog.__('success.sppdJenisTransportasi.update'),
                 record: {
-                    pangkat_id: result?.pangkat_id,
+                    transportation_type_id: result?.transportation_type_id,
                 }
             }
 
@@ -143,7 +142,7 @@ export class SPPDPangkatRepository implements I_SPPDPangkatRepository {
         try {
             let result = await this.repository.findOne({
                 where: {
-                    pangkat_id: id,
+                    transportation_type_id: id,
                     deleted_at: IsNull()
                 }
             })
@@ -151,7 +150,7 @@ export class SPPDPangkatRepository implements I_SPPDPangkatRepository {
             if (!result) {
                 return {
                     success: false,
-                    message: MessageDialog.__('error.default.notFoundItem', { item: 'Sppd Pangkat' }),
+                    message: MessageDialog.__('error.default.notFoundItem', { item: 'Spd Pangkat' }),
                     record: result
                 }
             }
@@ -165,9 +164,9 @@ export class SPPDPangkatRepository implements I_SPPDPangkatRepository {
 
             return {
                 success: true,
-                message: MessageDialog.__('success.sppdPangkat.softDelete'),
+                message: MessageDialog.__('success.sppdJenisTransportasi.softDelete'),
                 record: {
-                    pangkat_id: id
+                    transportation_type_id: id
                 }
             }
         } catch (error: any) {

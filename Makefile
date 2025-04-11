@@ -1,4 +1,4 @@
-migration-file=CreateSPDPangkatGolonganTable
+migration-file=CreateSppdJenisTransportasiTable
 entity-name=Users
 compose-file=docker-compose.local.yaml
 app-container-name=finance_core_app
@@ -61,5 +61,12 @@ restart-db:
 pm-dev:
 	pm2 start npm --name sikeu-api -- run dev
 
+pm-yarn-dev:
+	pm2 start yarn --name sikeu-api -- run dev
+
+
 pm-log:
 	pm2 logs $(app-pm-name)
+
+local-create-migration:
+	yarn run typeorm-ts-node-commonjs migration:create ./src/database/migrations/$(migration-file)
