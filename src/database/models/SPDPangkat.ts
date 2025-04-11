@@ -7,23 +7,21 @@ import {
     PrimaryGeneratedColumn,
     OneToMany,
 } from 'typeorm';
-import { Users } from './Users';
 import { SPDPegawai } from './SPDPegawai';
 
-
-@Entity({ name: 'master_work_unit' })
-export class MasterWorkUnit {
+@Entity({ name: 'spd_pangkat_golongan' })
+export class SPDPangkat {
     @PrimaryGeneratedColumn('uuid')
-    unit_id!: string;
+    pangkat_id!: string;
 
-    @Column({ type: 'varchar', length: 255, name: 'unit_code', nullable: false })
-    unit_code!: string;
+    @Column({ type: 'varchar', length: 100, name: 'golongan_romawi', default: null })
+    golongan_romawi!: string;
 
-    @Column({ type: 'varchar', length: 255, name: 'unit_type', nullable: true, default: null })
-    unit_type!: string;
+    @Column({ type: 'varchar', length: 100, name: 'golongan_angka', default: null })
+    golongan_angka!: string;
 
-    @Column({ type: 'text', name: 'unit_name', nullable: true, default: null })
-    unit_name!: string;
+    @Column({ type: 'varchar', length: 255, name: 'pangkat', default: null })
+    pangkat!: string;
 
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
     created_at!: Date;
@@ -43,10 +41,6 @@ export class MasterWorkUnit {
     @Column({ name: 'deleted_by', type: 'uuid' })
     deleted_by!: string;
 
-    @OneToMany(() => Users, (value: any) => value.work_unit)
-    users!: Users[]
-
-
-    @OneToMany(() => SPDPegawai, (value: any) => value.work_unit, { eager: true })
+    @OneToMany(() => SPDPegawai, (value: any) => value.pangkat_golongan, { eager: true })
     pegawai!: SPDPegawai[]
 }

@@ -1,8 +1,8 @@
 import { IsNull } from 'typeorm';
 import AppDataSource from '../../config/dbconfig';
-import { standartDateISO } from '../../lib/utils/common.util';
 import { MasterModule } from '../models/MasterModule';
 import { MasterMenu } from '../models/MasterMenu';
+
 
 export const moduleList = [
   {
@@ -13,19 +13,27 @@ export const moduleList = [
     module_name: 'SPPD',
     module_menus: [
       {
+        name: 'Surat Tugas & SPPD',
+        slug: '/surat-tugas-sppd',
+        order_number: 1
+      },
+      {
         name: 'Surat Tugas',
         slug: '/surat-tugas',
-        order_number: 1
+        order_number: 2,
+        parent_to: 'Surat Tugas & SPPD'
       },
       {
         name: 'SPD',
         slug: '/spd',
-        order_number: 2
+        order_number: 3,
+        parent_to: 'Surat Tugas & SPPD'
       },
       {
         name: 'Laporan',
         slug: '/laporan',
-        order_number: 3
+        order_number: 3,
+        parent_to: 'Surat Tugas & SPPD'
       },
       {
         name: 'Laporan Masuk',
@@ -42,7 +50,11 @@ export const moduleList = [
     ]
   },
   {
-    module_name: 'BKU & SPM',
+    module_name: 'BKU',
+    module_menus: []
+  },
+  {
+    module_name: 'SPM-SP2D',
     module_menus: []
   },
   {

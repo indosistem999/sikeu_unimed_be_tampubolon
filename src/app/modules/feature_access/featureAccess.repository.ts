@@ -236,12 +236,8 @@ class FeatureAccessRepository implements I_FeatureAccessRepository {
             'created_at', access_menu.created_at, 
             'updated_at', access_menu.updated_at
           ) as access_menu`,
-          `json_object(
-            'menu_id', children.menu_id, 
-            'name', children.name
-            
-          ) as children`,
-
+          'parent.menu_id',
+          'parent.name'
         ])
         .setParameter('baseUrl', filters?.base_url);
 

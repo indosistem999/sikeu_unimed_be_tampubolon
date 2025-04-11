@@ -16,20 +16,26 @@ export const moduleList = [
     order_number: 2
   },
   {
-    module_name: 'BKU & SPM',
-    module_path: '/bku_spm',
+    module_name: 'BKU',
+    module_path: '/bku',
     order_number: 3
   },
   {
-    module_name: 'Website',
-    module_path: '/website',
+    module_name: 'SPM-SP2D',
+    module_path: '/spm_sp2d',
     order_number: 4
   },
   {
     module_name: 'Gaji Honor',
     module_path: '/gaji_honor',
     order_number: 5
-  }
+  },
+  {
+    module_name: 'Website',
+    module_path: '/website',
+    order_number: 6
+  },
+
 ]
 
 export const masterModuleSeeder = async () => {

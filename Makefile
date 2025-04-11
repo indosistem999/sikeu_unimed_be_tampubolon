@@ -1,4 +1,4 @@
-migration-file=AddGenderToUserTable
+migration-file=CreateSPDPangkatGolonganTable
 entity-name=Users
 compose-file=docker-compose.dev.yaml
 app-container-name=finance_core_app
