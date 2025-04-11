@@ -8,6 +8,7 @@ import { MessageDialog } from "../../../lang";
 import AppDataSource from "../../../config/dbconfig";
 import { DTO_ValidationCreate, DTO_ValidationUpdate } from "./sppdJenisBiaya.dto";
 import { SPPDJenisBiaya } from "../../../database/models/SPPDJenisBiaya";
+import { SelectQueryBuilder } from "typeorm";
 
 class SPPDJenisBiayaValidation {
 
@@ -42,16 +43,21 @@ class SPPDJenisBiayaValidation {
             );
         }
 
+        const code: string = req?.body?.code || ''
+        const name: string = req?.body?.name || ''
+
         const row = await AppDataSource.getRepository(SPPDJenisBiaya)
             .createQueryBuilder('p')
-            .where(`p.code = :CODE`, { CODE: req?.body?.code })
-            .andWhere(`p.name LIKE :NAME`, { NAME: `%${req.body.name || ''}%` })
-            .andWhere(`p.deleted_at IS NULL`)
-            .select([`p.${sc.sppd_cost.primaryKey}`, 'p.code'])
+            .where(`p.deleted_at IS NULL`)
+            .andWhere((builder: SelectQueryBuilder<SPPDJenisBiaya>) => {
+                builder.where(`p.code = :CODE`, { CODE: code })
+                    .orWhere(`p.name LIKE :NAME`, { NAME: `%${name}%` })
+            })
+            .select([`p.${sc.sppd_cost.primaryKey}`, 'p.code', 'p.name'])
             .getOne();
 
         if (row) {
-            sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Jenis transportasi ${row?.code}` }), row)
+            sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Code: ${code} or Name: ${name}` }), { row_existed: row })
         }
 
         next()
@@ -81,11 +87,16 @@ class SPPDJenisBiayaValidation {
         }
         else {
 
+            const code: string = req?.body?.code || ''
+            const name: string = req?.body?.name || ''
+
             const row = await AppDataSource.getRepository(SPPDJenisBiaya)
                 .createQueryBuilder('p')
-                .where(`p.code = :CODE`, { CODE: req?.body?.code })
-                .andWhere(`p.name LIKE :NAME`, { NAME: `%${req.body.name || ''}%` })
-                .andWhere(`p.deleted_at IS NULL`)
+                .where(`p.deleted_at IS NULL`)
+                .andWhere((builder: SelectQueryBuilder<SPPDJenisBiaya>) => {
+                    builder.where(`p.code = :CODE`, { CODE: code })
+                        .orWhere(`p.name LIKE :NAME`, { NAME: `%${name}%` })
+                })
                 .andWhere(
                     `p.${sc.sppd_cost.primaryKey} != :id`, { id }
                 )
@@ -97,12 +108,7 @@ class SPPDJenisBiayaValidation {
 
 
             if (row) {
-                sendErrorResponse(
-                    res,
-                    400,
-                    MessageDialog.__('error.existed.universal'),
-                    { item: `Jenis transportasi ${row?.cost_type_id} and ${row?.code}` }
-                );
+                sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Code: ${code} or Name: ${name}` }), { row_existed: row })
             }
 
             next();
