@@ -6,20 +6,20 @@ import swaggerUi from 'swagger-ui-express'
 import RouteHealtCheck from './routeHealtCheck';
 
 // Controller
-import AuthController from '../app/modules/auth/auth.controller';
-import MasterModuleController from '../app/modules/master_module/masterModule.controller';
-import MasterIdentityController from '../app/modules/master_identity/masterIdentity.controller';
-import MasterMenuController from '../app/modules/master_menu/masterMenu.controller'
-import WorkUnitController from '../app/modules/work_unit/workUnit.controller';
-import UserController from '../app/modules/user/user.controller';
-import RoleController from '../app/modules/role/role.controller';
-import RoleAssignModuleController from '../app/modules/role_assign_module/roleAssignModule.controller'
-import FeatureAccessController from '../app/modules/feature_access/featureAccess.controller'
+import AuthController from '../app/modules/auth/controller';
+import MasterModuleController from '../app/modules/master_module/controller';
+import MasterIdentityController from '../app/modules/master_identity/controller';
+import MasterMenuController from '../app/modules/master_menu/controller'
+import WorkUnitController from '../app/modules/work_unit/controller';
+import UserController from '../app/modules/user/controller';
+import RoleController from '../app/modules/role/controller';
+import RoleAssignModuleController from '../app/modules/role_assign_module/controller'
+import FeatureAccessController from '../app/modules/feature_access/controller'
 
 // SPPD
-import SPPDPangkatController from '../app/modules/sppd_pangkat/sppdPangkat.controller';
-import SPPDJenisTransportasiController from '../app/modules/sppd_jenis_transportasi/sppdJenisTransportasi.controller';
-import SPPDJenisBiayaController from '../app/modules/sppd_jenis_biaya/sppdJenisBiaya.controller'
+import SPPDPangkatController from '../app/modules/sppd_pangkat/controller';
+import SPPDJenisTransportasiController from '../app/modules/sppd_jenis_transportasi/controller';
+import SPPDJenisBiayaController from '../app/modules/sppd_jenis_biaya/controller'
 
 const tagVersionOne: string = '/api/v1';
 

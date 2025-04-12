@@ -1,7 +1,7 @@
-migration-file=CreateKategoriJabatanTable
+migration-file=CreateTahunAnggaranTable
 entity-name=Users
-compose-file=docker-compose.local.yaml
-app-container-name=finance_core_app
+compose-file=docker-compose.dev.yml
+app-container-name=sikeu-core-dev
 app-pm-name=sikeu-dev
 
 local-migration-create:
@@ -40,20 +40,20 @@ app-check:
 	docker exec -it $(app-container-name) sh
 
 migration-generate:
-	docker exec -it finance_core_app yarn run migration:generate
+	docker exec -it $(app-container-name) yarn run migration:generate
 
 migration-run:
-	docker exec -it finance_core_app yarn run migration:run
+	docker exec -it $(app-container-name) yarn run migration:run
 
 
 seed:
-	docker exec -it finance_core_app yarn run seed
+	docker exec -it $(app-container-name) yarn run seed
 
 create-migration:
-	docker exec -it finance_core_app yarn run typeorm-ts-node-commonjs migration:create ./src/database/migrations/$(migration-file)
+	docker exec -it $(app-container-name) yarn run typeorm-ts-node-commonjs migration:create ./src/database/migrations/$(migration-file)
 
 restart-app:
-	docker restart finance_core_app 
+	docker restart $(app-container-name) 
 
 restart-db:
 	docker restart finance_mysql 

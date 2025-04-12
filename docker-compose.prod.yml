@@ -1,0 +1,25 @@
+services:
+  sikeu-core-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: sikeu-core-api
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - '${APP_PORT}:${APP_PORT}'
+    volumes:
+      - './logs/:/app/logs/'
+    networks:
+      - sikeu_core_network
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '100m'
+        max-file: '5'
+
+networks:
+  sikeu_core_network:
+    name: sikeu_core_network
+    driver: bridge

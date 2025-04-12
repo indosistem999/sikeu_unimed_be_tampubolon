@@ -143,5 +143,9 @@ export const allSchema = {
   sppd_cost: {
     tableName: 'sppd_jenis_biaya',
     primaryKey: 'cost_type_id',
+  },
+  budget_year: {
+    tableName: 'master_budget_year',
+    primaryKey: 'budget_id',
   }
 }

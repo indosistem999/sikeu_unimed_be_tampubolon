@@ -1,15 +1,5 @@
 import { DataSource } from 'typeorm';
 import { Config as cfg, IsProduction } from '../constanta';
-import path from 'path';
-import { Users } from '../database/models/Users';
-import { Roles } from '../database/models/Roles';
-import { UserLog } from '../database/models/UserLog';
-import { MasterModule } from '../database/models/MasterModule';
-import { MasterMenu } from '../database/models/MasterMenu';
-import { RoleModuleAssociation } from '../database/models/RoleModuleAssociation';
-import { ModuleMenuAssociation } from '../database/models/ModuleMenuAssociation';
-
-// const rootPath = path.resolve(__dirname, '../../');
 
 const AppDataSource = new DataSource({
   type: 'mysql',

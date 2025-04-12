@@ -61,6 +61,13 @@
     "accessMenu": {
       "assigned": "Assigned access menu to role successfully"
     },
+    "budgetYear": {
+      "findItem": "Get budget of year {{item}} successfully",
+      "fetch": "Get budget of year successfully",
+      "store": "Budget of year added successfully",
+      "update": "Budget of year edited successfully",
+      "softDelete": "Budget of year deleted successfully"
+    },
     "sppdPangkat": {
       "findItem": "Get Sppd Pangkat {{item}} successfully",
       "fetch": "Get Sppd Pangkat successfully",
@@ -122,7 +129,8 @@
       "assignMenuAccess": "Menu access has been assigned to the role. Some processes may fail.",
       "storeSppdPangkat": "Failed to store spd pangkat",
       "storeSppdJenisTransportasi": "Failed to store spd jenis transportasi",
-      "storeSppdJenisBiaya": "Failed to store spd jenis biaya"
+      "storeSppdJenisBiaya": "Failed to store spd jenis biaya",
+      "storeBudgetYear": "Failed to store budget of year"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",
