@@ -10,15 +10,15 @@ import { DTO_ValidationCreate, DTO_ValidationUpdate } from "./dto";
 import { SPPDJenisBiaya } from "../../../database/models/SPPDJenisBiaya";
 import { SelectQueryBuilder } from "typeorm";
 
-class SPPDJenisBiayaValidation {
+class MasterSumberDanaValidation {
 
 
   async paramValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
-    if (!req?.params?.[sc.budget_year.primaryKey]) {
+    if (!req?.params?.[sc.sumber_dana.primaryKey]) {
       sendErrorResponse(
         res,
         422,
-        MessageDialog.__('error.missing.requiredEntry', { label: 'Budget year id' }),
+        MessageDialog.__('error.missing.requiredEntry', { label: 'Source of funds id' }),
         null
       );
     }
@@ -47,12 +47,12 @@ class SPPDJenisBiayaValidation {
     const row = await AppDataSource.getRepository(SPPDJenisBiaya)
       .createQueryBuilder('p')
       .where(`p.deleted_at IS NULL`)
-      .andWhere(`p.budget_name = :value`, { value: req?.body?.budget_name })
-      .select([`p.${sc.budget_year.primaryKey}`, 'p.budget_name', 'p.budget_start_date', `p.budget_end_date`])
+      .andWhere(`p.code = :value`, { value: req?.body?.code })
+      .select([`p.${sc.budget_year.primaryKey}`, 'p.code', 'p.description'])
       .getOne();
 
     if (row) {
-      sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Budget name ${req?.body?.budget_name}` }), { row_existed: row })
+      sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Source of code ${req?.body?.code}` }), { row_existed: row })
     }
 
     next()
@@ -60,7 +60,7 @@ class SPPDJenisBiayaValidation {
   }
 
   async updateValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
-    const id: string = req?.params?.[sc.sppd_cost.primaryKey]
+    const id: string = req?.params?.[sc.sumber_dana.primaryKey]
     const dtoInstance = plainToInstance(DTO_ValidationUpdate, req.body);
     (dtoInstance as any).req = req;
 
@@ -82,26 +82,25 @@ class SPPDJenisBiayaValidation {
     }
     else {
 
-      const code: string = req?.body?.code || ''
-      const name: string = req?.body?.name || ''
-
       const row = await AppDataSource.getRepository(SPPDJenisBiaya)
         .createQueryBuilder('p')
         .where(`p.deleted_at IS NULL`)
-        .andWhere(`p.deleted_at IS NULL`)
-        .andWhere(`p.budget_name = :value`, { value: req?.body?.budget_name })
-        .andWhere(`p.${sc.budget_year.primaryKey} != :id`, { id })
+        .andWhere(`p.code = :value`, { value: req?.body?.code })
+        .andWhere(`p.${sc.sumber_dana.primaryKey} != :id`, { id })
         .select([
-          `p.${sc.budget_year.primaryKey}`,
-          'p.budget_name',
-          'p.budget_start_date',
-          `p.budget_end_date`
+          `p.${sc.sumber_dana.primaryKey}`,
+          'p.code', 'p.description'
+        ])
+        .select([
+          `p.${sc.sumber_dana.primaryKey}`,
+          'p.code',
+          'p.description'
         ])
         .getOne()
 
 
       if (row) {
-        sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Code: ${code} or Name: ${name}` }), { row_existed: row })
+        sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Source of funds code: ${req?.body?.code}` }), { row_existed: row })
       }
 
       next();
@@ -109,4 +108,4 @@ class SPPDJenisBiayaValidation {
   }
 }
 
-export default new SPPDJenisBiayaValidation();
+export default new MasterSumberDanaValidation();

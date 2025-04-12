@@ -22,6 +22,7 @@ import SPPDJenisTransportasiController from '../app/modules/sppd_jenis_transport
 import SPPDJenisBiayaController from '../app/modules/sppd_jenis_biaya/controller'
 import MasterBudgetYearController from '../app/modules/master_budget_year/controller'
 import MasterJobCategoryController from '../app/modules/master_job_category/controller'
+import MasterSumberDanaController from '../app/modules/master_sumber_dana/controller'
 
 const tagVersionOne: string = '/api/v1';
 
@@ -57,6 +58,9 @@ class RouteApplication extends MainRoutes {
 
     // API Master Job Category
     this.router.use(`${tagVersionOne}/master-job-category`, MasterJobCategoryController)
+
+    // API Master Sumber Dana
+    this.router.use(`${tagVersionOne}/master-sumber-dana`, MasterSumberDanaController)
 
     // API User
     this.router.use(`${tagVersionOne}/user`, UserController)

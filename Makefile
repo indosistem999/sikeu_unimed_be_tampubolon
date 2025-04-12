@@ -1,4 +1,4 @@
-migration-file=CreateTahunAnggaranTable
+migration-file=CreateMasterSumberDanaTable
 entity-name=Users
 compose-file=docker-compose.dev.yml
 app-container-name=sikeu-core-dev

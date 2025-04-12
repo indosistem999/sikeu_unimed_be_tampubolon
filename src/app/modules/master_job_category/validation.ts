@@ -18,7 +18,7 @@ class MasterJobCategoryValidation {
             sendErrorResponse(
                 res,
                 422,
-                MessageDialog.__('error.missing.requiredEntry', { label: 'Job category' }),
+                MessageDialog.__('error.missing.requiredEntry', { label: 'Job category id' }),
                 null
             );
         }
@@ -102,13 +102,14 @@ class MasterJobCategoryValidation {
                 )
                 .select([
                     `p.${sc.job_category.primaryKey}`,
-                    'p.code'
+                    'p.code',
+                    'p.name'
                 ])
                 .getOne()
 
 
             if (row) {
-                sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Code: ${code} or Name: ${name}` }), { row_existed: row })
+                sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Budget code: ${code} or budget name: ${name}` }), { row_existed: row })
             }
 
             next();
