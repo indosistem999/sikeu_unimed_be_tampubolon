@@ -18,6 +18,7 @@ export const selectDetailMenu: Record<string, any> = {
   menu_id: true,
   name: true,
   slug: true,
+  order_number: true,
   parent: {
     menu_id: true,
     name: true,
