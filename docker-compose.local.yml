@@ -27,7 +27,7 @@ services:
   finance_mysql:
     build:
       context: .
-      dockerfile: Dockerfile.mysql
+      dockerfile: ./docker/Dockerfile.mysql.windows
     container_name: finance_mysql
     restart: on-failure
     env_file:
@@ -42,8 +42,14 @@ services:
     volumes:
       - finance_mysql_data:/var/lib/mysql
       - ./docker:/docker-entrypoint-initdb.d/
+      - ./docker/my.cnf:/etc/mysql/conf.d/my.cnf
     networks:
       - finance_core_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   finance_rabbitmq:
     image: rabbitmq:3.13.7-management-alpine

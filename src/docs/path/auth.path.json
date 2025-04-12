@@ -156,5 +156,34 @@
         }
       }
     }
+  },
+  "/auth/register": {
+    "post": {
+      "tags": ["Auth"],
+      "summary": "Register new account",
+      "description": "Register a new user account",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SchemaAuthRegister"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultResponseSchema"
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
