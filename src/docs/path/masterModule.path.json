@@ -1,7 +1,7 @@
 {
   "/master-module": {
     "get": {
-      "tags": ["Master Module"],
+      "tags": ["Master - Module"],
       "security": [
         {
           "bearerAuth": []
@@ -50,7 +50,7 @@
       }
     },
     "post": {
-      "tags": ["Master Module"],
+      "tags": ["Master - Module"],
       "security": [
         {
           "bearerAuth": []
@@ -82,7 +82,7 @@
   },
   "/master-module/{module_id}": {
     "get": {
-      "tags": ["Master Module"],
+      "tags": ["Master - Module"],
       "security": [
         {
           "bearerAuth": []
@@ -112,7 +112,7 @@
       }
     },
     "put": {
-      "tags": ["Master Module"],
+      "tags": ["Master - Module"],
       "security": [
         {
           "bearerAuth": []
@@ -152,7 +152,7 @@
       }
     },
     "delete": {
-      "tags": ["Master Module"],
+      "tags": ["Master - Module"],
       "security": [
         {
           "bearerAuth": []

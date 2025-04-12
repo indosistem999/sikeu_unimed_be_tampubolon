@@ -1,7 +1,7 @@
 {
   "/master-identity": {
     "get": {
-      "tags": ["Master Identity"],
+      "tags": ["Master - Identitas"],
       "security": [
         {
           "bearerAuth": []
@@ -22,7 +22,7 @@
       }
     },
     "post": {
-      "tags": ["Master Identity"],
+      "tags": ["Master - Identitas"],
       "security": [
         {
           "bearerAuth": []
@@ -54,7 +54,7 @@
   },
   "/master-identity/{identity_id}": {
     "get": {
-      "tags": ["Master Identity"],
+      "tags": ["Master - Identitas"],
       "security": [
         {
           "bearerAuth": []
@@ -84,7 +84,7 @@
       }
     },
     "put": {
-      "tags": ["Master Identity"],
+      "tags": ["Master - Identitas"],
       "security": [
         {
           "bearerAuth": []
@@ -124,7 +124,7 @@
       }
     },
     "delete": {
-      "tags": ["Master Identity"],
+      "tags": ["Master - Identitas"],
       "security": [
         {
           "bearerAuth": []

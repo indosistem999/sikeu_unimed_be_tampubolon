@@ -1,0 +1,32 @@
+{
+  "SchemaCreateMasterJobCategory": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "string",
+        "summary": "Job Code",
+        "default": "A"
+      },
+      "name": {
+        "type": "string",
+        "summary": "Job Name",
+        "default": "Rektor"
+      }
+    }
+  },
+  "SchemaUpdateMasterJobCategory": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "string",
+        "summary": "Job Code",
+        "default": "A"
+      },
+      "name": {
+        "type": "string",
+        "summary": "Job Name",
+        "default": "Rektor"
+      }
+    }
+  }
+}

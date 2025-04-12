@@ -1,4 +1,46 @@
 {
-  "SchemaCreateMasterBudgetYear": {},
-  "SchemaUpdateMasterBudgetYear": {}
+  "SchemaCreateMasterBudgetYear": {
+    "type": "object",
+    "properties": {
+      "budget_name": {
+        "type": "string",
+        "summary": "Tahun Anggaran",
+        "default": "2025"
+      },
+      "budget_start_date": {
+        "type": "string",
+        "format": "YYYY-MM-DD",
+        "summary": "Tanggal Mulai Anggaran",
+        "default": "2025-03-21"
+      },
+      "budget_end_date": {
+        "type": "string",
+        "format": "YYYY-MM-DD",
+        "summary": "Tanggal Akhir Anggaran",
+        "default": "2026-03-25"
+      }
+    }
+  },
+  "SchemaUpdateMasterBudgetYear": {
+    "type": "object",
+    "properties": {
+      "budget_name": {
+        "type": "string",
+        "summary": "Tahun Anggaran",
+        "default": "2025"
+      },
+      "budget_start_date": {
+        "type": "string",
+        "format": "YYYY-MM-DD",
+        "summary": "Tanggal Mulai Anggaran",
+        "default": "2025-03-21"
+      },
+      "budget_end_date": {
+        "type": "string",
+        "format": "YYYY-MM-DD",
+        "summary": "Tanggal Akhir Anggaran",
+        "default": "2026-03-25"
+      }
+    }
+  }
 }

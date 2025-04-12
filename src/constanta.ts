@@ -147,5 +147,9 @@ export const allSchema = {
   budget_year: {
     tableName: 'master_budget_year',
     primaryKey: 'budget_id',
+  },
+  job_category: {
+    tableName: 'master_kategori_jabatan',
+    primaryKey: 'category_id',
   }
 }
