@@ -13,6 +13,13 @@ const AppDataSource = new DataSource({
   entities: ['src/database/models/*.ts'], // Path to your entities
   migrations: ['src/database/migrations/*.ts'], // Path to your migrations,
   migrationsTableName: 'migrations',
+  extra: {
+    connectionLimit: 10,
+    queueLimit: 0,
+    waitForConnections: true,
+    connectTimeout: 10000
+  },
+  maxQueryExecutionTime: 5000
 });
 
 export default AppDataSource;

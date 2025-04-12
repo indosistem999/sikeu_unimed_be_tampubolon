@@ -11,10 +11,38 @@ import { selectDetailMenu, selectOnlyChildMenu } from './constanta';
 class MasterMenuRepository implements I_MasterMenuRepository {
   private repository = AppDataSource.getRepository(MasterMenu);
 
-  setupErrorMessage(error: any): I_ResultService {
+  private setupErrorMessage(error: any): I_ResultService {
+    // Handle TypeORM specific errors
+    if (error.code === 'ECONNREFUSED') {
+      return {
+        success: false,
+        message: 'Database connection error',
+        record: null
+      }
+    }
+
+    // Handle constraint violations
+    if (error.code === '23505') { // Unique violation
+      return {
+        success: false,
+        message: 'Duplicate entry found',
+        record: null
+      }
+    }
+
+    // Handle foreign key violations
+    if (error.code === '23503') {
+      return {
+        success: false,
+        message: 'Referenced record not found',
+        record: null
+      }
+    }
+
+    // Default error handling
     return {
       success: false,
-      message: error.message,
+      message: error.message || 'An unexpected error occurred',
       record: error
     }
   }

@@ -70,3 +70,10 @@ pm-log:
 
 local-create-migration:
 	yarn run typeorm-ts-node-commonjs migration:create ./src/database/migrations/$(migration-file)
+
+# Quick development commands
+start:
+	docker compose -f $(compose-file) up -d
+
+stop:
+	docker compose -f $(compose-file) down

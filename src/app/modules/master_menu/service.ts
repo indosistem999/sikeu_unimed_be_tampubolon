@@ -6,9 +6,10 @@ import MasterMenuRepository from './repository';
 import { menuSchema, sortDefault, sortRequest } from './constanta';
 import { standartDateISO } from '../../../lib/utils/common.util';
 import path from 'path';
-import { getFileFromStorage } from '../../../config/storages';
+import { getFileFromStorage, removeFileInStorage } from '../../../config/storages';
 import { I_MasterMenuService } from '../../../interfaces/masterMenu.interface';
 import { defineRequestOrder } from '../../../lib/utils/request.util';
+import AppDataSource from '../../../config/dbconfig';
 
 
 class MasterMenuService implements I_MasterMenuService {
@@ -70,56 +71,87 @@ class MasterMenuService implements I_MasterMenuService {
 
   /** Store Identity */
   async store(req: I_RequestCustom, res: Response, type_store: string = 'parent'): Promise<Response> {
-    const today: Date = new Date(standartDateISO())
-    let payload: Record<string, any> = {
-      created_at: today,
-      created_by: req?.user?.user_id,
-      ...this.bodyValidation(req),
-      type_store
+    const queryRunner = AppDataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const today: Date = new Date(standartDateISO())
+      let payload: Record<string, any> = {
+        created_at: today,
+        created_by: req?.user?.user_id,
+        ...this.bodyValidation(req),
+        type_store
+      }
+
+      if (req?.file) {
+        const fileName = req?.file ? req?.file?.filename : null
+        payload.logo = fileName !== null ? path.join('icon', fileName) : null
+      }
+
+      const result = await this.repository.store(payload);
+
+      if (!result?.success) {
+        // If store fails, cleanup uploaded file if any
+        if (req?.file) {
+          await removeFileInStorage(payload.logo);
+        }
+        await queryRunner.rollbackTransaction();
+        return sendErrorResponse(res, 400, result.message, result.record);
+      }
+
+      await queryRunner.commitTransaction();
+      return sendSuccessResponse(res, 200, result.message, result.record);
+    } catch (error: any) {
+      await queryRunner.rollbackTransaction();
+      return sendErrorResponse(res, 500, 'Internal server error', error);
+    } finally {
+      await queryRunner.release();
     }
-
-
-    if (req?.file) {
-      const fileName = req?.file ? req?.file?.filename : null
-      payload.logo = fileName !== null ? path.join('icon', fileName) : null
-    }
-
-
-    const result = await this.repository.store(payload);
-
-    if (!result?.success) {
-      return sendErrorResponse(res, 400, result.message, result.record);
-    }
-
-    return sendSuccessResponse(res, 200, result.message, result.record);
   }
 
   /** Update By Id */
   async update(req: I_RequestCustom, res: Response): Promise<Response> {
-    const today: Date = new Date(standartDateISO())
-    const id: string = req?.params?.[menuSchema.primaryKey];
-    let payload: Record<string, any> = {
-      updated_at: today,
-      updated_by: req?.user?.user_id,
-      ...this.bodyValidation(req)
-    }
+    const queryRunner = AppDataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-
-    if (req?.file) {
-      const fileName = req?.file ? req?.file?.filename : null
-      payload = {
-        ...payload,
-        icon: fileName !== null ? path.join('icon', fileName) : null,
+    try {
+      const today: Date = new Date(standartDateISO())
+      const id: string = req?.params?.[menuSchema.primaryKey];
+      let payload: Record<string, any> = {
+        updated_at: today,
+        updated_by: req?.user?.user_id,
+        ...this.bodyValidation(req)
       }
+
+      if (req?.file) {
+        const fileName = req?.file ? req?.file?.filename : null
+        payload = {
+          ...payload,
+          icon: fileName !== null ? path.join('icon', fileName) : null,
+        }
+      }
+
+      const result = await this.repository.update(id, payload);
+
+      if (!result?.success) {
+        // If update fails, cleanup newly uploaded file if any
+        if (req?.file) {
+          await removeFileInStorage(payload.icon);
+        }
+        await queryRunner.rollbackTransaction();
+        return sendErrorResponse(res, 400, result.message, result.record);
+      }
+
+      await queryRunner.commitTransaction();
+      return sendSuccessResponse(res, 200, result.message, result.record);
+    } catch (error: any) {
+      await queryRunner.rollbackTransaction();
+      return sendErrorResponse(res, 500, 'Internal server error', error);
+    } finally {
+      await queryRunner.release();
     }
-
-
-    const result = await this.repository.update(id, payload)
-    if (!result?.success) {
-      return sendErrorResponse(res, 400, result.message, result.record);
-    }
-
-    return sendSuccessResponse(res, 200, result.message, result.record);
   }
 
 
