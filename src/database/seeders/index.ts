@@ -1,8 +1,11 @@
 import AppDataSource from "../../config/dbconfig";
+import { masterBudgetYearSeeder } from "./MasterBudgetYearSeeder";
 import { masterMenuSeeder } from "./MasterMenuSeeder";
 import { masterModuleSeeder } from "./MasterModuleSeeder";
 import { rolesSeeder } from "./RoleSeeder";
 import { usersSeeder } from "./UserSeeder";
+import { masterJobCategorySeeder } from './MasterJobCategorySeeder'
+import { masterWorkUnitSeeder } from "./MasterWorkUnitSeeder";
 
 const runSeeders = async () => {
   try {
@@ -32,6 +35,23 @@ const runSeeders = async () => {
     await masterMenuSeeder();
     console.log('Master Menu seeded successfully');
 
+
+    /** Master Budget Year */
+    console.log('Seeding master budget year...');
+    await masterBudgetYearSeeder();
+    console.log('Master budget year successfully');
+
+
+    /** Master Job Category */
+    console.log('Seeding master job category year...');
+    await masterJobCategorySeeder();
+    console.log('Master job category successfully');
+
+
+    /** Master Work Unit */
+    console.log('Seeding master work unit ...');
+    await masterWorkUnitSeeder();
+    console.log('Master work unit successfully');
     // Close the connection if we initialized it
     if (AppDataSource.isInitialized) {
       await AppDataSource.destroy();

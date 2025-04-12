@@ -59,7 +59,7 @@ export class MasterJobCategoryRepository implements I_MasterJobCategoryRepositor
             const result = await this.repository.findOne({
                 where: {
                     deleted_at: IsNull(),
-                    category_id: id
+                    job_category_id: id
                 },
             });
 
@@ -108,7 +108,7 @@ export class MasterJobCategoryRepository implements I_MasterJobCategoryRepositor
             let result = await this.repository.findOne({
                 where: {
                     deleted_at: IsNull(),
-                    category_id: id
+                    job_category_id: id
                 }
             });
 
@@ -129,7 +129,7 @@ export class MasterJobCategoryRepository implements I_MasterJobCategoryRepositor
                 success: true,
                 message: MessageDialog.__('success.storeJobCategory.update'),
                 record: {
-                    category_id: result?.category_id,
+                    job_category_id: result?.job_category_id,
                 }
             }
 
@@ -142,7 +142,7 @@ export class MasterJobCategoryRepository implements I_MasterJobCategoryRepositor
         try {
             let result = await this.repository.findOne({
                 where: {
-                    category_id: id,
+                    job_category_id: id,
                     deleted_at: IsNull()
                 }
             })

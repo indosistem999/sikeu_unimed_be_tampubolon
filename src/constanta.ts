@@ -149,11 +149,15 @@ export const allSchema = {
     primaryKey: 'budget_id',
   },
   job_category: {
-    tableName: 'master_kategori_jabatan',
-    primaryKey: 'category_id',
+    tableName: 'master_job_category',
+    primaryKey: 'job_category_id',
   },
   sumber_dana: {
     tableName: 'master_sumber_dana',
     primaryKey: 'sumber_dana_id',
+  },
+  master_officers: {
+    tableName: 'master_officers',
+    primaryKey: 'officers_id',
   }
 }

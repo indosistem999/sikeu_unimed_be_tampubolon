@@ -122,7 +122,12 @@ export const getTotalDays = (start: Date, end: Date): number => {
   const startTimestamp: number = new Date(start).getTime();
   const endTimestamp: number = new Date(end).getTime();
   const millisecondsPerDay = 1000 * 60 * 60 * 24;
-  return Math.abs(endTimestamp - startTimestamp) / millisecondsPerDay;
+  const num = Math.abs(endTimestamp - startTimestamp) / millisecondsPerDay;
+
+  if (num >= 0.465) {
+    return Math.ceil(num)
+  }
+  return Math.floor(num)
 }
 
 
