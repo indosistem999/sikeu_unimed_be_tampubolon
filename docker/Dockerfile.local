@@ -15,13 +15,13 @@ RUN apk update && apk add --no-cache \
 # Set working directory
 WORKDIR /app
 
-# Copy essential files first to optimize caching
-COPY package.json yarn.lock ./
+# Copy package.json first
+COPY package.json ./
 
-# Install dependencies before copying source code (leverages Docker layer caching)
-RUN yarn install --frozen-lockfile
+# Install dependencies
+RUN yarn install
 
-# Install development tools locally instead of globally (ensuring version consistency)
+# Install development tools locally instead of globally
 RUN yarn add --dev ts-node nodemon
 
 # Copy remaining application files
@@ -30,7 +30,6 @@ COPY . .
 RUN rm -rf .env
 
 RUN cp .env.example .env
-
 
 # Define default command for development
 CMD ["yarn", "dev"]

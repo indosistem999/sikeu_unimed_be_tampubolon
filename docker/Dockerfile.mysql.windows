@@ -1,0 +1,36 @@
+# Use MySQL 8.0 on Windows Server Core base image
+FROM mysql:8.0.41-oracle
+
+# Set system timezone
+ENV TZ=Asia/Jakarta
+
+# Configure Windows-specific settings
+ENV MYSQL_ROOT_PASSWORD=root
+ENV MYSQL_DATABASE=sikeu_unimed
+ENV MYSQL_USER=admin
+ENV MYSQL_PASSWORD=admin123
+
+# Set character set and collation
+ENV MYSQL_CHARACTER_SET_SERVER=utf8mb4
+ENV MYSQL_COLLATION_SERVER=utf8mb4_unicode_ci
+
+# Enable binary logging for replication support
+ENV MYSQL_LOG_BIN=1
+
+# Optimize for Windows performance
+ENV MYSQL_INNODB_BUFFER_POOL_SIZE=1G
+ENV MYSQL_INNODB_FLUSH_METHOD=normal
+ENV MYSQL_INNODB_FLUSH_LOG_AT_TRX_COMMIT=2
+
+# Copy initialization script
+COPY ./docker/init.sql /docker-entrypoint-initdb.d/
+
+# Set custom configuration
+COPY ./docker/my.cnf /etc/mysql/conf.d/
+
+# Expose MySQL port
+EXPOSE 3306
+
+# Healthcheck to verify MySQL is running properly
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD mysqladmin ping -h localhost -u root --password=$MYSQL_ROOT_PASSWORD || exit 1 

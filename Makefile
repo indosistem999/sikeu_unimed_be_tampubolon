@@ -1,7 +1,7 @@
 migration-file=CreateTahunAnggaranTable
 entity-name=Users
-compose-file=docker-compose.dev.yml
-app-container-name=sikeu-core-dev
+compose-file=docker-compose.local.yml
+app-container-name=finance_core_app
 app-pm-name=sikeu-dev
 
 local-migration-create:
@@ -47,7 +47,7 @@ migration-run:
 
 
 seed:
-	docker exec -it $(app-container-name) yarn run seed
+	docker exec -t $(app-container-name) yarn run seed
 
 create-migration:
 	docker exec -it $(app-container-name) yarn run typeorm-ts-node-commonjs migration:create ./src/database/migrations/$(migration-file)

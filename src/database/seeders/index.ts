@@ -5,32 +5,50 @@ import { rolesSeeder } from "./RoleSeeder";
 import { usersSeeder } from "./UserSeeder";
 
 const runSeeders = async () => {
-  await AppDataSource.initialize();
-  console.log('Database connection established');
+  try {
+    // Only initialize if not already initialized
+    if (!AppDataSource.isInitialized) {
+      await AppDataSource.initialize();
+      console.log('Database connection established');
+    }
 
-  /** Roles */
-  console.log('Seeding Roles...');
-  await rolesSeeder();
-  console.log('Roles seeded successfully');
+    /** Roles */
+    console.log('Seeding Roles...');
+    await rolesSeeder();
+    console.log('Roles seeded successfully');
 
-  /** Roles */
-  console.log('Seeding Users...');
-  await usersSeeder();
-  console.log('Users seeded successfully');
+    /** Users */
+    console.log('Seeding Users...');
+    await usersSeeder();
+    console.log('Users seeded successfully');
 
-  /** Master Module */
-  console.log('Seeding Master Module...');
-  await masterModuleSeeder();
-  console.log('Master Module seeded successfully');
+    /** Master Module */
+    console.log('Seeding Master Module...');
+    await masterModuleSeeder();
+    console.log('Master Module seeded successfully');
 
+    /** Master Menu */
+    console.log('Seeding Master Menu...');
+    await masterMenuSeeder();
+    console.log('Master Menu seeded successfully');
 
-  /** Master Menu */
-  console.log('Seeding Master Menu...');
-  await masterMenuSeeder();
-  console.log('Master Module menu successfully');
+    // Close the connection if we initialized it
+    if (AppDataSource.isInitialized) {
+      await AppDataSource.destroy();
+      console.log('Database connection closed');
+    }
+
+    // Exit successfully
+    process.exit(0);
+  } catch (error) {
+    console.error('Error running seeders:', error);
+    // Close the connection if it's open
+    if (AppDataSource.isInitialized) {
+      await AppDataSource.destroy();
+    }
+    // Exit with error
+    process.exit(1);
+  }
 }
 
-
-runSeeders()
-  .then(() => console.log('Seeders executed successfully'))
-  .catch((error) => console.error('Error running seeders:', error));
+runSeeders();
