@@ -9,7 +9,7 @@ import {
 
 /** Master Kategori Jabatan */
 @Entity({ name: 'master_kategori_jabatan' })
-export class MasterCategoryJob {
+export class MasterJobCategory {
   @PrimaryGeneratedColumn('uuid')
   category_id!: string;
 

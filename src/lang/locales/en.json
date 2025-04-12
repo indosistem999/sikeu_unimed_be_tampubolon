@@ -88,6 +88,20 @@
       "store": "Sppd Jenis Biaya added successfully",
       "update": "Sppd Jenis Biaya edited successfully",
       "softDelete": "Sppd Jenis Biaya deleted successfully"
+    },
+    "jobCategory": {
+      "findItem": "Get job category {{item}} successfully",
+      "fetch": "Get job category successfully",
+      "store": "Job category added successfully",
+      "update": "Job category edited successfully",
+      "softDelete": "Job category deleted successfully"
+    },
+    "sumberDana": {
+      "findItem": "Get source of funds {{item}} successfully",
+      "fetch": "Source of funds category successfully",
+      "store": "Source of funds added successfully",
+      "update": "Source of funds edited successfully",
+      "softDelete": "Source of funds deleted successfully"
     }
   },
   "error": {
@@ -130,7 +144,9 @@
       "storeSppdPangkat": "Failed to store spd pangkat",
       "storeSppdJenisTransportasi": "Failed to store spd jenis transportasi",
       "storeSppdJenisBiaya": "Failed to store spd jenis biaya",
-      "storeBudgetYear": "Failed to store budget of year"
+      "storeBudgetYear": "Failed to store budget of year",
+      "storeJobCategory": "Failed to store job category",
+      "storeSumberDana": "Failed to store source of funds"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",

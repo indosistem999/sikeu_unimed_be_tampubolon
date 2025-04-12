@@ -1,4 +1,4 @@
-migration-file=CreateTahunAnggaranTable
+migration-file=CreateMasterSumberDanaTable
 entity-name=Users
 compose-file=docker-compose.local.yml
 app-container-name=finance_core_app

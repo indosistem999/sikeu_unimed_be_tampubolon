@@ -1,7 +1,7 @@
 {
-  "/master-tahun-anggaran": {
+  "/master-budget-year": {
     "get": {
-      "tags": ["SPPD - Master Tahun Anggaran"],
+      "tags": ["Master - Tahun Anggaran"],
       "security": [
         {
           "bearerAuth": []
@@ -68,7 +68,7 @@
       }
     },
     "post": {
-      "tags": ["SPPD - Master Tahun Anggaran"],
+      "tags": ["Master - Tahun Anggaran"],
       "security": [
         {
           "bearerAuth": []
@@ -99,9 +99,9 @@
     }
   },
 
-  "/master-tahun-anggaran/{budget_id}": {
+  "/master-budget-year/{budget_id}": {
     "get": {
-      "tags": ["SPPD - Master Tahun Anggaran"],
+      "tags": ["Master - Tahun Anggaran"],
       "security": [
         {
           "bearerAuth": []
@@ -131,7 +131,7 @@
       }
     },
     "put": {
-      "tags": ["SPPD - Master Tahun Anggaran"],
+      "tags": ["Master - Tahun Anggaran"],
       "security": [
         {
           "bearerAuth": []
@@ -171,7 +171,7 @@
       }
     },
     "delete": {
-      "tags": ["SPPD - Master Tahun Anggaran"],
+      "tags": ["Master - Tahun Anggaran"],
       "security": [
         {
           "bearerAuth": []

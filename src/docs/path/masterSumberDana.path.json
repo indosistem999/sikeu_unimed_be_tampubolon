@@ -1,7 +1,7 @@
 {
-  "/work-unit": {
+  "/master-sumber-dana": {
     "get": {
-      "tags": ["Master - Satuan Kerja (SATKER)"],
+      "tags": ["Master - Sumber Dana"],
       "security": [
         {
           "bearerAuth": []
@@ -68,7 +68,7 @@
       }
     },
     "post": {
-      "tags": ["Master - Satuan Kerja (SATKER)"],
+      "tags": ["Master - Sumber Dana"],
       "security": [
         {
           "bearerAuth": []
@@ -79,7 +79,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/SchemaCreateWorkUnit"
+              "$ref": "#/components/schemas/SchemaCreateMasterSumberDana"
             }
           }
         }
@@ -99,9 +99,9 @@
     }
   },
 
-  "/work-unit/{unit_id}": {
+  "/master-sumber-dana/{sumber_dana_id}": {
     "get": {
-      "tags": ["Master - Satuan Kerja (SATKER)"],
+      "tags": ["Master - Sumber Dana"],
       "security": [
         {
           "bearerAuth": []
@@ -110,7 +110,7 @@
       "parameters": [
         {
           "in": "path",
-          "name": "unit_id",
+          "name": "sumber_dana_id",
           "required": true,
           "schema": {
             "type": "string"
@@ -131,7 +131,7 @@
       }
     },
     "put": {
-      "tags": ["Master - Satuan Kerja (SATKER)"],
+      "tags": ["Master - Sumber Dana"],
       "security": [
         {
           "bearerAuth": []
@@ -140,7 +140,7 @@
       "parameters": [
         {
           "in": "path",
-          "name": "unit_id",
+          "name": "sumber_dana_id",
           "required": true,
           "schema": {
             "type": "string"
@@ -152,7 +152,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/SchemaUpdateWorkUnit"
+              "$ref": "#/components/schemas/SchemaUpdateMasterSumberDana"
             }
           }
         }
@@ -171,7 +171,7 @@
       }
     },
     "delete": {
-      "tags": ["Master - Satuan Kerja (SATKER)"],
+      "tags": ["Master - Sumber Dana"],
       "security": [
         {
           "bearerAuth": []
@@ -180,7 +180,7 @@
       "parameters": [
         {
           "in": "path",
-          "name": "unit_id",
+          "name": "sumber_dana_id",
           "required": true,
           "schema": {
             "type": "string"

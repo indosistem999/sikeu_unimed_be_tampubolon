@@ -1,0 +1,32 @@
+{
+  "SchemaCreateMasterSumberDana": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "string",
+        "summary": "Kode Sumber Dana",
+        "default": "SD-001"
+      },
+      "description": {
+        "type": "string",
+        "summary": "Uraian Sumber Dana",
+        "default": "Biaya Perjalanan Dinas"
+      }
+    }
+  },
+  "SchemaUpdateMasterSumberDana": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "string",
+        "summary": "Kode Sumber Dana",
+        "default": "SD-001"
+      },
+      "description": {
+        "type": "string",
+        "summary": "Uraian Sumber Dana",
+        "default": "Biaya Perjalanan Dinas"
+      }
+    }
+  }
+}

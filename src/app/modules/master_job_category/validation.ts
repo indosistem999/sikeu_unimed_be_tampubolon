@@ -10,15 +10,15 @@ import { DTO_ValidationCreate, DTO_ValidationUpdate } from "./dto";
 import { SPPDJenisBiaya } from "../../../database/models/SPPDJenisBiaya";
 import { SelectQueryBuilder } from "typeorm";
 
-class SPPDJenisBiayaValidation {
+class MasterJobCategoryValidation {
 
 
     async paramValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
-        if (!req?.params?.[sc.sppd_cost.primaryKey]) {
+        if (!req?.params?.[sc.job_category.primaryKey]) {
             sendErrorResponse(
                 res,
                 422,
-                MessageDialog.__('error.missing.requiredEntry', { label: 'Jenis biaya id' }),
+                MessageDialog.__('error.missing.requiredEntry', { label: 'Job category id' }),
                 null
             );
         }
@@ -53,11 +53,11 @@ class SPPDJenisBiayaValidation {
                 builder.where(`p.code = :CODE`, { CODE: code })
                     .orWhere(`p.name LIKE :NAME`, { NAME: `%${name}%` })
             })
-            .select([`p.${sc.sppd_cost.primaryKey}`, 'p.code', 'p.name'])
+            .select([`p.${sc.job_category.primaryKey}`, 'p.code', 'p.name'])
             .getOne();
 
         if (row) {
-            sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Code: ${code} or Name: ${name}` }), { row_existed: row })
+            sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Job Code: ${code} or Job Name: ${name}` }), { row_existed: row })
         }
 
         next()
@@ -65,7 +65,7 @@ class SPPDJenisBiayaValidation {
     }
 
     async updateValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
-        const id: string = req?.params?.[sc.sppd_cost.primaryKey]
+        const id: string = req?.params?.[sc.job_category.primaryKey]
         const dtoInstance = plainToInstance(DTO_ValidationUpdate, req.body);
         (dtoInstance as any).req = req;
 
@@ -98,10 +98,10 @@ class SPPDJenisBiayaValidation {
                         .orWhere(`p.name LIKE :NAME`, { NAME: `%${name}%` })
                 })
                 .andWhere(
-                    `p.${sc.sppd_cost.primaryKey} != :id`, { id }
+                    `p.${sc.job_category.primaryKey} != :id`, { id }
                 )
                 .select([
-                    `p.${sc.sppd_cost.primaryKey}`,
+                    `p.${sc.job_category.primaryKey}`,
                     'p.code',
                     'p.name'
                 ])
@@ -109,7 +109,7 @@ class SPPDJenisBiayaValidation {
 
 
             if (row) {
-                sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Code: ${code} or Name: ${name}` }), { row_existed: row })
+                sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Budget code: ${code} or budget name: ${name}` }), { row_existed: row })
             }
 
             next();
@@ -117,4 +117,4 @@ class SPPDJenisBiayaValidation {
     }
 }
 
-export default new SPPDJenisBiayaValidation();
+export default new MasterJobCategoryValidation();
