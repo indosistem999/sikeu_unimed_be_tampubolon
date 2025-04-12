@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class CreateKategoriJabatanTable1744367431285 implements MigrationInterface {
+export class CreateJobCategoryTable1744367431285 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`CREATE TABLE master_kategori_jabatan (
-            category_id CHAR(36) PRIMARY KEY,
+        await queryRunner.query(`CREATE TABLE master_job_category (
+            job_category_id CHAR(36) PRIMARY KEY,
             code VARCHAR(100) DEFAULT NULL,
             name VARCHAR(255) DEFAULT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -17,7 +17,7 @@ export class CreateKategoriJabatanTable1744367431285 implements MigrationInterfa
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`DROP TABLE master_kategori_jabatan`);
+        await queryRunner.query(`DROP TABLE master_job_category`);
     }
 
 }

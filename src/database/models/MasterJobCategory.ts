@@ -5,13 +5,15 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   PrimaryGeneratedColumn,
+  OneToMany,
 } from 'typeorm';
+import { MasterOfficers } from './MasterOfficers';
 
 /** Master Kategori Jabatan */
-@Entity({ name: 'master_kategori_jabatan' })
+@Entity({ name: 'master_job_category' })
 export class MasterJobCategory {
   @PrimaryGeneratedColumn('uuid')
-  category_id!: string;
+  job_category_id!: string;
 
   @Column({ type: 'varchar', length: 100, name: 'code', default: null })
   code!: string;
@@ -36,4 +38,7 @@ export class MasterJobCategory {
 
   @Column({ name: 'deleted_by', type: 'uuid' })
   deleted_by!: string;
+
+  @OneToMany(() => MasterOfficers, (value) => value.job_category)
+  officers!: MasterOfficers[];
 }

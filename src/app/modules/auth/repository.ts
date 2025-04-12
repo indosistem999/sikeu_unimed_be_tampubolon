@@ -89,8 +89,6 @@ class AuthRepository implements I_AuthRepository {
       user.refresh_token = refresh_token;
       user = await this.userRepo.save(user);
 
-      console.log({ totalDays })
-
       // Create Log Activity
       if (totalDays >= 1) {
         const resultLog = await this.userLogRepository.store({

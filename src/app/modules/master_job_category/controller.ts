@@ -23,13 +23,13 @@ class MasterJobCategoryController extends MainRoutes {
         );
 
         /** [GET] - Find By Id  */
-        this.router.get('/:category_id', authMiddleware, ReqValidation.paramValidation, async (req: Request, res: Response) => {
+        this.router.get('/:job_category_id', authMiddleware, ReqValidation.paramValidation, async (req: Request, res: Response) => {
             await Services.fetchById(req, res);
         });
 
         /** [PUT] - Update Data */
         this.router.put(
-            '/:category_id',
+            '/:job_category_id',
             authMiddleware,
             ReqValidation.paramValidation,
             ReqValidation.updateValidation,
@@ -39,7 +39,7 @@ class MasterJobCategoryController extends MainRoutes {
         );
 
         /** [DELETE] - Delete Data */
-        this.router.delete('/:category_id', authMiddleware, ReqValidation.paramValidation, async (req: Request, res: Response) => {
+        this.router.delete('/:job_category_id', authMiddleware, ReqValidation.paramValidation, async (req: Request, res: Response) => {
             await Services.softDelete(req, res);
         });
     }

@@ -39,7 +39,54 @@ class MasterMenuRepository implements I_MasterMenuRepository {
           'children',
           'master_module'
         ],
-        select: selectDetailMenu
+        select: {
+          menu_id: true,
+          name: true,
+          slug: true,
+          parent: {
+            menu_id: true,
+            name: true,
+            slug: true,
+            created_at: true,
+            created_by: true
+          },
+          children: {
+            menu_id: true,
+            name: true,
+            slug: true,
+            children: {
+              menu_id: true,
+              name: true,
+              slug: true,
+              children: {
+                menu_id: true,
+                name: true,
+                slug: true,
+                master_module: {
+                  module_id: true,
+                  module_name: true,
+                  module_path: true
+                },
+                created_at: true,
+                updated_at: true
+              }
+            },
+            master_module: {
+              module_id: true,
+              module_name: true,
+              module_path: true
+            },
+            created_at: true,
+            updated_at: true
+          },
+          master_module: {
+            module_id: true,
+            module_name: true,
+            module_path: true
+          },
+          created_at: true,
+          updated_at: true
+        }
       })
 
       if (!result) {

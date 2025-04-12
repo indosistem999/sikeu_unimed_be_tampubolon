@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Users } from './Users';
 import { SPPDPegawai } from './SPPDPegawai';
+import { MasterOfficers } from './MasterOfficers';
 
 
 @Entity({ name: 'master_work_unit' })
@@ -46,6 +47,8 @@ export class MasterWorkUnit {
     @OneToMany(() => Users, (value: any) => value.work_unit)
     users!: Users[]
 
+    @OneToMany(() => MasterOfficers, (value: any) => value.work_unit)
+    officers!: MasterOfficers[]
 
     @OneToMany(() => SPPDPegawai, (value: any) => value.work_unit, { eager: true })
     pegawai!: SPPDPegawai[]
