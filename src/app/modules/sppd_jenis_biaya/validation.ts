@@ -102,7 +102,8 @@ class SPPDJenisBiayaValidation {
                 )
                 .select([
                     `p.${sc.sppd_cost.primaryKey}`,
-                    'p.code'
+                    'p.code',
+                    'p.name'
                 ])
                 .getOne()
 

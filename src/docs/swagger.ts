@@ -20,7 +20,7 @@ export const swaggerDocLocalApi: object = {
   info: swaggerDocInfo,
   servers: [
     {
-      url: '/api/v1/',
+      url: 'http://localhost:7001/api/v1/',
       description: 'Private API',
     },
   ],

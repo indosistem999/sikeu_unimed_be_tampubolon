@@ -4,6 +4,7 @@
   "main": "src/server.ts",
   "type": "commonjs",
   "scripts": {
+    "create-migration": "node src/migrationScript.js",
     "lint": "eslint --max-warnings=0 --cache --cache-location ./.eslintcache ./src --ext .js,.ts -c ./.eslintrc.js",
     "lint:fix": "eslint --max-warnings=0 --cache --cache-location ./.eslintcache --fix ./src --ext .js,.ts -c ./.eslintrc.js",
     "format": "eslint src/**/*.ts --fix",
