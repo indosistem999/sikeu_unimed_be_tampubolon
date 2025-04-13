@@ -1,38 +1,31 @@
-import {
-    Entity,
-    Column,
-    CreateDateColumn,
-    UpdateDateColumn,
-    DeleteDateColumn,
-    PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({ name: 'sppd_bagian_surat' })
+@Entity('sppd_bagian_surat')
 export class SPPDBagianSurat {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn('uuid', { name: 'bagian_surat_id' })
     bagian_surat_id!: string;
 
-    @Column({ type: 'text', name: 'name', default: null })
+    @Column({ type: 'text', nullable: true })
     name!: string;
 
-    @Column({ type: 'text', name: 'description', default: null })
+    @Column({ type: 'text', nullable: true })
     description!: string;
 
-    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
+    @Column({ type: 'timestamp', nullable: false, default: () => 'CURRENT_TIMESTAMP' })
     created_at!: Date;
 
-    @Column({ name: 'created_by', type: 'uuid' })
+    @Column({ type: 'char', length: 36, nullable: true })
     created_by!: string;
 
-    @UpdateDateColumn({ type: 'timestamp', nullable: true, name: 'updated_at' })
+    @Column({ type: 'timestamp', nullable: true })
     updated_at!: Date;
 
-    @Column({ name: 'updated_by', type: 'uuid' })
+    @Column({ type: 'char', length: 36, nullable: true })
     updated_by!: string;
 
-    @DeleteDateColumn({ type: 'timestamp', nullable: true, name: 'deleted_at' })
+    @Column({ type: 'timestamp', nullable: true })
     deleted_at!: Date;
 
-    @Column({ name: 'deleted_by', type: 'uuid' })
+    @Column({ type: 'char', length: 36, nullable: true })
     deleted_by!: string;
 }

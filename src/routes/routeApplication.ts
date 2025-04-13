@@ -1,4 +1,3 @@
-
 import MainRoutes from '../config/mainRoute';
 import { IsProduction } from '../constanta';
 import { swaggerDocLocalApi } from '../docs/swagger';
@@ -23,6 +22,7 @@ import SPPDJenisBiayaController from '../app/modules/sppd_jenis_biaya/controller
 import MasterBudgetYearController from '../app/modules/master_budget_year/controller'
 import MasterJobCategoryController from '../app/modules/master_job_category/controller'
 import MasterSumberDanaController from '../app/modules/master_sumber_dana/controller'
+import BagianSuratController from '../app/modules/sppd_bagian_surat'
 
 const tagVersionOne: string = '/api/v1';
 
@@ -86,6 +86,8 @@ class RouteApplication extends MainRoutes {
     // SPPD Jeni Biaya
     this.router.use(`${tagVersionOne}/sppd-jenis-biaya`, SPPDJenisBiayaController)
 
+    // SPPD Bagian Surat
+    this.router.use(`${tagVersionOne}/sppd-bagian-surat`, BagianSuratController.router)
   }
 }
 

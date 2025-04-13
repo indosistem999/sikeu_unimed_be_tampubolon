@@ -1,0 +1,144 @@
+{
+    "/sppd-bagian-surat": {
+        "get": {
+            "tags": ["SPPD Bagian Surat"],
+            "summary": "Get all bagian surat",
+            "security": [{ "bearerAuth": [] }],
+            "responses": {
+                "200": {
+                    "description": "Success get all bagian surat",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Response"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "post": {
+            "tags": ["SPPD Bagian Surat"],
+            "summary": "Create new bagian surat",
+            "security": [{ "bearerAuth": [] }],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/BagianSurat"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Success create bagian surat",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Response"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/sppd-bagian-surat/{bagian_surat_id}": {
+        "get": {
+            "tags": ["SPPD Bagian Surat"],
+            "summary": "Get bagian surat by ID",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "bagian_surat_id",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    },
+                    "description": "Bagian Surat ID"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Success get bagian surat by ID",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Response"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "put": {
+            "tags": ["SPPD Bagian Surat"],
+            "summary": "Update bagian surat",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "bagian_surat_id",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    },
+                    "description": "Bagian Surat ID"
+                }
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/BagianSurat"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Success update bagian surat",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Response"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "tags": ["SPPD Bagian Surat"],
+            "summary": "Delete bagian surat",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "bagian_surat_id",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    },
+                    "description": "Bagian Surat ID"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Success delete bagian surat",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Response"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+} 

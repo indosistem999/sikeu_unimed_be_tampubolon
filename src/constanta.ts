@@ -159,5 +159,9 @@ export const allSchema = {
   master_officers: {
     tableName: 'master_officers',
     primaryKey: 'officers_id',
+  },
+  bagian_surat: {
+    tableName: 'sppd_bagian_surat',
+    primaryKey: 'bagian_surat_id',
   }
 }
