@@ -163,5 +163,9 @@ export const allSchema = {
   bagian_surat: {
     tableName: 'sppd_bagian_surat',
     primaryKey: 'bagian_surat_id',
+  },
+  kop_surat: {
+    tableName: 'sppd_kopsurat',
+    primaryKey: 'kopsurat_id',
   }
 }

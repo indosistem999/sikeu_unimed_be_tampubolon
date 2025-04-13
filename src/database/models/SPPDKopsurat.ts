@@ -1,48 +1,40 @@
-import {
-    Entity,
-    Column,
-    CreateDateColumn,
-    UpdateDateColumn,
-    DeleteDateColumn,
-    PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity({ name: 'sppd_kopsurat' })
-export class SPPDKopsurat {
-    @PrimaryGeneratedColumn('uuid')
+@Entity('sppd_kopsurat')
+export class SPPDKopSurat {
+    @PrimaryGeneratedColumn('uuid', { name: 'kopsurat_id' })
     kopsurat_id!: string;
 
-    @Column({ type: 'bigint', name: 'order_number', default: null })
+    @Column('bigint', { name: 'order_number', nullable: true })
     order_number!: number;
 
-    @Column({ type: 'text', name: 'description', default: null })
+    @Column('text', { name: 'description', nullable: true })
     description!: string;
 
-    @Column({ type: 'text', name: 'font_type', default: null })
+    @Column('text', { name: 'font_type', nullable: true })
     font_type!: string;
 
-    @Column({ type: 'text', name: 'font_style', default: null })
+    @Column('text', { name: 'font_style', nullable: true })
     font_style!: string;
 
-
-    @Column({ type: 'varchar', length: 200, name: 'font_size', default: null })
+    @Column('varchar', { name: 'font_size', length: 200, nullable: true })
     font_size!: string;
 
-    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
+    @Column('timestamp', { name: 'created_at', nullable: false, default: () => 'CURRENT_TIMESTAMP' })
     created_at!: Date;
 
-    @Column({ name: 'created_by', type: 'uuid' })
+    @Column('char', { name: 'created_by', length: 36, nullable: true })
     created_by!: string;
 
-    @UpdateDateColumn({ type: 'timestamp', nullable: true, name: 'updated_at' })
+    @Column('timestamp', { name: 'updated_at', nullable: true, onUpdate: 'CURRENT_TIMESTAMP' })
     updated_at!: Date;
 
-    @Column({ name: 'updated_by', type: 'uuid' })
+    @Column('char', { name: 'updated_by', length: 36, nullable: true })
     updated_by!: string;
 
-    @DeleteDateColumn({ type: 'timestamp', nullable: true, name: 'deleted_at' })
+    @Column('timestamp', { name: 'deleted_at', nullable: true })
     deleted_at!: Date;
 
-    @Column({ name: 'deleted_by', type: 'uuid' })
+    @Column('char', { name: 'deleted_by', length: 36, nullable: true })
     deleted_by!: string;
 }

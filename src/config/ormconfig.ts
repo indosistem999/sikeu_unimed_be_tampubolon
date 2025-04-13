@@ -7,6 +7,7 @@ import { MasterModule } from '../database/models/MasterModule';
 import { MasterMenu } from '../database/models/MasterMenu';
 import { RoleModuleAssociation } from '../database/models/RoleModuleAssociation';
 import { ModuleMenuAssociation } from '../database/models/ModuleMenuAssociation';
+import { SPPDKopSurat } from '../database/models/SPPDKopsurat';
 
 const AppDataSource = new DataSource({
   type: 'mysql',
@@ -24,7 +25,8 @@ const AppDataSource = new DataSource({
     MasterModule,
     MasterMenu,
     RoleModuleAssociation,
-    ModuleMenuAssociation
+    ModuleMenuAssociation,
+    SPPDKopSurat
   ], // Path to your entities
   migrations: ['src/database/migrations/*.ts'], // Path to your migrations,
   migrationsTableName: 'migrations',

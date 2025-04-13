@@ -1,0 +1,27 @@
+{
+    "KopSurat": {
+        "type": "object",
+        "properties": {
+            "order_number": {
+                "type": "integer",
+                "description": "Order number of the kop surat"
+            },
+            "description": {
+                "type": "string",
+                "description": "Description of the kop surat"
+            },
+            "font_type": {
+                "type": "string",
+                "description": "Font type of the kop surat"
+            },
+            "font_style": {
+                "type": "string",
+                "description": "Font style of the kop surat"
+            },
+            "font_size": {
+                "type": "string",
+                "description": "Font size of the kop surat"
+            }
+        }
+    }
+} 

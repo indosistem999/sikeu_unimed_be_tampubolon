@@ -1,12 +1,12 @@
 {
-    "/sppd-bagian-surat": {
+    "/sppd-kop-surat": {
         "get": {
-            "tags": ["SPPD Bagian Surat"],
-            "summary": "Get all bagian surat",
+            "tags": ["SPPD Kop Surat"],
+            "summary": "Get all kop surat",
             "security": [{ "bearerAuth": [] }],
             "responses": {
                 "200": {
-                    "description": "Success get all bagian surat",
+                    "description": "Success get all kop surat",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -18,22 +18,22 @@
             }
         },
         "post": {
-            "tags": ["SPPD Bagian Surat"],
-            "summary": "Create new bagian surat",
+            "tags": ["SPPD Kop Surat"],
+            "summary": "Create new kop surat",
             "security": [{ "bearerAuth": [] }],
             "requestBody": {
                 "required": true,
                 "content": {
                     "application/json": {
                         "schema": {
-                            "$ref": "#/components/schemas/BagianSurat"
+                            "$ref": "#/components/schemas/KopSurat"
                         }
                     }
                 }
             },
             "responses": {
                 "200": {
-                    "description": "Success create bagian surat",
+                    "description": "Success create kop surat",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -45,25 +45,25 @@
             }
         }
     },
-    "/sppd-bagian-surat/{bagian_surat_id}": {
+    "/sppd-kop-surat/{kopsurat_id}": {
         "get": {
-            "tags": ["SPPD Bagian Surat"],
-            "summary": "Get bagian surat by ID",
+            "tags": ["SPPD Kop Surat"],
+            "summary": "Get kop surat by ID",
             "security": [{ "bearerAuth": [] }],
             "parameters": [
                 {
                     "in": "path",
-                    "name": "bagian_surat_id",
+                    "name": "kopsurat_id",
                     "required": true,
                     "schema": {
                         "type": "string"
                     },
-                    "description": "Bagian Surat ID"
+                    "description": "Kop Surat ID"
                 }
             ],
             "responses": {
                 "200": {
-                    "description": "Success get bagian surat by ID",
+                    "description": "Success get kop surat by ID",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -75,18 +75,18 @@
             }
         },
         "put": {
-            "tags": ["SPPD Bagian Surat"],
-            "summary": "Update bagian surat",
+            "tags": ["SPPD Kop Surat"],
+            "summary": "Update kop surat",
             "security": [{ "bearerAuth": [] }],
             "parameters": [
                 {
                     "in": "path",
-                    "name": "bagian_surat_id",
+                    "name": "kopsurat_id",
                     "required": true,
                     "schema": {
                         "type": "string"
                     },
-                    "description": "Bagian Surat ID"
+                    "description": "Kop Surat ID"
                 }
             ],
             "requestBody": {
@@ -94,14 +94,14 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "$ref": "#/components/schemas/BagianSurat"
+                            "$ref": "#/components/schemas/KopSurat"
                         }
                     }
                 }
             },
             "responses": {
                 "200": {
-                    "description": "Success update bagian surat",
+                    "description": "Success update kop surat",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -113,23 +113,53 @@
             }
         },
         "delete": {
-            "tags": ["SPPD Bagian Surat"],
-            "summary": "Delete bagian surat",
+            "tags": ["SPPD Kop Surat"],
+            "summary": "Delete kop surat",
             "security": [{ "bearerAuth": [] }],
             "parameters": [
                 {
                     "in": "path",
-                    "name": "bagian_surat_id",
+                    "name": "kopsurat_id",
                     "required": true,
                     "schema": {
                         "type": "string"
                     },
-                    "description": "Bagian Surat ID"
+                    "description": "Kop Surat ID"
                 }
             ],
             "responses": {
                 "200": {
-                    "description": "Success delete bagian surat",
+                    "description": "Success delete kop surat",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DefaultResponseSchema"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/sppd-kop-surat/{kopsurat_id}/preview": {
+        "get": {
+            "tags": ["SPPD Kop Surat"],
+            "summary": "Preview kop surat",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "kopsurat_id",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    },
+                    "description": "Kop Surat ID"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Success preview kop surat",
                     "content": {
                         "application/json": {
                             "schema": {

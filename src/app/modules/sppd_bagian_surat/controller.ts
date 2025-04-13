@@ -45,4 +45,4 @@ class BagianSuratController extends MainRoutes {
     }
 }
 
-export default new BagianSuratController(); 
+export default new BagianSuratController().router; 

@@ -22,7 +22,8 @@ import SPPDJenisBiayaController from '../app/modules/sppd_jenis_biaya/controller
 import MasterBudgetYearController from '../app/modules/master_budget_year/controller'
 import MasterJobCategoryController from '../app/modules/master_job_category/controller'
 import MasterSumberDanaController from '../app/modules/master_sumber_dana/controller'
-import BagianSuratController from '../app/modules/sppd_bagian_surat'
+import BagianSuratController from '../app/modules/sppd_bagian_surat/controller'
+import KopSuratController from '../app/modules/sppd_kop_surat/controller'
 
 const tagVersionOne: string = '/api/v1';
 
@@ -87,7 +88,10 @@ class RouteApplication extends MainRoutes {
     this.router.use(`${tagVersionOne}/sppd-jenis-biaya`, SPPDJenisBiayaController)
 
     // SPPD Bagian Surat
-    this.router.use(`${tagVersionOne}/sppd-bagian-surat`, BagianSuratController.router)
+    this.router.use(`${tagVersionOne}/sppd-bagian-surat`, BagianSuratController)
+
+    // SPPD Kop Surat
+    this.router.use(`${tagVersionOne}/sppd-kop-surat`, KopSuratController)
   }
 }
 

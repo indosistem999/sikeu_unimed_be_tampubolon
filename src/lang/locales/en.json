@@ -102,6 +102,21 @@
       "store": "Source of funds added successfully",
       "update": "Source of funds edited successfully",
       "softDelete": "Source of funds deleted successfully"
+    },
+    "sppdBagianSurat": {
+      "findItem": "Get Bagian Surat {{item}} successfully",
+      "fetch": "Get Bagian Surat successfully",
+      "store": "Bagian Surat added successfully",
+      "update": "Bagian Surat edited successfully",
+      "softDelete": "Bagian Surat deleted successfully"
+    },
+    "sppdKopSurat": {
+      "findItem": "Get Kop Surat {{item}} successfully",
+      "fetch": "Get Kop Surat successfully",
+      "store": "Kop Surat added successfully",
+      "update": "Kop Surat edited successfully",
+      "softDelete": "Kop Surat deleted successfully",
+      "preview": "Preview Kop Surat successfully"
     }
   },
   "error": {
@@ -118,7 +133,9 @@
       "orderNumber": "Order number {{value}} already exists in the database.",
       "hasRegistered": "{{item}} already registered",
       "roleModule": "Data already existed. The Module had assigned to role",
-      "sppdPangkat": "Data spd pangkat already existed"
+      "sppdPangkat": "Data spd pangkat already existed",
+      "sppdBagianSurat": "Bagian Surat already exists",
+      "sppdKopSurat": "Kop Surat already exists"
     },
     "missing": {
       "tokenAuth": "Unauthorized: Token is missing",
@@ -146,14 +163,18 @@
       "storeSppdJenisBiaya": "Failed to store spd jenis biaya",
       "storeBudgetYear": "Failed to store budget of year",
       "storeJobCategory": "Failed to store job category",
-      "storeSumberDana": "Failed to store source of funds"
+      "storeSumberDana": "Failed to store source of funds",
+      "storeBagianSurat": "Failed to store bagian surat",
+      "storeKopSurat": "Failed to store kop surat"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",
       "emailFormatted": "Invalid email formatted",
       "password": "Invalid password entry",
       "tokenExpired": "Unauthorized: Invalid or expired token",
-      "otpExpired": "The OTP code has expired. Please request again."
+      "otpExpired": "The OTP code has expired. Please request again.",
+      "bagianSuratId": "Invalid Bagian Surat ID",
+      "kopSuratId": "Invalid Kop Surat ID"
     },
     "denied": {
       "tokenAccess": "Access denied. No token provided."
@@ -161,6 +182,19 @@
     "other": {
       "passwordLength": "Password must be at least {{number}} characters long",
       "emailNotRegistered": "Email not registered"
+    },
+    "validation": {
+      "bagianSurat": {
+        "nameRequired": "Name must be a string",
+        "descriptionString": "Description must be a string"
+      },
+      "kopSurat": {
+        "orderNumber": "Order number must be a number",
+        "description": "Description must be a string",
+        "fontType": "Font type must be a string",
+        "fontStyle": "Font style must be a string",
+        "fontSize": "Font size must be a string"
+      }
     }
   }
 }

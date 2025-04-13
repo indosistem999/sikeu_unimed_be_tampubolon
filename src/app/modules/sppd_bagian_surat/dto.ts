@@ -1,21 +1,22 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { MessageDialog } from '../../../lang';
 
 export class DTO_ValidationCreate {
-    @IsString()
+    @IsString({ message: () => MessageDialog.__('error.validation.bagianSurat.nameRequired') })
     @IsNotEmpty()
     name!: string;
 
-    @IsString()
+    @IsString({ message: () => MessageDialog.__('error.validation.bagianSurat.descriptionString') })
     @IsOptional()
     description!: string;
 }
 
 export class DTO_ValidationUpdate {
-    @IsString()
+    @IsString({ message: () => MessageDialog.__('error.validation.bagianSurat.nameRequired') })
     @IsNotEmpty()
     name!: string;
 
-    @IsString()
+    @IsString({ message: () => MessageDialog.__('error.validation.bagianSurat.descriptionString') })
     @IsOptional()
     description!: string;
 } 

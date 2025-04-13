@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import { sendErrorResponse, sendSuccessResponse } from '../../../lib/utils/response.util';
 import { I_RequestCustom } from '../../../interfaces/app.interface';
-import { standartDateISO } from '../../../lib/utils/common.util';
 import { defineRequestOrderORM, defineRequestPaginateArgs } from '../../../lib/utils/request.util';
 import { sortDefault, sortRequest } from './constanta';
 import { I_BagianSuratService } from '../../../interfaces/bagianSurat.interface';
 import { BagianSuratRepository } from './repository';
+import { allSchema as sc } from '../../../constanta';
+import { MessageDialog } from '../../../lang';
 
 class BagianSuratService implements I_BagianSuratService {
     private readonly repository = new BagianSuratRepository();
@@ -24,83 +25,83 @@ class BagianSuratService implements I_BagianSuratService {
         return payload;
     }
 
-    /** Fetch Data */
     async fetch(req: Request, res: Response): Promise<Response> {
-        const filters: Record<string, any> = {
-            paging: defineRequestPaginateArgs(req),
-            sorting: defineRequestOrderORM(req, sortDefault, sortRequest),
-        }
+        try {
+            const filters = {
+                paging: defineRequestPaginateArgs(req),
+                sorting: defineRequestOrderORM(req, sortDefault, sortRequest)
+            };
+            const result = await this.repository.fetch(filters);
 
-        const result = await this.repository.fetch(filters)
-        if (!result?.success) {
-            return sendErrorResponse(res, 400, result.message, result.record);
-        }
+            if (!result.success) {
+                return sendErrorResponse(res, 400, result.message, result.record);
+            }
 
-        return sendSuccessResponse(res, 200, result.message, result.record);
+            return sendSuccessResponse(res, 200, MessageDialog.__('success.sppdBagianSurat.fetch'), result.record);
+        } catch (error) {
+            return sendErrorResponse(res, 500, MessageDialog.__('error.failed.storeBagianSurat'), error);
+        }
     }
 
-    /** Fetch By Id */
+    async store(req: Request, res: Response): Promise<Response> {
+        try {
+            const payload = this.bodyValidation(req);
+            const result = await this.repository.store(payload);
+
+            if (!result.success) {
+                return sendErrorResponse(res, 400, result.message, result.record);
+            }
+
+            return sendSuccessResponse(res, 200, MessageDialog.__('success.sppdBagianSurat.store'), result.record);
+        } catch (error) {
+            return sendErrorResponse(res, 500, MessageDialog.__('error.failed.storeBagianSurat'), error);
+        }
+    }
+
     async fetchById(req: Request, res: Response): Promise<Response> {
-        const id: string = req?.params?.bagian_surat_id
-        const result = await this.repository.fetchById(id)
+        try {
+            const result = await this.repository.fetchById(req?.params?.[sc.bagian_surat.primaryKey]);
 
-        if (!result?.success) {
-            return sendErrorResponse(res, 400, result.message, result.record);
+            if (!result.success) {
+                return sendErrorResponse(res, 404, result.message, result.record);
+            }
+
+            return sendSuccessResponse(res, 200, MessageDialog.__('success.sppdBagianSurat.findItem', { item: result.record.bagian_surat_id }), result.record);
+        } catch (error) {
+            return sendErrorResponse(res, 500, MessageDialog.__('error.failed.storeBagianSurat'), error);
         }
-
-        return sendSuccessResponse(res, 200, result.message, result.record);
     }
 
-    /** Store Data */
-    async store(req: I_RequestCustom, res: Response): Promise<Response> {
-        const today: Date = new Date(standartDateISO())
-        let payload: Record<string, any> = {
-            created_at: today,
-            created_by: req?.user?.user_id,
-            ...this.bodyValidation(req)
-        }
+    async update(req: Request, res: Response): Promise<Response> {
+        try {
+            const payload = this.bodyValidation(req);
+            const result = await this.repository.update(req?.params?.[sc.bagian_surat.primaryKey], payload);
 
-        const result = await this.repository.store(payload)
-        if (!result?.success) {
-            return sendErrorResponse(res, 400, result.message, result.record);
-        }
+            if (!result.success) {
+                return sendErrorResponse(res, 404, result.message, result.record);
+            }
 
-        return sendSuccessResponse(res, 200, result.message, result.record);
+            return sendSuccessResponse(res, 200, MessageDialog.__('success.sppdBagianSurat.update'), result.record);
+        } catch (error) {
+            return sendErrorResponse(res, 500, MessageDialog.__('error.failed.storeBagianSurat'), error);
+        }
     }
 
-    /** Update Data */
-    async update(req: I_RequestCustom, res: Response): Promise<Response> {
-        const today: Date = new Date(standartDateISO())
-        const id: string = req?.params?.bagian_surat_id;
-        let payload: Record<string, any> = {
-            updated_at: today,
-            updated_by: req?.user?.user_id,
-            ...this.bodyValidation(req)
+    async softDelete(req: Request, res: Response): Promise<Response> {
+        try {
+            const result = await this.repository.softDelete(req?.params?.[sc.bagian_surat.primaryKey], {
+                deleted_at: new Date(),
+                deleted_by: (req as I_RequestCustom)?.user?.user_id
+            });
+
+            if (!result.success) {
+                return sendErrorResponse(res, 404, result.message, result.record);
+            }
+
+            return sendSuccessResponse(res, 200, MessageDialog.__('success.sppdBagianSurat.softDelete'), result.record);
+        } catch (error) {
+            return sendErrorResponse(res, 500, MessageDialog.__('error.failed.storeBagianSurat'), error);
         }
-
-        const result = await this.repository.update(id, payload)
-        if (!result?.success) {
-            return sendErrorResponse(res, 400, result.message, result.record);
-        }
-
-        return sendSuccessResponse(res, 200, result.message, result.record);
-    }
-
-    /** Soft Delete By Id */
-    async softDelete(req: I_RequestCustom, res: Response): Promise<Response> {
-        const today: Date = new Date(standartDateISO())
-        const id: string = req?.params?.bagian_surat_id;
-        let payload: Record<string, any> = {
-            deleted_at: today,
-            deleted_by: req?.user?.user_id
-        }
-
-        const result = await this.repository.softDelete(id, payload)
-        if (!result?.success) {
-            return sendErrorResponse(res, 400, result.message, result.record);
-        }
-
-        return sendSuccessResponse(res, 200, result.message, result.record);
     }
 }
 
