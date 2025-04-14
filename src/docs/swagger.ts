@@ -36,25 +36,3 @@ export const swaggerDocLocalApi: object = {
     schemas: createSwaggerSchema(),
   },
 };
-
-export const swaggerDocGatewayApi: object = {
-  openapi: '3.0.0',
-  info: swaggerDocInfo,
-  servers: [
-    {
-      url: 'url gateway',
-      description: 'API Gateway',
-    },
-  ],
-  paths: createSwaggerPath(),
-  components: {
-    securitySchemes: {
-      bearerAuth: {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-      },
-    },
-    schemas: createSwaggerSchema(),
-  },
-};

@@ -4,6 +4,8 @@ import MainRoutes from '../config/mainRoute';
 import { sendSuccessResponse } from '../lib/utils/response.util';
 import { Config as cfg, IsProduction } from '../constanta';
 import { getDurationInMilliseconds } from '../lib/utils/common.util';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerDocLocalApi } from '../docs/swagger';
 
 class RouteHealtCheck extends MainRoutes {
   public routes(): void {
@@ -20,6 +22,15 @@ class RouteHealtCheck extends MainRoutes {
 
       sendSuccessResponse(res, 200, `Welcome to api ${cfg.AppName}`, rows);
     });
+
+
+    if (!IsProduction) {
+      this.router.use(
+        '/documentation',
+        swaggerUi.serveFiles(swaggerDocLocalApi),
+        swaggerUi.setup(swaggerDocLocalApi)
+      );
+    }
   }
 }
 

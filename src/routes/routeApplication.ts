@@ -31,14 +31,6 @@ class RouteApplication extends MainRoutes {
   public routes(): void {
     this.router.use(RouteHealtCheck)
 
-    if (!IsProduction) {
-      this.router.use(
-        '/documentation',
-        swaggerUi.serveFiles(swaggerDocLocalApi),
-        swaggerUi.setup(swaggerDocLocalApi)
-      );
-    }
-
     // API Auth
     this.router.use(`${tagVersionOne}/auth`, AuthController);
 
