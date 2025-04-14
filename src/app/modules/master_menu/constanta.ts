@@ -31,21 +31,25 @@ export const selectDetailMenu: Record<string, any> = {
     name: true,
     slug: true,
     order_number: true,
+    icon: true,
     children: {
       menu_id: true,
       name: true,
       slug: true,
       order_number: true,
+      icon: true,
       children: {
         menu_id: true,
         name: true,
         slug: true,
         order_number: true,
+        icon: true,
         children: {
           menu_id: true,
           name: true,
           slug: true,
           order_number: true,
+          icon: true,
           children: {
             menu_id: true,
             name: true,

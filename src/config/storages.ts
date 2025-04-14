@@ -65,9 +65,9 @@ export const uploadImageToStorage = multer({
     }
 });
 
-export const makeFullUrlFile = (filePath: string): any => {
+export const makeFullUrlFile = (filePath: string, pathSlug: string = 'master-module'): any => {
     if (filePath != null && filePath != '' && filePath != undefined) {
-        return `${BASE_URL}/api/v1/master-module/files/${filePath}`;
+        return `${BASE_URL}/api/v1/${pathSlug}/files/${filePath}`;
     }
     return filePath
 }
@@ -115,7 +115,6 @@ export const removeFileInStorage = (fileName: string): I_ResultService => {
             message: `${fileName} was found and deleted.`,
             record: filePath
         }
-        console.log(`${fileName} was found and deleted.`);
     } else {
         return {
             success: true,

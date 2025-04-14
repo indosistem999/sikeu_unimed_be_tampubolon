@@ -25,6 +25,7 @@ import bcrypt from 'bcrypt';
 import { IsNull } from 'typeorm';
 import { RoleModuleAssociation } from '../../../database/models/RoleModuleAssociation';
 import { selectDetailMenu } from '../master_menu/constanta';
+import { makeFullUrlFile } from '../../../config/storages';
 
 class AuthRepository implements I_AuthRepository {
   private userRepo = AppDataSource.getRepository(Users);
@@ -504,10 +505,26 @@ class AuthRepository implements I_AuthRepository {
       })
 
 
+      const updatedRows = rows.map((row: any) => {
+        if (row.master_module?.icon) {
+          row.master_module.icon = makeFullUrlFile(row.master_module.icon, 'master-module')
+          if (row?.master_module?.module_menu?.length > 0) {
+            row.master_module.module_menu = row.master_module.module_menu.map((x: any) => {
+              if (x?.icon) {
+                x.icon = makeFullUrlFile(x.icon, 'master-menu')
+              }
+              return x
+            })
+          }
+        }
+        return row;
+      });
+
+
       return {
         success: true,
         message: 'Get data success',
-        record: rows
+        record: updatedRows
       }
 
 
