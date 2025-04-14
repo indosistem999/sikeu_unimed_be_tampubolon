@@ -18,7 +18,7 @@ class MasterSumberDanaService implements I_MasterSumberDanaService {
       payload.code = req?.body?.code
     }
 
-    if (req?.body?.code) {
+    if (req?.body?.description) {
       payload.description = req?.body?.description
     }
 

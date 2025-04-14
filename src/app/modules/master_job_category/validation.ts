@@ -7,8 +7,8 @@ import { allSchema as sc } from "../../../constanta";
 import { MessageDialog } from "../../../lang";
 import AppDataSource from "../../../config/dbconfig";
 import { DTO_ValidationCreate, DTO_ValidationUpdate } from "./dto";
-import { SPPDJenisBiaya } from "../../../database/models/SPPDJenisBiaya";
 import { SelectQueryBuilder } from "typeorm";
+import { MasterJobCategory } from "../../../database/models/MasterJobCategory";
 
 class MasterJobCategoryValidation {
 
@@ -46,10 +46,10 @@ class MasterJobCategoryValidation {
         const code: string = req?.body?.code || ''
         const name: string = req?.body?.name || ''
 
-        const row = await AppDataSource.getRepository(SPPDJenisBiaya)
+        const row = await AppDataSource.getRepository(MasterJobCategory)
             .createQueryBuilder('p')
             .where(`p.deleted_at IS NULL`)
-            .andWhere((builder: SelectQueryBuilder<SPPDJenisBiaya>) => {
+            .andWhere((builder: SelectQueryBuilder<MasterJobCategory>) => {
                 builder.where(`p.code = :CODE`, { CODE: code })
                     .orWhere(`p.name LIKE :NAME`, { NAME: `%${name}%` })
             })
@@ -90,10 +90,10 @@ class MasterJobCategoryValidation {
             const code: string = req?.body?.code || ''
             const name: string = req?.body?.name || ''
 
-            const row = await AppDataSource.getRepository(SPPDJenisBiaya)
+            const row = await AppDataSource.getRepository(MasterJobCategory)
                 .createQueryBuilder('p')
                 .where(`p.deleted_at IS NULL`)
-                .andWhere((builder: SelectQueryBuilder<SPPDJenisBiaya>) => {
+                .andWhere((builder: SelectQueryBuilder<MasterJobCategory>) => {
                     builder.where(`p.code = :CODE`, { CODE: code })
                         .orWhere(`p.name LIKE :NAME`, { NAME: `%${name}%` })
                 })
@@ -109,7 +109,7 @@ class MasterJobCategoryValidation {
 
 
             if (row) {
-                sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Budget code: ${code} or budget name: ${name}` }), { row_existed: row })
+                sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Job Code: ${code} or Job Name: ${name}` }), { row_existed: row })
             }
 
             next();

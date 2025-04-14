@@ -7,11 +7,10 @@ import { allSchema as sc } from "../../../constanta";
 import { MessageDialog } from "../../../lang";
 import AppDataSource from "../../../config/dbconfig";
 import { DTO_ValidationCreate, DTO_ValidationUpdate } from "./dto";
-import { SPPDJenisBiaya } from "../../../database/models/SPPDJenisBiaya";
+import { MasterSumberDana } from "../../../database/models/MasterSumberDana";
 import { SelectQueryBuilder } from "typeorm";
 
 class MasterSumberDanaValidation {
-
 
   async paramValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
     if (!req?.params?.[sc.sumber_dana.primaryKey]) {
@@ -25,7 +24,6 @@ class MasterSumberDanaValidation {
     else {
       next()
     }
-
   }
 
   async createValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
@@ -43,12 +41,11 @@ class MasterSumberDanaValidation {
       );
     }
 
-
-    const row = await AppDataSource.getRepository(SPPDJenisBiaya)
+    const row = await AppDataSource.getRepository(MasterSumberDana)
       .createQueryBuilder('p')
       .where(`p.deleted_at IS NULL`)
       .andWhere(`p.code = :value`, { value: req?.body?.code })
-      .select([`p.${sc.budget_year.primaryKey}`, 'p.code', 'p.description'])
+      .select([`p.${sc.sumber_dana.primaryKey}`, 'p.code', 'p.description'])
       .getOne();
 
     if (row) {
@@ -56,14 +53,12 @@ class MasterSumberDanaValidation {
     }
 
     next()
-
   }
 
   async updateValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
     const id: string = req?.params?.[sc.sumber_dana.primaryKey]
     const dtoInstance = plainToInstance(DTO_ValidationUpdate, req.body);
     (dtoInstance as any).req = req;
-
 
     const errors = await validate(dtoInstance);
 
@@ -81,23 +76,17 @@ class MasterSumberDanaValidation {
       );
     }
     else {
-
-      const row = await AppDataSource.getRepository(SPPDJenisBiaya)
+      const row = await AppDataSource.getRepository(MasterSumberDana)
         .createQueryBuilder('p')
         .where(`p.deleted_at IS NULL`)
         .andWhere(`p.code = :value`, { value: req?.body?.code })
         .andWhere(`p.${sc.sumber_dana.primaryKey} != :id`, { id })
         .select([
           `p.${sc.sumber_dana.primaryKey}`,
-          'p.code', 'p.description'
-        ])
-        .select([
-          `p.${sc.sumber_dana.primaryKey}`,
           'p.code',
           'p.description'
         ])
         .getOne()
-
 
       if (row) {
         sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Source of funds code: ${req?.body?.code}` }), { row_existed: row })

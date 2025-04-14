@@ -7,10 +7,10 @@ import { allSchema as sc } from "../../../constanta";
 import { MessageDialog } from "../../../lang";
 import AppDataSource from "../../../config/dbconfig";
 import { DTO_ValidationCreate, DTO_ValidationUpdate } from "./dto";
-import { SPPDJenisBiaya } from "../../../database/models/SPPDJenisBiaya";
+import { MasterBudgetYear } from "../../../database/models/MasterBudgetYear";
 import { SelectQueryBuilder } from "typeorm";
 
-class SPPDJenisBiayaValidation {
+class MasterBudgetYearValidation {
 
 
   async paramValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
@@ -44,7 +44,7 @@ class SPPDJenisBiayaValidation {
     }
 
 
-    const row = await AppDataSource.getRepository(SPPDJenisBiaya)
+    const row = await AppDataSource.getRepository(MasterBudgetYear)
       .createQueryBuilder('p')
       .where(`p.deleted_at IS NULL`)
       .andWhere(`p.budget_name = :value`, { value: req?.body?.budget_name })
@@ -60,7 +60,7 @@ class SPPDJenisBiayaValidation {
   }
 
   async updateValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
-    const id: string = req?.params?.[sc.sppd_cost.primaryKey]
+    const id: string = req?.params?.[sc.budget_year.primaryKey]
     const dtoInstance = plainToInstance(DTO_ValidationUpdate, req.body);
     (dtoInstance as any).req = req;
 
@@ -82,13 +82,9 @@ class SPPDJenisBiayaValidation {
     }
     else {
 
-      const code: string = req?.body?.code || ''
-      const name: string = req?.body?.name || ''
-
-      const row = await AppDataSource.getRepository(SPPDJenisBiaya)
+      const row = await AppDataSource.getRepository(MasterBudgetYear)
         .createQueryBuilder('p')
         .where(`p.deleted_at IS NULL`)
-        .andWhere(`p.deleted_at IS NULL`)
         .andWhere(`p.budget_name = :value`, { value: req?.body?.budget_name })
         .andWhere(`p.${sc.budget_year.primaryKey} != :id`, { id })
         .select([
@@ -101,7 +97,7 @@ class SPPDJenisBiayaValidation {
 
 
       if (row) {
-        sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Code: ${code} or Name: ${name}` }), { row_existed: row })
+        sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Budget name ${req?.body?.budget_name}` }), { row_existed: row })
       }
 
       next();
@@ -109,4 +105,4 @@ class SPPDJenisBiayaValidation {
   }
 }
 
-export default new SPPDJenisBiayaValidation();
+export default new MasterBudgetYearValidation();
