@@ -32,9 +32,11 @@ export default new (class AuthService implements I_AuthService {
       return sendErrorResponse(res, 400, result.message, result.record);
     }
 
-    if (payload?.remember_me === true) {
+    if (payload?.remember_me == true) {
       res.cookie("refresh_token", result?.record?.refresh_token, { httpOnly: true });
     }
+
+    console.log({ result, payload })
 
     return sendSuccessResponse(res, 200, result.message, result.record);
   }
