@@ -22,9 +22,13 @@ import { eventPublishMessageToSendEmail } from '../../../events/publishers/email
 import { optionalEmail } from '../../../constanta'
 
 import bcrypt from 'bcrypt';
+import { IsNull } from 'typeorm';
+import { RoleModuleAssociation } from '../../../database/models/RoleModuleAssociation';
+import { selectDetailMenu } from '../master_menu/constanta';
 
 class AuthRepository implements I_AuthRepository {
   private userRepo = AppDataSource.getRepository(Users);
+  private roleModuleAssocRepo = AppDataSource.getRepository(RoleModuleAssociation)
 
   private userLogRepository: UserLogRepository;
   private roleRepository: RoleRepository;
@@ -32,6 +36,14 @@ class AuthRepository implements I_AuthRepository {
   constructor() {
     this.userLogRepository = new UserLogRepository();
     this.roleRepository = new RoleRepository();
+  }
+
+  setupErrorMessage(error: any): I_ResultService {
+    return {
+      success: false,
+      message: error.message,
+      record: error
+    }
   }
 
   /** Login */
@@ -112,11 +124,7 @@ class AuthRepository implements I_AuthRepository {
         },
       };
     } catch (err: any) {
-      return {
-        success: false,
-        message: err.message,
-        record: err,
-      };
+      return this.setupErrorMessage(err)
     }
   }
 
@@ -177,11 +185,7 @@ class AuthRepository implements I_AuthRepository {
         },
       };
     } catch (err: any) {
-      return {
-        success: false,
-        message: err.message,
-        record: err,
-      };
+      return this.setupErrorMessage(err)
     }
   }
 
@@ -230,11 +234,7 @@ class AuthRepository implements I_AuthRepository {
         record: { email },
       };
     } catch (err: any) {
-      return {
-        success: false,
-        message: err.message,
-        record: err,
-      };
+      return this.setupErrorMessage(err)
     }
   }
 
@@ -283,11 +283,7 @@ class AuthRepository implements I_AuthRepository {
         }
       }
     } catch (error: any) {
-      return {
-        success: false,
-        message: error.message,
-        record: error
-      }
+      return this.setupErrorMessage(error)
     }
   }
 
@@ -369,11 +365,7 @@ class AuthRepository implements I_AuthRepository {
         },
       };
     } catch (err: any) {
-      return {
-        success: false,
-        message: err.message,
-        record: err,
-      };
+      return this.setupErrorMessage(err)
     }
   }
 
@@ -411,11 +403,7 @@ class AuthRepository implements I_AuthRepository {
         },
       };
     } catch (err: any) {
-      return {
-        success: false,
-        message: err.message,
-        record: err,
-      };
+      return this.setupErrorMessage(err)
     }
   }
 
@@ -430,8 +418,6 @@ class AuthRepository implements I_AuthRepository {
         };
       }
 
-      console.log({ user })
-
       return {
         success: true,
         message: MessageDialog.__('success.auth.userDetailInfo'),
@@ -440,6 +426,8 @@ class AuthRepository implements I_AuthRepository {
           email: user.email,
           first_name: user.first_name,
           last_name: user.last_name,
+          phone_number: user.phone_number,
+          photo: user.photo,
           role: {
             role_id: user?.role?.role_id,
             role_name: user?.role?.role_name,
@@ -454,6 +442,79 @@ class AuthRepository implements I_AuthRepository {
         message: err.message,
         record: err,
       };
+    }
+  }
+
+  async getListMenu(payload: Record<string, any>): Promise<I_ResultService> {
+    try {
+      const user = await this.userRepo.findOne({ where: { user_id: payload.userId }, relations: ['role'] });
+      if (!user) {
+        return {
+          success: false,
+          message: MessageDialog.__('error.default.notFoundItem', { item: 'User' }),
+          record: user,
+        };
+      }
+
+      const roleId: any = user.role.role_id;
+
+      const rows = await this.roleModuleAssocRepo.find({
+        where: {
+          deleted_at: IsNull(),
+          role: {
+            role_id: roleId
+          },
+          role_module_access: {
+            menu: {
+              parent: IsNull()
+            }
+          },
+        },
+        relations: [
+          'master_module',
+          'role_module_access',
+          'role',
+          'master_module.module_menu',
+          'master_module.module_menu.children',
+          'master_module.module_menu.children.children',
+          'master_module.module_menu.access_menu',
+          'master_module.module_menu.children.access_menu',
+          'master_module.module_menu.children.children.access_menu',
+        ],
+        order: {
+          master_module: {
+            order_number: 'ASC'
+          }
+        },
+        select: {
+          module_access_id: true,
+          role: {
+            role_id: true,
+            role_name: true
+          },
+          master_module: {
+            module_id: true,
+            module_name: true,
+            module_path: true,
+            icon: true,
+            order_number: true,
+            module_menu: selectDetailMenu
+          },
+        }
+      })
+
+
+      return {
+        success: true,
+        message: 'Get data success',
+        record: rows
+      }
+
+
+
+
+    } catch (err: any) {
+      return this.setupErrorMessage(err)
     }
   }
 }

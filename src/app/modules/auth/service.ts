@@ -127,4 +127,18 @@ export default new (class AuthService implements I_AuthService {
 
     return sendSuccessResponse(res, 200, result.message, result.record);
   }
+
+
+  async getListMenu(req: I_RequestCustom, res: Response): Promise<Response> {
+    const payload: Record<string, any> = {
+      userId: req?.user?.user_id
+    }
+    const result = await this.authRepo.getListMenu(payload);
+
+    if (!result?.success) {
+      return sendErrorResponse(res, 400, result.message, result.record);
+    }
+
+    return sendSuccessResponse(res, 200, result.message, result.record);
+  }
 })();

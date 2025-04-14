@@ -22,7 +22,7 @@ app-build:
 	docker compose -f $(compose-file) up -d --build 
 
 app-deploy:
-	docker compose -f $(compose-file) up -d --build --remove-orphans --force-recreate
+	docker compose -f $(compose-file) up -d  --remove-orphans --force-recreate
 
 app-rebuild:
 	docker compose -f $(compose-file) build --no-cache
@@ -31,7 +31,7 @@ app-deploy-watch:
 	docker compose -f $(compose-file) up --build  --remove-orphans --force-recreate
 
 app-down:
-	docker compose -f $(compose-file) down -v
+	docker compose -f $(compose-file) down
 
 app-logs:
 	docker logs -f $(app-container-name)

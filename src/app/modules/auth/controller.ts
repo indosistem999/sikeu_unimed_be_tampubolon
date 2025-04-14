@@ -48,6 +48,14 @@ class AuthController extends MainRoutes {
       await AuthService.refreshToken(req, res);
     });
 
+    /** [GET] - Detail User Information */
+    this.router.get('/profile', authMiddleware, async (req: I_RequestCustom, res: Response) => {
+      await AuthService.getMe(req, res);
+    });
+
+    this.router.get('/list-menu', authMiddleware, async (req: Request, res: Response) => {
+      await AuthService.getListMenu(req, res);
+    })
 
 
     /** [GET] - Verified Account */
@@ -56,13 +64,6 @@ class AuthController extends MainRoutes {
     });
 
 
-
-
-
-    /** [GET] - Detail User Information */
-    this.router.get('/profile', authMiddleware, async (req: I_RequestCustom, res: Response) => {
-      await AuthService.getMe(req, res);
-    });
   }
 }
 

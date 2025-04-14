@@ -73,6 +73,29 @@
       }
     }
   },
+  "/auth/list-menu": {
+    "get": {
+      "tags": ["Auth"],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "summary": "Authentication",
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultResponseSchema"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
   "/auth/forgot-password": {
     "post": {
       "tags": ["Auth"],

@@ -22,7 +22,7 @@ COPY package.json ./
 RUN yarn install
 
 # Install development tools locally instead of globally
-RUN yarn add --dev ts-node nodemon
+RUN yarn add --dev ts-node nodemon ts-node-dev cross-env
 
 # Copy remaining application files
 COPY . .
