@@ -30,8 +30,51 @@ export const selectDetailMenu: Record<string, any> = {
     menu_id: true,
     name: true,
     slug: true,
+    order_number: true,
+    children: {
+      menu_id: true,
+      name: true,
+      slug: true,
+      order_number: true,
+      children: {
+        menu_id: true,
+        name: true,
+        slug: true,
+        order_number: true,
+        children: {
+          menu_id: true,
+          name: true,
+          slug: true,
+          order_number: true,
+          children: {
+            menu_id: true,
+            name: true,
+            slug: true,
+            master_module: {
+              module_id: true,
+              module_name: true,
+              module_path: true
+            },
+            created_at: true,
+            updated_at: true
+          }
+        },
+        master_module: {
+          module_id: true,
+          module_name: true,
+          module_path: true
+        },
+        created_at: true,
+        updated_at: true
+      }
+    },
+    master_module: {
+      module_id: true,
+      module_name: true,
+      module_path: true
+    },
     created_at: true,
-    created_by: true
+    updated_at: true
   },
   master_module: {
     module_id: true,

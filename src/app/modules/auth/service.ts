@@ -36,7 +36,6 @@ export default new (class AuthService implements I_AuthService {
       res.cookie("refresh_token", result?.record?.refresh_token, { httpOnly: true });
     }
 
-    console.log({ result, payload })
 
     return sendSuccessResponse(res, 200, result.message, result.record);
   }

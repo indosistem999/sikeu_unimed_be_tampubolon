@@ -28,6 +28,7 @@ class MasterMenuController extends MainRoutes {
       '/sub-menu',
       adminAuthMiddleware,
       uploadImageToStorage.single('file_icon'),
+      ReqValidation.createSubItemValidation,
       async (req: I_RequestCustom, res: Response) => {
         await Services.store(req, res, 'child');
       }

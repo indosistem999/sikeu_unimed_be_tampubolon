@@ -59,62 +59,20 @@ class MasterMenuRepository implements I_MasterMenuRepository {
         whereCondition = { ...whereCondition, master_module: { module_id: moduleId } }
       }
 
-
       let result = await this.repository.find({
-        where: whereCondition,
+        where: {
+          ...whereCondition,
+          parent: IsNull()
+        },
         relations: [
           'parent',
           'children',
-          'master_module'
+          'master_module',
+          'children.children',
+          'access_menu',
+          'children.children.children',
         ],
-        select: {
-          menu_id: true,
-          name: true,
-          slug: true,
-          parent: {
-            menu_id: true,
-            name: true,
-            slug: true,
-            created_at: true,
-            created_by: true
-          },
-          children: {
-            menu_id: true,
-            name: true,
-            slug: true,
-            children: {
-              menu_id: true,
-              name: true,
-              slug: true,
-              children: {
-                menu_id: true,
-                name: true,
-                slug: true,
-                master_module: {
-                  module_id: true,
-                  module_name: true,
-                  module_path: true
-                },
-                created_at: true,
-                updated_at: true
-              }
-            },
-            master_module: {
-              module_id: true,
-              module_name: true,
-              module_path: true
-            },
-            created_at: true,
-            updated_at: true
-          },
-          master_module: {
-            module_id: true,
-            module_name: true,
-            module_path: true
-          },
-          created_at: true,
-          updated_at: true
-        }
+        select: selectDetailMenu
       })
 
       if (!result) {
@@ -177,6 +135,7 @@ class MasterMenuRepository implements I_MasterMenuRepository {
   async store(payload: Record<string, any>): Promise<I_ResultService> {
     try {
       const { type_store, ...rest } = payload
+
       const result = await this.repository.save(this.repository.create(rest));
 
       if (!result) {
