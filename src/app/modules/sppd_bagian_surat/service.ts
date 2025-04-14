@@ -45,7 +45,10 @@ class BagianSuratService implements I_BagianSuratService {
 
     async store(req: Request, res: Response): Promise<Response> {
         try {
-            const payload = this.bodyValidation(req);
+            const payload = {
+                ...this.bodyValidation(req),
+                created_by: (req as I_RequestCustom)?.user?.user_id
+            };
             const result = await this.repository.store(payload);
 
             if (!result.success) {
@@ -74,7 +77,11 @@ class BagianSuratService implements I_BagianSuratService {
 
     async update(req: Request, res: Response): Promise<Response> {
         try {
-            const payload = this.bodyValidation(req);
+            const payload = {
+                ...this.bodyValidation(req),
+                updated_by: (req as I_RequestCustom)?.user?.user_id,
+                updated_at: new Date()
+            };
             const result = await this.repository.update(req?.params?.[sc.bagian_surat.primaryKey], payload);
 
             if (!result.success) {
