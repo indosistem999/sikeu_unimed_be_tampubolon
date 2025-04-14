@@ -1,0 +1,58 @@
+name: Sikeu Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      
+      - name: Set up Node.js 22.14.0-alpine
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.14.0
+      
+      - name: Install Dependencies
+        run: |
+          yarn install --frozen-lockfile
+
+      - name: Copy Files to AWS VPS
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.AWS_HOST }}
+          port: ${{ secrets.AWS_PORT }}
+          username: ${{ secrets.AWS_USER }}
+          password: ${{ secrets.AWS_PASSWORD }}
+          source: "."
+          target: "/app"
+
+      - name: Connect via SSH into VPS and Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_HOST }}
+          port: ${{ secrets.AWS_PORT }}
+          username: ${{ secrets.AWS_USER }}
+          password: ${{ secrets.AWS_PASSWORD }}
+          script: |
+            cd /app
+            
+            # Set environment variables for development mode
+            export NODE_ENV=development
+            echo "APP_ENV=development" >> .env
+            
+            # Bring down running containers (if any) and rebuild the project
+            docker-compose -f docker-compose.dev.yml down
+            docker compose -f docker-compose.dev.yml up -d --build  --remove-orphans --force-recreate
+
+            # Ensure the container is running properly
+            docker ps
+
+            # Restart PM2 process (optional if you need to keep it running outside Docker)
+            pm2 restart all || echo "PM2 not running, skipping..."
+
