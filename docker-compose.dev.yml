@@ -22,5 +22,5 @@ services:
 
 networks:
   sikeu_dev_network:
-    name: sikeu_dev_network
     driver: bridge
+    internal: true
