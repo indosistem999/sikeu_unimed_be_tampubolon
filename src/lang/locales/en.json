@@ -117,6 +117,14 @@
       "update": "Kop Surat edited successfully",
       "softDelete": "Kop Surat deleted successfully",
       "preview": "Preview Kop Surat successfully"
+    },
+    "masterOfficer": {
+      "findItem": "Get officer {{item}} successfully",
+      "fetch": "Get officer successfully",
+      "store": "A new officer added successfully",
+      "update": "Officer edited successfully",
+      "softDelete": "Officer deleted successfully",
+      "preview": "Preview officer successfully"
     }
   },
   "error": {
@@ -165,7 +173,8 @@
       "storeJobCategory": "Failed to store job category",
       "storeSumberDana": "Failed to store source of funds",
       "storeBagianSurat": "Failed to store bagian surat",
-      "storeKopSurat": "Failed to store kop surat"
+      "storeKopSurat": "Failed to store kop surat",
+      "storeOfficer": "Failed to store officer"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",
@@ -174,7 +183,8 @@
       "tokenExpired": "Unauthorized: Invalid or expired token",
       "otpExpired": "The OTP code has expired. Please request again.",
       "bagianSuratId": "Invalid Bagian Surat ID",
-      "kopSuratId": "Invalid Kop Surat ID"
+      "kopSuratId": "Invalid Kop Surat ID",
+      "enumValue": "Invalid {{label}}. Please fill the correct value"
     },
     "denied": {
       "tokenAccess": "Access denied. No token provided."

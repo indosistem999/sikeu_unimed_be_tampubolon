@@ -19,4 +19,178 @@ export class MasterOfficerRepository implements I_MasterOfficerRepository {
       record: error
     }
   }
+
+  async fetch(filters: Record<string, any>): Promise<I_ResultService> {
+    try {
+      const { paging, sorting } = filters
+      let whereConditions: Record<string, any>[] = []
+
+
+      if (paging?.search && paging?.search != '' && paging?.search != null) {
+        const searchTerm: string = paging?.search
+        whereConditions = [
+          { nip: Like(`%${searchTerm}%`), deleted_at: IsNull() },
+          { full_name: Like(`%${searchTerm}%`), deleted_at: IsNull() },
+          { posititon_name: Like(`%${searchTerm}%`), deleted_at: IsNull() },
+          { position_type: Like(`%${searchTerm}%`), deleted_at: IsNull() },
+          { start_date_position: [{ name: Like(`%${searchTerm}%`) }], deleted_at: IsNull() },
+          {
+            work_unit: [
+              {
+                unit_name: Like(`%${searchTerm}%`)
+              }
+            ],
+            deleted_at: IsNull()
+          }
+        ];
+      }
+
+      let [rows, count] = await this.repository.findAndCount({
+        where: whereConditions,
+        relations: {
+          job_category: true,
+          work_unit: true
+        },
+        skip: paging?.skip,
+        take: paging?.limit,
+        order: sorting
+      })
+
+      const pagination: I_ResponsePagination = setPagination(rows, count, paging.page, paging.limit);
+
+
+      return {
+        success: true,
+        message: MessageDialog.__('success.sppdJenisBiaya.fetch'),
+        record: pagination
+      }
+    } catch (error: any) {
+      return this.setupErrorMessage(error)
+    }
+  }
+
+
+  async fetchById(id: string): Promise<I_ResultService> {
+    try {
+      const result = await this.repository.findOne({
+        where: {
+          deleted_at: IsNull(),
+          officers_id: id
+        },
+      });
+
+      if (!result) {
+        return {
+          success: false,
+          message: MessageDialog.__('error.default.notFoundItem', { item: 'Officer' }),
+          record: result
+        }
+      }
+
+      return {
+        success: true,
+        message: MessageDialog.__('success.masterOfficer.fetch'),
+        record: result
+      }
+    } catch (error: any) {
+      return this.setupErrorMessage(error);
+    }
+  }
+
+  async store(payload: Record<string, any>): Promise<I_ResultService> {
+    try {
+      const result = await this.repository.save(this.repository.create(payload));
+
+      if (!result) {
+        return {
+          success: false,
+          message: MessageDialog.__('error.failed.storeOfficer'),
+          record: result
+        }
+      }
+
+      return {
+        success: false,
+        message: MessageDialog.__('success.masterOfficer.store'),
+        record: result
+      }
+    } catch (err: any) {
+      return this.setupErrorMessage(err)
+    }
+  }
+
+  async update(id: string, payload: Record<string, any>): Promise<I_ResultService> {
+    try {
+      let result = await this.repository.findOne({
+        where: {
+          deleted_at: IsNull(),
+          officers_id: id
+        }
+      });
+
+      if (!result) {
+        return {
+          success: false,
+          message: MessageDialog.__('error.default.notFoundItem', { item: 'Officer' }),
+          record: result
+        }
+      }
+
+      result = { ...result, ...payload }
+
+      await this.repository.save(result);
+
+
+      return {
+        success: true,
+        message: MessageDialog.__('success.masterOfficer.update'),
+        record: {
+          officers_id: result?.officers_id,
+        }
+      }
+
+    } catch (error: any) {
+      return this.setupErrorMessage(error)
+    }
+  }
+
+  async softDelete(id: string, payload: Record<string, any>): Promise<I_ResultService> {
+    try {
+      let result = await this.repository.findOne({
+        where: {
+          officers_id: id,
+          deleted_at: IsNull()
+        }
+      })
+
+      if (!result) {
+        return {
+          success: false,
+          message: MessageDialog.__('error.default.notFoundItem', { item: 'Officer' }),
+          record: result
+        }
+      }
+
+      result = {
+        ...result,
+        ...payload
+      }
+
+      await this.repository.save(result);
+
+      return {
+        success: true,
+        message: MessageDialog.__('success.masterOfficer.softDelete'),
+        record: {
+          officers_id: id
+        }
+      }
+    } catch (error: any) {
+      return this.setupErrorMessage(error)
+    }
+  }
+
+
+
+
 }

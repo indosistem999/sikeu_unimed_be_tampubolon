@@ -1,0 +1,98 @@
+{
+  "SchemaCreateOfficers": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Nama Lengkap"
+      },
+      "nip": {
+        "type": "string",
+        "description": "NIP (Unique Value)"
+      },
+      "posititon_name": {
+        "type": "string",
+        "description": "Nama Jabatan"
+      },
+      "position_type": {
+        "type": "enum",
+        "value": ["umum", "satker"],
+        "default": "umum",
+        "description": "Jenis Pejabat"
+      },
+      "job_category_id": {
+        "type": "string",
+        "description": "Pilih Kelompok Jabatan (job_category_id=uuid)"
+      },
+      "unit_id": {
+        "type": "string",
+        "description": "Pilih Satker (unit_id=uuid)"
+      },
+      "start_date_position": {
+        "type": "date",
+        "format": "YYYY-MM-DD",
+        "description": "Tanggal mulai"
+      },
+      "end_date_position": {
+        "type": "date",
+        "format": "YYYY-MM-DD",
+        "default": null,
+        "description": "Tanggal akhir"
+      },
+      "is_not_specified": {
+        "type": "enum",
+        "value": [1, 0],
+        "default": 0,
+        "description": "Belum bisa ditentukan. (Value 1: True/Check, 0: False/Uncheck)"
+      }
+    }
+  },
+  "SchemaUpdateOfficers": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Nama Lengkap"
+      },
+      "nip": {
+        "type": "string",
+        "description": "NIP (Unique Value)"
+      },
+      "posititon_name": {
+        "type": "string",
+        "description": "Nama Jabatan"
+      },
+      "position_type": {
+        "type": "enum",
+        "value": ["umum", "satker"],
+        "default": "umum",
+        "description": "Jenis Pejabat"
+      },
+      "job_category_id": {
+        "type": "string",
+        "description": "Pilih Kelompok Jabatan (job_category_id=uuid)"
+      },
+      "unit_id": {
+        "type": "string",
+        "description": "Pilih Satker (unit_id=uuid)"
+      },
+      "start_date_position": {
+        "type": "date",
+        "format": "YYYY-MM-DD",
+        "description": "Tanggal mulai"
+      },
+      "end_date_position": {
+        "type": "date",
+        "format": "YYYY-MM-DD",
+        "default": null,
+        "description": "Tanggal akhir"
+      },
+      "is_not_specified": {
+        "type": "enum",
+        "value": [1, 0],
+        "default": 0,
+        "description": "Belum bisa ditentukan. (Value 1: True/Check, 0: False/Uncheck)"
+      }
+    }
+  }
+}

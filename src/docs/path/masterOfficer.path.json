@@ -1,7 +1,7 @@
 {
-  "/master-job-category": {
+  "/master-officers": {
     "get": {
-      "tags": ["Master - Kategori Jabatan (Kelompok Jabatan)"],
+      "tags": ["Master - Pejabat (Data Pejabat Umum Maupun Satker)"],
       "security": [
         {
           "bearerAuth": []
@@ -68,7 +68,7 @@
       }
     },
     "post": {
-      "tags": ["Master - Kategori Jabatan (Kelompok Jabatan)"],
+      "tags": ["Master - Pejabat (Data Pejabat Umum Maupun Satker)"],
       "security": [
         {
           "bearerAuth": []
@@ -77,9 +77,9 @@
       "requestBody": {
         "required": false,
         "content": {
-          "application/json": {
+          "multipart/form-data": {
             "schema": {
-              "$ref": "#/components/schemas/SchemaCreateMasterJobCategory"
+              "$ref": "#/components/schemas/SchemaCreateOfficers"
             }
           }
         }
@@ -99,9 +99,9 @@
     }
   },
 
-  "/master-job-category/{category_id}": {
+  "/master-officers/{officers_id}": {
     "get": {
-      "tags": ["Master - Kategori Jabatan (Kelompok Jabatan)"],
+      "tags": ["Master - Pejabat (Data Pejabat Umum Maupun Satker)"],
       "security": [
         {
           "bearerAuth": []
@@ -110,7 +110,7 @@
       "parameters": [
         {
           "in": "path",
-          "name": "category_id",
+          "name": "officers_id",
           "required": true,
           "schema": {
             "type": "string"
@@ -131,7 +131,7 @@
       }
     },
     "put": {
-      "tags": ["Master - Kategori Jabatan (Kelompok Jabatan)"],
+      "tags": ["Master - Pejabat (Data Pejabat Umum Maupun Satker)"],
       "security": [
         {
           "bearerAuth": []
@@ -140,7 +140,7 @@
       "parameters": [
         {
           "in": "path",
-          "name": "category_id",
+          "name": "officers_id",
           "required": true,
           "schema": {
             "type": "string"
@@ -150,9 +150,9 @@
       "requestBody": {
         "required": false,
         "content": {
-          "application/json": {
+          "multipart/form-data": {
             "schema": {
-              "$ref": "#/components/schemas/SchemaUpdateMasterJobCategory"
+              "$ref": "#/components/schemas/SchemaUpdateOfficers"
             }
           }
         }
@@ -171,7 +171,7 @@
       }
     },
     "delete": {
-      "tags": ["Master - Kategori Jabatan (Kelompok Jabatan)"],
+      "tags": ["Master - Pejabat (Data Pejabat Umum Maupun Satker)"],
       "security": [
         {
           "bearerAuth": []
@@ -180,7 +180,7 @@
       "parameters": [
         {
           "in": "path",
-          "name": "category_id",
+          "name": "officers_id",
           "required": true,
           "schema": {
             "type": "string"
