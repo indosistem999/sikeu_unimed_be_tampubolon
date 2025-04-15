@@ -4,6 +4,7 @@ import { authMiddleware } from '../../middlewares/auth.middleware';
 import { I_RequestCustom } from '../../../interfaces/app.interface';
 import ReqValidation from './validation'
 import Service from './service'
+import { readBodyReq } from '../../../config/storages';
 
 
 class MasterOfficerController extends MainRoutes {
@@ -17,6 +18,7 @@ class MasterOfficerController extends MainRoutes {
     this.router.post(
       '/',
       authMiddleware,
+      readBodyReq.any(),
       ReqValidation.createValidation,
       async (req: I_RequestCustom, res: Response) => {
         await Service.store(req, res)
@@ -24,7 +26,7 @@ class MasterOfficerController extends MainRoutes {
     );
 
     /** [GET] - Find By Id  */
-    this.router.get('/:officers_id', authMiddleware, ReqValidation.paramValidation, async (req: Request, res: Response) => {
+    this.router.get('/:officers_id', authMiddleware, readBodyReq.any(), ReqValidation.paramValidation, async (req: Request, res: Response) => {
       await Service.fetchById(req, res)
     });
 
@@ -32,6 +34,7 @@ class MasterOfficerController extends MainRoutes {
     this.router.put(
       '/:officers_id',
       authMiddleware,
+      readBodyReq.any(),
       ReqValidation.paramValidation,
       ReqValidation.updateValidation,
       async (req: I_RequestCustom, res: Response) => {

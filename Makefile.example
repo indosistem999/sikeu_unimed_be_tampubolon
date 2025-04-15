@@ -1,7 +1,7 @@
 migration-file=CreateMasterSumberDanaTable
 entity-name=Users
 compose-file=docker-compose.dev.yml
-app-container-name=sikeu-core-dev
+app-container-name=finance_core_app
 app-pm-name=sikeu-dev
 
 local-migration-create:

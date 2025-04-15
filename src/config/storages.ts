@@ -65,6 +65,8 @@ export const uploadImageToStorage = multer({
     }
 });
 
+export const readBodyReq = multer()
+
 export const makeFullUrlFile = (filePath: string, pathSlug: string = 'master-module'): any => {
     if (filePath != null && filePath != '' && filePath != undefined) {
         return `${BASE_URL}/api/v1/${pathSlug}/files/${filePath}`;

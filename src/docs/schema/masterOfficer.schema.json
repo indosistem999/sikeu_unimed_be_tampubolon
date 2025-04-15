@@ -15,8 +15,8 @@
         "description": "Nama Jabatan"
       },
       "position_type": {
-        "type": "enum",
-        "value": ["umum", "satker"],
+        "type": "string",
+        "enum": ["umum", "satker"],
         "default": "umum",
         "description": "Jenis Pejabat"
       },
@@ -29,19 +29,20 @@
         "description": "Pilih Satker (unit_id=uuid)"
       },
       "start_date_position": {
-        "type": "date",
-        "format": "YYYY-MM-DD",
-        "description": "Tanggal mulai"
+        "type": "string",
+        "format": "date",
+        "default": null,
+        "description": "Tanggal mulai (YYYY-MM-DD)"
       },
       "end_date_position": {
-        "type": "date",
-        "format": "YYYY-MM-DD",
+        "type": "string",
+        "format": "date",
         "default": null,
-        "description": "Tanggal akhir"
+        "description": "Tanggal akhir (YYYY-MM-DD)"
       },
       "is_not_specified": {
-        "type": "enum",
-        "value": [1, 0],
+        "type": "number",
+        "enum": [1, 0],
         "default": 0,
         "description": "Belum bisa ditentukan. (Value 1: True/Check, 0: False/Uncheck)"
       }
@@ -63,8 +64,8 @@
         "description": "Nama Jabatan"
       },
       "position_type": {
-        "type": "enum",
-        "value": ["umum", "satker"],
+        "type": "string",
+        "enum": ["umum", "satker"],
         "default": "umum",
         "description": "Jenis Pejabat"
       },
@@ -77,19 +78,20 @@
         "description": "Pilih Satker (unit_id=uuid)"
       },
       "start_date_position": {
-        "type": "date",
-        "format": "YYYY-MM-DD",
-        "description": "Tanggal mulai"
+        "type": "string",
+        "format": "date",
+        "default": null,
+        "description": "Tanggal mulai (YYYY-MM-DD)"
       },
       "end_date_position": {
-        "type": "date",
-        "format": "YYYY-MM-DD",
+        "type": "string",
+        "format": "date",
         "default": null,
-        "description": "Tanggal akhir"
+        "description": "Tanggal akhir (YYYY-MM-DD)"
       },
       "is_not_specified": {
-        "type": "enum",
-        "value": [1, 0],
+        "type": "number",
+        "enum": [1, 0],
         "default": 0,
         "description": "Belum bisa ditentukan. (Value 1: True/Check, 0: False/Uncheck)"
       }

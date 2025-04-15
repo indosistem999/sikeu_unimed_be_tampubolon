@@ -1,7 +1,4 @@
 import MainRoutes from '../config/mainRoute';
-import { IsProduction } from '../constanta';
-import { swaggerDocLocalApi } from '../docs/swagger';
-import swaggerUi from 'swagger-ui-express'
 import RouteHealtCheck from './routeHealtCheck';
 
 // Controller
@@ -19,11 +16,11 @@ import FeatureAccessController from '../app/modules/feature_access/controller'
 import SPPDPangkatController from '../app/modules/sppd_pangkat/controller';
 import SPPDJenisTransportasiController from '../app/modules/sppd_jenis_transportasi/controller';
 import SPPDJenisBiayaController from '../app/modules/sppd_jenis_biaya/controller'
-import MasterBudgetYearController from '../app/modules/master_budget_year/controller'
 import MasterJobCategoryController from '../app/modules/master_job_category/controller'
 import MasterSumberDanaController from '../app/modules/master_sumber_dana/controller'
 import BagianSuratController from '../app/modules/sppd_bagian_surat/controller'
 import KopSuratController from '../app/modules/sppd_kop_surat/controller'
+import MasterOfficerController from '../app/modules/master_officers/controller'
 
 const tagVersionOne: string = '/api/v1';
 
@@ -46,9 +43,6 @@ class RouteApplication extends MainRoutes {
     // API Master Work Unit
     this.router.use(`${tagVersionOne}/work-unit`, WorkUnitController)
 
-    // API Master Budget Year
-    this.router.use(`${tagVersionOne}/master-budget-year`, MasterBudgetYearController)
-
     // API Master Job Category
     this.router.use(`${tagVersionOne}/master-job-category`, MasterJobCategoryController)
 
@@ -69,7 +63,6 @@ class RouteApplication extends MainRoutes {
 
 
     /** SPPD */
-
     // SPPD Pangkat dan Golongan
     this.router.use(`${tagVersionOne}/sppd-pangkat-golongan`, SPPDPangkatController)
 
@@ -84,6 +77,8 @@ class RouteApplication extends MainRoutes {
 
     // SPPD Kop Surat
     this.router.use(`${tagVersionOne}/sppd-kop-surat`, KopSuratController)
+
+    this.router.use(`${tagVersionOne}/master-officers`, MasterOfficerController)
   }
 }
 

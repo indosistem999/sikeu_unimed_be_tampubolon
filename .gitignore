@@ -143,3 +143,5 @@ dist
 uploads
 
 package-lock.json
+
+Makefile
