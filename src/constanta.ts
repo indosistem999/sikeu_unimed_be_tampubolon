@@ -37,7 +37,6 @@ export const Config = {
   AppEnv: process.env.NODE_ENV?.toString() || 'development',
   AppAuthor: process.env.APP_AUTHOR?.toString() || 'Ruben Alpredo Tampubolon',
   AppDebug: Boolean(process.env.APP_DEBUG?.toString().toLowerCase()) || true,
-  AppDomain: process.env.APP_DOMAIN || 'http://dev-sikeu-unimed.avnet.id',
   AppPermissionPolicy: process?.env?.APP_PERMISSION_POLICY ?? '',
   AppProtection: process?.env?.APP_PROTECTION ?? '',
   AppContentSecurityPolicy: getContentSecurePolice(),
@@ -45,6 +44,7 @@ export const Config = {
   AppMethod: process?.env?.APP_METHOD ?? 'POST,PUT,DELETE,GET,OPTIONS',
   AppAllowHeader: process?.env?.APP_ALLOW_HEADER ?? 'POST,PUT,DELETE,GET,OPTIONS',
   AppExposeHeader: process?.env?.APP_EXPOSE_HEADER ?? 'POST,PUT,DELETE,GET,OPTIONS',
+  AppDomain: process?.env?.APP_DOMAIN || 'http://localhost',
 
   // Database
   DbHost: process.env.DB_HOST?.toString() || 'localhost',
