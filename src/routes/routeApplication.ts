@@ -22,6 +22,7 @@ import BagianSuratController from '../app/modules/sppd_bagian_surat/controller'
 import KopSuratController from '../app/modules/sppd_kop_surat/controller'
 import MasterOfficerController from '../app/modules/master_officers/controller'
 import PejabatSatkerController from '../app/modules/pejabat_satker/controller'
+import SPPDSuratTugasController from '../app/modules/sppd_surat_tugas/controller'
 
 const tagVersionOne: string = '/api/v1';
 
@@ -78,6 +79,9 @@ class RouteApplication extends MainRoutes {
 
     // SPPD Kop Surat
     this.router.use(`${tagVersionOne}/sppd-kop-surat`, KopSuratController)
+
+    // SPPD Surat Tugas
+    this.router.use(`${tagVersionOne}/sppd-surat-tugas`, SPPDSuratTugasController)
 
     this.router.use(`${tagVersionOne}/master-officers`, MasterOfficerController)
 

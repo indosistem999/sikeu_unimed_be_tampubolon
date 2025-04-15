@@ -1,0 +1,472 @@
+{
+  "SppdSuratTugasCreate": {
+    "type": "object",
+    "properties": {
+      "unit_id": {
+        "type": "string",
+        "example": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "bagian_surat_id": {
+        "type": "string",
+        "example": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "nomor_surat": {
+        "type": "string",
+        "example": "ST/123/2024"
+      },
+      "tanggal_surat": {
+        "type": "string",
+        "format": "date",
+        "example": "2024-03-20"
+      },
+      "kegiatan": {
+        "type": "string",
+        "example": "Rapat Koordinasi"
+      },
+      "awal_kegiatan": {
+        "type": "string",
+        "format": "date",
+        "example": "2024-03-21"
+      },
+      "akhir_kegiatan": {
+        "type": "string",
+        "format": "date",
+        "example": "2024-03-22"
+      },
+      "only_one": {
+        "type": "integer",
+        "example": 0
+      },
+      "lokasi_kegiatan": {
+        "type": "string",
+        "example": "Gedung Rektorat"
+      },
+      "officers_id": {
+        "type": "string",
+        "example": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "file_undangan": {
+        "type": "string",
+        "example": "base64_encoded_file_content"
+      }
+    },
+    "required": ["kegiatan"]
+  },
+  "SppdSuratTugasUpdate": {
+    "type": "object",
+    "properties": {
+      "unit_id": {
+        "type": "string",
+        "example": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "bagian_surat_id": {
+        "type": "string",
+        "example": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "nomor_surat": {
+        "type": "string",
+        "example": "ST/123/2024"
+      },
+      "tanggal_surat": {
+        "type": "string",
+        "format": "date",
+        "example": "2024-03-20"
+      },
+      "kegiatan": {
+        "type": "string",
+        "example": "Rapat Koordinasi"
+      },
+      "awal_kegiatan": {
+        "type": "string",
+        "format": "date",
+        "example": "2024-03-21"
+      },
+      "akhir_kegiatan": {
+        "type": "string",
+        "format": "date",
+        "example": "2024-03-22"
+      },
+      "only_one": {
+        "type": "integer",
+        "example": 0
+      },
+      "lokasi_kegiatan": {
+        "type": "string",
+        "example": "Gedung Rektorat"
+      },
+      "officers_id": {
+        "type": "string",
+        "example": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "file_undangan": {
+        "type": "string",
+        "example": "base64_encoded_file_content"
+      }
+    }
+  },
+  "SppdSuratTugasResponse": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean",
+        "example": true
+      },
+      "message": {
+        "type": "string",
+        "example": "Success"
+      },
+      "record": {
+        "type": "object",
+        "properties": {
+          "surat_tugas_id": {
+            "type": "string",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "unit_id": {
+            "type": "string",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "bagian_surat_id": {
+            "type": "string",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "nomor_surat": {
+            "type": "string",
+            "example": "ST/123/2024"
+          },
+          "tanggal_surat": {
+            "type": "string",
+            "format": "date",
+            "example": "2024-03-20"
+          },
+          "kegiatan": {
+            "type": "string",
+            "example": "Rapat Koordinasi"
+          },
+          "awal_kegiatan": {
+            "type": "string",
+            "format": "date",
+            "example": "2024-03-21"
+          },
+          "akhir_kegiatan": {
+            "type": "string",
+            "format": "date",
+            "example": "2024-03-22"
+          },
+          "only_one": {
+            "type": "integer",
+            "example": 0
+          },
+          "lokasi_kegiatan": {
+            "type": "string",
+            "example": "Gedung Rektorat"
+          },
+          "officers_id": {
+            "type": "string",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "file_undangan": {
+            "type": "string",
+            "example": "base64_encoded_file_content"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_by": {
+            "type": "string"
+          },
+          "deleted_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deleted_by": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "SppdSuratTugasListResponse": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean",
+        "example": true
+      },
+      "message": {
+        "type": "string",
+        "example": "Success"
+      },
+      "record": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SppdSuratTugasResponse/properties/record"
+            }
+          },
+          "paging": {
+            "type": "object",
+            "properties": {
+              "page": {
+                "type": "integer",
+                "example": 0
+              },
+              "limit": {
+                "type": "integer",
+                "example": 10
+              },
+              "total": {
+                "type": "integer",
+                "example": 100
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "SppdSuratTugasPegawaiResponse": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean",
+        "example": true
+      },
+      "message": {
+        "type": "string",
+        "example": "Success"
+      },
+      "record": {
+        "type": "object",
+        "properties": {
+          "surat_tugas_id": {
+            "type": "string",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "nomor_surat": {
+            "type": "string",
+            "example": "ST/123/2024"
+          },
+          "tanggal_surat": {
+            "type": "string",
+            "format": "date",
+            "example": "2024-03-20"
+          },
+          "kegiatan": {
+            "type": "string",
+            "example": "Rapat Koordinasi"
+          },
+          "pegawais": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "assign_surat_id": {
+                  "type": "string",
+                  "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
+                "pegawai_id": {
+                  "type": "string",
+                  "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
+                "jabatan_kegiatan": {
+                  "type": "string",
+                  "example": "Ketua Tim"
+                },
+                "tanggal_pergi": {
+                  "type": "string",
+                  "format": "date",
+                  "example": "2024-03-21"
+                },
+                "tanggal_pulang": {
+                  "type": "string",
+                  "format": "date",
+                  "example": "2024-03-22"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "SppdSuratTugasSPPDCreate": {
+    "type": "object",
+    "properties": {
+      "bagian_surat_id": {
+        "type": "string",
+        "example": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "tanggal_sppd": {
+        "type": "string",
+        "format": "date",
+        "example": "2024-03-20"
+      },
+      "instansi": {
+        "type": "string",
+        "example": "Universitas Medan"
+      },
+      "akun": {
+        "type": "string",
+        "example": "524111"
+      },
+      "lainnya": {
+        "type": "string",
+        "example": "Additional information"
+      },
+      "officers_id": {
+        "type": "string",
+        "example": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "transportation_type_id": {
+        "type": "string",
+        "example": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "lokasi_awal": {
+        "type": "string",
+        "example": "Medan"
+      },
+      "lokasi_akhir": {
+        "type": "string",
+        "example": "Jakarta"
+      }
+    },
+    "required": ["tanggal_sppd", "instansi"]
+  },
+  "SppdSuratTugasSPPDUpdate": {
+    "type": "object",
+    "properties": {
+      "bagian_surat_id": {
+        "type": "string",
+        "example": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "tanggal_sppd": {
+        "type": "string",
+        "format": "date",
+        "example": "2024-03-20"
+      },
+      "instansi": {
+        "type": "string",
+        "example": "Universitas Medan"
+      },
+      "akun": {
+        "type": "string",
+        "example": "524111"
+      },
+      "lainnya": {
+        "type": "string",
+        "example": "Additional information"
+      },
+      "officers_id": {
+        "type": "string",
+        "example": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "transportation_type_id": {
+        "type": "string",
+        "example": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "lokasi_awal": {
+        "type": "string",
+        "example": "Medan"
+      },
+      "lokasi_akhir": {
+        "type": "string",
+        "example": "Jakarta"
+      }
+    }
+  },
+  "SppdSuratTugasSPPDResponse": {
+    "type": "object",
+    "properties": {
+      "success": {
+        "type": "boolean",
+        "example": true
+      },
+      "message": {
+        "type": "string",
+        "example": "Success"
+      },
+      "record": {
+        "type": "object",
+        "properties": {
+          "sppd_id": {
+            "type": "string",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "surat_tugas_id": {
+            "type": "string",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "bagian_surat_id": {
+            "type": "string",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "tanggal_sppd": {
+            "type": "string",
+            "format": "date",
+            "example": "2024-03-20"
+          },
+          "instansi": {
+            "type": "string",
+            "example": "Universitas Medan"
+          },
+          "akun": {
+            "type": "string",
+            "example": "524111"
+          },
+          "lainnya": {
+            "type": "string",
+            "example": "Additional information"
+          },
+          "officers_id": {
+            "type": "string",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "transportation_type_id": {
+            "type": "string",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "lokasi_awal": {
+            "type": "string",
+            "example": "Medan"
+          },
+          "lokasi_akhir": {
+            "type": "string",
+            "example": "Jakarta"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_by": {
+            "type": "string"
+          },
+          "deleted_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deleted_by": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+} 

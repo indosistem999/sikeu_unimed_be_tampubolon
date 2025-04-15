@@ -1,0 +1,503 @@
+{
+  "/sppd-surat-tugas": {
+    "get": {
+      "tags": ["SPPD Surat Tugas"],
+      "summary": "Get all surat tugas",
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "in": "query",
+          "name": "page",
+          "schema": {
+            "type": "integer",
+            "default": 0
+          },
+          "description": "Page number"
+        },
+        {
+          "in": "query",
+          "name": "limit",
+          "schema": {
+            "type": "integer",
+            "default": 10
+          },
+          "description": "Number of items per page"
+        },
+        {
+          "in": "query",
+          "name": "sort",
+          "schema": {
+            "type": "string"
+          },
+          "description": "Sort field (e.g. created_at:DESC)"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Success get surat tugas list",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SppdSuratTugasListResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "tags": ["SPPD Surat Tugas"],
+      "summary": "Create new surat tugas",
+      "security": [{ "bearerAuth": [] }],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SppdSuratTugasCreate"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Success create surat tugas",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SppdSuratTugasResponse"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/sppd-surat-tugas/{surat_tugas_id}": {
+    "get": {
+      "tags": ["SPPD Surat Tugas"],
+      "summary": "Get surat tugas by ID",
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "surat_tugas_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Surat Tugas ID"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Success get surat tugas detail",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SppdSuratTugasResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "tags": ["SPPD Surat Tugas"],
+      "summary": "Update surat tugas",
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "surat_tugas_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Surat Tugas ID"
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SppdSuratTugasUpdate"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Success update surat tugas",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SppdSuratTugasResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "tags": ["SPPD Surat Tugas"],
+      "summary": "Delete surat tugas",
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "surat_tugas_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Surat Tugas ID"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Success delete surat tugas",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SppdSuratTugasResponse"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/sppd-surat-tugas/{surat_tugas_id}/pegawai": {
+    "get": {
+      "tags": ["SPPD Surat Tugas"],
+      "summary": "Preview pegawai by surat tugas ID",
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "surat_tugas_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Surat Tugas ID"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Success get pegawai preview",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SppdSuratTugasPegawaiResponse"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/sppd-surat-tugas/{surat_tugas_id}/sppd": {
+    "post": {
+      "tags": ["SPPD Surat Tugas"],
+      "summary": "Create new SPPD for a Surat Tugas",
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "surat_tugas_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Surat Tugas ID"
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SppdSuratTugasSPPDCreate"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Success create SPPD",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Success create SPPD"
+                  },
+                  "record": {
+                    "$ref": "#/components/schemas/SppdSuratTugasSPPDResponse/properties/record"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Bad Request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Validation failed"
+                  },
+                  "errors": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/sppd-surat-tugas/{surat_tugas_id}/sppd/{sppd_id}": {
+    "get": {
+      "tags": ["SPPD Surat Tugas"],
+      "summary": "Preview SPPD by ID",
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "surat_tugas_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Surat Tugas ID"
+        },
+        {
+          "in": "path",
+          "name": "sppd_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "SPPD ID"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Success get SPPD detail",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Success get SPPD detail"
+                  },
+                  "record": {
+                    "$ref": "#/components/schemas/SppdSuratTugasSPPDResponse/properties/record"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Not Found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "SPPD not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "tags": ["SPPD Surat Tugas"],
+      "summary": "Update SPPD",
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "surat_tugas_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Surat Tugas ID"
+        },
+        {
+          "in": "path",
+          "name": "sppd_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "SPPD ID"
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SppdSuratTugasSPPDUpdate"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Success update SPPD",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Success update SPPD"
+                  },
+                  "record": {
+                    "$ref": "#/components/schemas/SppdSuratTugasSPPDResponse/properties/record"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Not Found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "SPPD not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "tags": ["SPPD Surat Tugas"],
+      "summary": "Delete SPPD",
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "surat_tugas_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Surat Tugas ID"
+        },
+        {
+          "in": "path",
+          "name": "sppd_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "SPPD ID"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Success delete SPPD",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Success delete SPPD"
+                  },
+                  "record": {
+                    "$ref": "#/components/schemas/SppdSuratTugasSPPDResponse/properties/record"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Not Found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "SPPD not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 
