@@ -48,7 +48,12 @@ export class PejabatSatkerRepository implements I_PejabatSatkerRepository {
 
             if (sorting) {
                 for (const [key, value] of Object.entries(sorting)) {
-                    queryBuilder.addOrderBy(`${key}`, value as 'ASC' | 'DESC');
+                    if (key == 'total_officers') {
+                        queryBuilder.addOrderBy(`count(mo.officers_id)`, value as 'ASC' | 'DESC')
+                    }
+                    else {
+                        queryBuilder.addOrderBy(`mwu.${key}`, value as 'ASC' | 'DESC');
+                    }
                 }
             }
 

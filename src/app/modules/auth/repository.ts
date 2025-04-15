@@ -62,7 +62,7 @@ class AuthRepository implements I_AuthRepository {
         return {
           success: false,
           message: MessageDialog.__('error.invalid.emailEntry'),
-          record: user,
+          record: payload,
         };
       }
 
@@ -71,7 +71,7 @@ class AuthRepository implements I_AuthRepository {
         return {
           success: false,
           message: MessageDialog.__('error.invalid.password'),
-          record: user,
+          record: payload,
         };
       }
 
