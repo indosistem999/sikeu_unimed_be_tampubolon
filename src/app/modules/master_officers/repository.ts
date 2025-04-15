@@ -6,6 +6,7 @@ import { I_ResponsePagination } from "../../../interfaces/pagination.interface";
 import { setPagination } from "../../../lib/utils/pagination.util";
 import { I_MasterOfficerRepository } from "../../../interfaces/masterOfficer.interface";
 import { MasterOfficers } from "../../../database/models/MasterOfficers";
+import { selectOfficer } from "./constanta";
 
 
 
@@ -46,10 +47,13 @@ export class MasterOfficerRepository implements I_MasterOfficerRepository {
       }
 
       let [rows, count] = await this.repository.findAndCount({
+        select: selectOfficer,
         where: whereConditions,
         relations: {
           job_category: true,
-          work_unit: true
+          work_unit: {
+            pegawai: false
+          }
         },
         skip: paging?.skip,
         take: paging?.limit,
@@ -77,6 +81,7 @@ export class MasterOfficerRepository implements I_MasterOfficerRepository {
           deleted_at: IsNull(),
           officers_id: id
         },
+        select: selectOfficer,
       });
 
       if (!result) {

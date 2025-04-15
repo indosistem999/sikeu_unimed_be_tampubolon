@@ -25,6 +25,10 @@ class MasterOfficerService implements I_MasterOfficerService {
       payload.full_name = req?.body?.full_name
     }
 
+    if (req?.body?.posititon_name) {
+      payload.posititon_name = req?.body?.posititon_name
+    }
+
     // Nama Jabatan
     if (req?.body?.position_type) {
       if (req?.body?.position_type == PositionType.SATKER) {
@@ -44,17 +48,18 @@ class MasterOfficerService implements I_MasterOfficerService {
     }
 
 
-    if (req?.body?.start_date_position) {
+    if (req?.body?.start_date_position && req?.body?.start_date_position != null) {
       payload.start_date_position = req?.body?.start_date_position
     }
 
-    if (req?.body?.end_date_position) {
+    if (req?.body?.end_date_position && req?.body?.end_date_position != null) {
       payload.end_date_position = req?.body?.end_date_position
     }
 
     if (req?.body?.is_not_specified) {
       payload.is_not_specified = Boolean(req?.body?.is_not_specified)
     }
+
 
     return payload;
   }

@@ -44,7 +44,7 @@ export const Config = {
   AppMethod: process?.env?.APP_METHOD ?? 'POST,PUT,DELETE,GET,OPTIONS',
   AppAllowHeader: process?.env?.APP_ALLOW_HEADER ?? 'POST,PUT,DELETE,GET,OPTIONS',
   AppExposeHeader: process?.env?.APP_EXPOSE_HEADER ?? 'POST,PUT,DELETE,GET,OPTIONS',
-  AppDomain: process?.env?.APP_DOMAIN || 'http://localhost',
+  AppDomain: process?.env?.APP_DOMAIN || '',
 
   // Database
   DbHost: process.env.DB_HOST?.toString() || 'localhost',

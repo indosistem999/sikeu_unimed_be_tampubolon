@@ -2,7 +2,7 @@
   "SchemaCreateOfficers": {
     "type": "object",
     "properties": {
-      "name": {
+      "full_name": {
         "type": "string",
         "description": "Nama Lengkap"
       },
@@ -31,13 +31,11 @@
       "start_date_position": {
         "type": "string",
         "format": "date",
-        "default": null,
         "description": "Tanggal mulai (YYYY-MM-DD)"
       },
       "end_date_position": {
         "type": "string",
         "format": "date",
-        "default": null,
         "description": "Tanggal akhir (YYYY-MM-DD)"
       },
       "is_not_specified": {
@@ -51,7 +49,7 @@
   "SchemaUpdateOfficers": {
     "type": "object",
     "properties": {
-      "name": {
+      "full_name": {
         "type": "string",
         "description": "Nama Lengkap"
       },
@@ -80,13 +78,11 @@
       "start_date_position": {
         "type": "string",
         "format": "date",
-        "default": null,
         "description": "Tanggal mulai (YYYY-MM-DD)"
       },
       "end_date_position": {
         "type": "string",
         "format": "date",
-        "default": null,
         "description": "Tanggal akhir (YYYY-MM-DD)"
       },
       "is_not_specified": {
