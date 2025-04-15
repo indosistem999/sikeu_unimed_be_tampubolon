@@ -8,6 +8,7 @@ import { CreateSppdDto, UpdateSppdDto } from './dto';
 import { validate } from 'class-validator';
 import { sendErrorResponse } from '../../../lib/utils/response.util';
 import { MessageDialog } from '../../../lang';
+import { uploadImageToStorage, showFile } from '../../../config/storages';
 
 class SppdSuratTugasController extends MainRoutes {
     constructor() {
@@ -55,6 +56,23 @@ class SppdSuratTugasController extends MainRoutes {
         /** [GET] - Preview Pegawai By Surat Tugas ID */
         this.router.get('/:surat_tugas_id/pegawai', authMiddleware, ReqValidation.paramValidation, async (req: Request, res: Response) => {
             await Services.previewPegawai(req, res);
+        });
+
+        /** [POST] - Upload Undangan for a Surat Tugas */
+        this.router.post(
+            '/:surat_tugas_id/upload-undangan',
+            authMiddleware,
+            ReqValidation.paramValidation,
+            uploadImageToStorage.single('file_undangan'),
+            ReqValidation.uploadUndanganValidation,
+            async (req: I_RequestCustom, res: Response) => {
+                await this.uploadUndangan(req, res);
+            }
+        );
+
+        /** [GET] - Get File Undangan */
+        this.router.get('/files/undangan/:filename', async (req: Request, res: Response) => {
+            await showFile(req, res);
         });
 
         /** SPPD Routes */
@@ -173,6 +191,27 @@ class SppdSuratTugasController extends MainRoutes {
             });
         } catch (error) {
             return sendErrorResponse(res, 500, MessageDialog.__('error.failed.previewSPPD'), error);
+        }
+    }
+
+    private async uploadUndangan(req: I_RequestCustom, res: Response): Promise<Response> {
+        try {
+            const suratTugasId = req.params.surat_tugas_id;
+            const fileName = req.file ? req.file.filename : null;
+
+            if (!fileName) {
+                return sendErrorResponse(res, 400, 'No file uploaded', null);
+            }
+
+            const result = await Services.updateUndangan(suratTugasId, fileName, req.user?.user_id);
+
+            return res.status(200).json({
+                success: true,
+                message: 'Success upload undangan',
+                record: result
+            });
+        } catch (error) {
+            return sendErrorResponse(res, 500, MessageDialog.__('error.failed.uploadUndangan'), error);
         }
     }
 }

@@ -197,6 +197,97 @@
           }
         }
       }
+    },
+    "upload-undangan": {
+      "post": {
+        "tags": ["SPPD Surat Tugas"],
+        "summary": "Upload undangan file for a surat tugas",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "surat_tugas_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Surat Tugas ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file_undangan": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Undangan file to upload"
+                  }
+                },
+                "required": ["file_undangan"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success upload undangan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Success upload undangan"
+                    },
+                    "record": {
+                      "$ref": "#/components/schemas/SppdSuratTugasResponse/properties/record"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/sppd-surat-tugas/files/undangan/{filename}": {
+    "get": {
+      "tags": ["SPPD Surat Tugas"],
+      "summary": "Get undangan file by filename",
+      "parameters": [
+        {
+          "in": "path",
+          "name": "filename",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Filename of the undangan file"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "The undangan file",
+          "content": {
+            "application/octet-stream": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "/sppd-surat-tugas/{surat_tugas_id}/sppd": {

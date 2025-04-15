@@ -255,6 +255,26 @@ class SppdSuratTugasService {
 
         return sppd;
     }
+
+    public async updateUndangan(suratTugasId: string, fileName: string, userId: string | null = null): Promise<SppdSuratTugas> {
+        const suratTugasRepo = getRepository(SppdSuratTugas);
+
+        // Check if Surat Tugas exists
+        const suratTugas = await suratTugasRepo.findOne({ where: { surat_tugas_id: suratTugasId } });
+        if (!suratTugas) {
+            throw new NotFoundException('Surat Tugas not found');
+        }
+
+        // Update the file_undangan field
+        suratTugas.file_undangan = fileName;
+        suratTugas.updated_at = new Date();
+
+        if (userId) {
+            suratTugas.updated_by = userId;
+        }
+
+        return await suratTugasRepo.save(suratTugas);
+    }
 }
 
 export default new SppdSuratTugasService(); 

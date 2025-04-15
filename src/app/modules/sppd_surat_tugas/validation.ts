@@ -64,6 +64,19 @@ class SppdSuratTugasValidation {
             next();
         }
     }
+
+    async uploadUndanganValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
+        if (!req?.file) {
+            sendErrorResponse(
+                res,
+                422,
+                MessageDialog.__('error.missing.fileUpload', { label: 'Undangan' }),
+                null
+            );
+        } else {
+            next();
+        }
+    }
 }
 
 export default new SppdSuratTugasValidation(); 

@@ -25,6 +25,11 @@ if (!fs.existsSync(path.join(uploadPath, 'images'))) {
     fs.mkdirSync(path.join(uploadPath, 'images'), { recursive: true });
 }
 
+// Create undangan directory if it doesn't exist
+if (!fs.existsSync(path.join(uploadPath, 'undangan'))) {
+    fs.mkdirSync(path.join(uploadPath, 'undangan'), { recursive: true });
+}
+
 const multerStorage = multer.diskStorage({
     destination: function (req: Request, file: Express.Multer.File, cb: Function) {
         if (file.fieldname === 'file_icon') {
@@ -33,6 +38,8 @@ const multerStorage = multer.diskStorage({
             cb(null, path.join(uploadPath, 'logo')); // Save file_logo in 'uploads/logo'
         } else if (file.fieldname === 'file_image') {
             cb(null, path.join(uploadPath, 'images')); // Save file_logo in 'uploads/logo'
+        } else if (file.fieldname === 'file_undangan') {
+            cb(null, path.join(uploadPath, 'undangan')); // Save file_undangan in 'uploads/undangan'
         } else {
             cb(new Error('Invalid file type'), ''); // Handle error if fieldname is wrong
         }

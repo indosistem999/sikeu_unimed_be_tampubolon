@@ -176,7 +176,8 @@
       "storeSumberDana": "Failed to store source of funds",
       "storeBagianSurat": "Failed to store bagian surat",
       "storeKopSurat": "Failed to store kop surat",
-      "storeOfficer": "Failed to store officer"
+      "storeOfficer": "Failed to store officer",
+      "uploadUndangan": "Failed to upload undangan file"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",
