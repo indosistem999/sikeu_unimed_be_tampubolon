@@ -1,6 +1,5 @@
 import createSwaggerPath from './path';
 import createSwaggerSchema from './schema';
-import { Config as cfg } from '../constanta'
 
 const swaggerDocInfo: object = {
   description:
@@ -21,7 +20,7 @@ export const swaggerDocLocalApi: object = {
   info: swaggerDocInfo,
   servers: [
     {
-      url: `${cfg.AppDomain}/api/v1/`,
+      url: '/api/v1',
       description: 'Private API',
     },
   ],
