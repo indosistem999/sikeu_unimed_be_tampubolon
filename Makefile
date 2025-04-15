@@ -4,6 +4,8 @@ compose-file=docker-compose.dev.yml
 app-container-name=sikeu-core-dev
 app-pm-name=sikeu-dev
 
+-include Makefile.local
+
 local-migration-create:
 	yarn typeorm migration:create  ./src/database/migrations/$(migration-file)
 
