@@ -124,6 +124,39 @@
       }
     }
   },
+  "/auth/manual-change-password": {
+    "post": {
+      "tags": ["Auth"],
+      "summary": "Authentication",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "required": false,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SchemaAuthManualChangePassword"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultResponseSchema"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
   "/auth/verify-otp": {
     "post": {
       "tags": ["Auth"],

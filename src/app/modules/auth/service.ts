@@ -141,4 +141,21 @@ export default new (class AuthService implements I_AuthService {
 
     return sendSuccessResponse(res, 200, result.message, result.record);
   }
+
+
+  async manualChangePassword(req: I_RequestCustom, res: Response): Promise<Response> {
+    const payload: Record<string, any> = {
+      old_password: req?.body?.old_password,
+      new_password: req?.body?.new_password,
+      confirm_password: req?.body?.confirm_password
+    }
+    const userId: any = req?.user?.user_id
+    const result = await this.authRepo.manualChangePassword(userId, payload);
+
+    if (!result?.success) {
+      return sendErrorResponse(res, 400, result.message, result.record);
+    }
+
+    return sendSuccessResponse(res, 200, result.message, result.record);
+  }
 })();

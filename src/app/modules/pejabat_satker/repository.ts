@@ -26,7 +26,7 @@ export class PejabatSatkerRepository implements I_PejabatSatkerRepository {
             const { paging, sorting } = filters
 
             const queryBuilder = this.repoUnit.createQueryBuilder('mwu')
-                .leftJoinAndSelect(MasterOfficers, 'mo', 'mo.unit_id = mwu.unit_id')
+                .leftJoinAndSelect('mwu.officers', 'mo', 'mo.unit_id = mwu.unit_id')
                 .where('mwu.deleted_at is null')
                 .select([
                     'mwu.unit_id as unit_id',

@@ -20,6 +20,7 @@ class PejabatSatkerService implements I_PejabatSatkerService {
             sorting: defineRequestOrderORM(req, sortDefaultUnitWork, sortRequestUnitWork),
         }
 
+
         const result = await this.repository.fetchUnitWorkGroup(filters)
         if (!result?.success) {
             return sendErrorResponse(res, 400, result.message, result.record);

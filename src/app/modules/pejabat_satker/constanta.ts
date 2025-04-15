@@ -1,12 +1,12 @@
 export const sortRequestUnitWork: Record<string, any> = {
-    unit_code: 'mwu.unit_code',
-    unit_name: 'mwu.unit_name',
-    unit_type: 'mwu.unit_type',
-    total_officers: `count(mo.officers_id)`,
-    created_at: 'mwu.created_at'
+    unit_code: 'unit_code',
+    unit_name: 'unit_name',
+    unit_type: 'unit_type',
+    total_officers: `total_officers`,
+    created_at: 'created_at'
 };
 
-export const sortDefaultUnitWork: string[] = [`mwu.created_at`, 'asc'];
+export const sortDefaultUnitWork: string[] = [`created_at`, 'asc'];
 
 
 export const sortRequestOfficer: Record<string, any> = {

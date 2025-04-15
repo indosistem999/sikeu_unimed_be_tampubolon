@@ -85,5 +85,22 @@
       }
     },
     "required": ["first_name", "last_name", "email", "password", "confirm_password"]
+  },
+  "SchemaAuthManualChangePassword": {
+    "type": "object",
+    "properties": {
+      "old_password": {
+        "type": "string",
+        "summary": "Enter your old password"
+      },
+      "new_password": {
+        "type": "string",
+        "summary": "Enter your new password"
+      },
+      "confirm_password": {
+        "type": "string",
+        "summary": "Enter your confirm password"
+      }
+    }
   }
 }

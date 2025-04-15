@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import MainRoutes from '../../../config/mainRoute';
 import { authMiddleware } from '../../middlewares/auth.middleware';
-import { I_RequestCustom } from '../../../interfaces/app.interface';
 import Services from './service';
 import ReqValidation from './validation';
+
 
 class PejabatSatkerController extends MainRoutes {
     public routes(): void {
@@ -12,7 +12,7 @@ class PejabatSatkerController extends MainRoutes {
             await Services.fetchUnitWorkGroup(req, res)
         });
 
-        this.router.get('/list-pejabat/:unit_id', authMiddleware, async (req: Request, res: Response) => {
+        this.router.get('/list-pejabat/:unit_id', authMiddleware, ReqValidation.paramValidation, async (req: Request, res: Response) => {
             await Services.fetchOfficerGroup(req, res)
         });
     }

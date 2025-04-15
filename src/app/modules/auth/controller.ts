@@ -33,6 +33,11 @@ class AuthController extends MainRoutes {
       }
     );
 
+
+    this.router.post('/manual-change-password', authMiddleware, async (req: Request, res: Response) => {
+      await AuthService.manualChangePassword(req, res);
+    });
+
     /** [POST] - Verification OTP */
     this.router.post('/verify-otp', AuthValidation.verifyOTPValidation, async (req: Request, res: Response) => {
       await AuthService.verifiedOTP(req, res);

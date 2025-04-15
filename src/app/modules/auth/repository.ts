@@ -26,6 +26,7 @@ import { IsNull } from 'typeorm';
 import { RoleModuleAssociation } from '../../../database/models/RoleModuleAssociation';
 import { selectDetailMenu } from '../master_menu/constanta';
 import { makeFullUrlFile } from '../../../config/storages';
+import { Roles } from '../../../database/models/Roles';
 
 class AuthRepository implements I_AuthRepository {
   private userRepo = AppDataSource.getRepository(Users);
@@ -91,30 +92,30 @@ class AuthRepository implements I_AuthRepository {
       const refresh_token = generatedToken(jwtPayload, '7d');
 
 
-      const today = others?.last_login
-      const totalDays = user?.last_login == null ? 1 : getTotalDays(today, user?.last_login)
+      // const today = others?.last_login
+      // const totalDays = user?.last_login == null ? 1 : getTotalDays(today, user?.last_login)
 
 
-      user.last_login = today;
-      user.last_ip = others?.request_ip,
-        user.last_hostname = others?.request_host
-      user.security_question_answer = payload.security_question_answer;
-      user.refresh_token = refresh_token;
-      user = await this.userRepo.save(user);
+      // user.last_login = today;
+      // user.last_ip = others?.request_ip,
+      //   user.last_hostname = others?.request_host
+      // user.security_question_answer = payload.security_question_answer;
+      // user.refresh_token = refresh_token;
+      // user = await this.userRepo.save(user);
 
-      // Create Log Activity
-      if (totalDays >= 1) {
-        const resultLog = await this.userLogRepository.store({
-          activity_time: others.last_login,
-          activity_type: logType.Login,
-          user,
-          description: `User has signed in at ${today} on IP: ${others?.request_ip}, Hostname: ${others?.request_host}`
-        })
+      // // Create Log Activity
+      // if (totalDays >= 1) {
+      //   const resultLog = await this.userLogRepository.store({
+      //     activity_time: others.last_login,
+      //     activity_type: logType.Login,
+      //     user,
+      //     description: `User has signed in at ${today} on IP: ${others?.request_ip}, Hostname: ${others?.request_host}`
+      //   })
 
-        if (!resultLog.success) {
-          return resultLog;
-        }
-      }
+      //   if (!resultLog.success) {
+      //     return resultLog;
+      //   }
+      // }
 
       return {
         success: true,
@@ -410,32 +411,42 @@ class AuthRepository implements I_AuthRepository {
 
   async getMe(id: string): Promise<I_ResultService> {
     try {
-      const user = await this.userRepo.findOne({ where: { user_id: id }, relations: ['role'] });
-      if (!user) {
+      const row = await this.userRepo.createQueryBuilder('u')
+        .leftJoinAndSelect('u.role', 'r', 'r.deleted_at IS NULL')
+        .select([
+          'u.user_id',
+          'u.first_name',
+          'u.last_name',
+          'u.email',
+          'u.phone_number',
+          'u.gender',
+          'u.photo',
+          'u.address',
+          'u.job_position',
+          'u.created_at',
+          'u.start_work_at',
+          'u.end_work_at',
+          'u.updated_at',
+          'r.role_id',
+          'r.role_name',
+          'r.role_slug'
+        ])
+        .where('u.user_id = :id', { id })
+        .andWhere('u.deleted_at IS NULL')
+        .getMany();
+
+      if (!row) {
         return {
           success: false,
           message: MessageDialog.__('error.default.notFoundItem', { item: 'User' }),
-          record: user,
+          record: row,
         };
       }
 
       return {
         success: true,
         message: MessageDialog.__('success.auth.userDetailInfo'),
-        record: {
-          user_id: user.user_id,
-          email: user.email,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          phone_number: user.phone_number,
-          photo: user.photo,
-          role: {
-            role_id: user?.role?.role_id,
-            role_name: user?.role?.role_name,
-            role_slug: user?.role?.role_slug
-          },
-          // modules: user.role.role_modules.map((item) => ({...item.master_module})),
-        },
+        record: row,
       };
     } catch (err: any) {
       return {
@@ -529,6 +540,48 @@ class AuthRepository implements I_AuthRepository {
 
 
 
+
+    } catch (err: any) {
+      return this.setupErrorMessage(err)
+    }
+  }
+
+  async manualChangePassword(userId: string, payload: Record<string, any>): Promise<I_ResultService> {
+    try {
+      const user = await this.userRepo.findOne({
+        where: { user_id: userId, deleted_at: IsNull() }
+      })
+
+      console.log({ users: user, userId, payload })
+
+      if (!user) {
+        return {
+          success: false,
+          message: MessageDialog.__('error.default.notFoundItem', { item: 'User' }),
+          record: user,
+        };
+      }
+
+      const salt = await generateSalt();
+      const today: Date = new Date(standartDateISO())
+
+      user.password = await hashedPassword(payload.new_password, salt);
+      user.salt = salt;
+      user.updated_at = today;
+      user.password_change_at = today;
+      user.updated_by = user.user_id;
+
+      await this.userRepo.save(user);
+
+
+
+      return {
+        success: true,
+        message: MessageDialog.__('success.auth.changePassword'),
+        record: {
+          user_id: user.user_id,
+        },
+      };
 
     } catch (err: any) {
       return this.setupErrorMessage(err)

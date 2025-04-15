@@ -9,7 +9,8 @@
       "sendEmailResetPassword": "Reset password link sent to email",
       "resetPassword": "Reset password successfully",
       "userDetailInfo": "Get detail information success",
-      "verifiedOTP": "The OTP code is correct. Now entry new password."
+      "verifiedOTP": "The OTP code is correct. Now entry new password.",
+      "changePassword": "Change password successfully"
     },
     "log": {
       "storeUserLog": "Success to store user log"
@@ -132,7 +133,8 @@
       "internalServer": "Internal Server Error",
       "notFoundItem": "{{item}} not found",
       "notFound": "Data not found",
-      "emptyData": "{{item}} is empty"
+      "emptyData": "{{item}} is empty",
+      "changePassword": "Password was changed. Please login again."
     },
     "existed": {
       "slugItem": "{{item}} with {{slug}} already exists",
