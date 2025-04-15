@@ -1,15 +1,17 @@
-import { IsNull, Like } from "typeorm";
+import { IsNull, LessThanOrEqual, Like, MoreThanOrEqual } from "typeorm";
 import AppDataSource from "../../../config/dbconfig";
 import { I_ResultService } from "../../../interfaces/app.interface";
 import { MessageDialog } from "../../../lang";
 import { I_ResponsePagination } from "../../../interfaces/pagination.interface";
 import { setPagination } from "../../../lib/utils/pagination.util";
-import { I_SPPDJenisBiayaRepository } from "../../../interfaces/sppdJenisBiaya.interface";
-import { SPPDJenisBiaya } from "../../../database/models/SPPDJenisBiaya";
+import { I_PejabatSatkerRepository } from "../../../interfaces/pejabatSatker.interface";
+import { MasterWorkUnit } from "../../../database/models/MasterWorkUnit";
+import { MasterOfficers } from "../../../database/models/MasterOfficers";
 
 
-export class SPPDJenisBiayaRepository implements I_SPPDJenisBiayaRepository {
-    private repository = AppDataSource.getRepository(SPPDJenisBiaya);
+export class PejabatSatkerRepository implements I_PejabatSatkerRepository {
+    private repoUnit = AppDataSource.getRepository(MasterWorkUnit);
+    private repoOfficer = AppDataSource.getRepository(MasterOfficers)
 
     setupErrorMessage(error: any): I_ResultService {
         return {
@@ -19,33 +21,47 @@ export class SPPDJenisBiayaRepository implements I_SPPDJenisBiayaRepository {
         }
     }
 
-    async fetch(filters: Record<string, any>): Promise<I_ResultService> {
+    async fetchUnitWorkGroup(filters: Record<string, any>): Promise<I_ResultService> {
         try {
             const { paging, sorting } = filters
-            let whereConditions: Record<string, any>[] = []
+
+            const queryBuilder = this.repoUnit.createQueryBuilder('mwu')
+                .leftJoinAndSelect(MasterOfficers, 'mo', 'mo.unit_id = mwu.unit_id')
+                .where('mwu.deleted_at is null')
+                .select([
+                    'mwu.unit_id',
+                    'mwu.unit_name',
+                    'mwu.unit_code',
+                    'mwu.unit_type',
+                    'count(mo.officers_id) as total_officers'
+                ])
 
 
             if (paging?.search && paging?.search != '' && paging?.search != null) {
                 const searchTerm: string = paging?.search
-                whereConditions = [
-                    { code: Like(`%${searchTerm}%`), deleted_at: IsNull() },
-                    { name: Like(`%${searchTerm}%`), deleted_at: IsNull() },
-                ];
+                queryBuilder.andWhere((builder: any) => {
+                    builder.where(`mwu.unit_name LIKE :searchTerm`, { serachTerm: `%${searchTerm}%` })
+                        .orWhere(`mwu.unit_type LIKE :searchTerm`, { serachTerm: `%${searchTerm}%` })
+                        .orWhere(`mwu.unit_code LIKE :searchTerm`, { serachTerm: `%${searchTerm}%` })
+                })
             }
 
-            let [rows, count] = await this.repository.findAndCount({
-                where: whereConditions,
-                skip: paging?.skip,
-                take: paging?.limit,
-                order: sorting
-            })
+            queryBuilder.skip(paging?.skip).take(paging?.limit)
+
+            if (sorting && sorting?.length > 0) {
+                sorting.forEach((sort: any) => {
+                    queryBuilder.addOrderBy(`$${sort.column}`, sort.order);
+                });
+            }
+
+
+            const [rows, count] = await queryBuilder.groupBy('mwu.unit_id').getManyAndCount()
 
             const pagination: I_ResponsePagination = setPagination(rows, count, paging.page, paging.limit);
 
-
             return {
                 success: true,
-                message: MessageDialog.__('success.sppdJenisBiaya.fetch'),
+                message: MessageDialog.__('success.workUnit.fetch'),
                 record: pagination
             }
         } catch (error: any) {
@@ -53,124 +69,62 @@ export class SPPDJenisBiayaRepository implements I_SPPDJenisBiayaRepository {
         }
     }
 
-    async fetchById(id: string): Promise<I_ResultService> {
+    async fetchOfficerGroup(id: string, filters: Record<string, any>): Promise<I_ResultService> {
         try {
+            const { paging, sorting, queries } = filters
 
-            const result = await this.repository.findOne({
-                where: {
-                    deleted_at: IsNull(),
-                    cost_type_id: id
-                },
-            });
+            let whereConditions: Record<string, any>[] = []
 
-            if (!result) {
-                return {
-                    success: false,
-                    message: MessageDialog.__('error.default.notFoundItem', { item: 'Jenis Biaya' }),
-                    record: result
+            let whereQuery: Record<string, any> = {}
+
+
+            if (paging?.search && paging?.search != '' && paging?.search != null) {
+                const searchTerm: string = paging?.search
+                whereConditions = [
+                    { nip: Like(`%${searchTerm}%`), deleted_at: IsNull() },
+                    { full_name: Like(`%${searchTerm}%`), deleted_at: IsNull() },
+                    { posititon_name: Like(`%${searchTerm}%`), deleted_at: IsNull() },
+                    { position_type: Like(`%${searchTerm}%`), deleted_at: IsNull() },
+                ];
+            }
+
+
+            if (queries?.start_date_position && queries?.end_date_position) {
+                whereQuery = {
+                    ...whereQuery,
+                    start_date_position: MoreThanOrEqual(queries.start_date_position),
+                    end_date_position: LessThanOrEqual(queries.end_date_position)
+                }
+            } else if (queries?.start_date_position) {
+                whereQuery = {
+                    ...whereQuery,
+                    start_date_position: MoreThanOrEqual(queries.start_date_position)
                 }
             }
 
+            const [rows, count] = await this.repoOfficer.findAndCount({
+                where: {
+                    deleted_at: IsNull(),
+                    unit_id: id,
+                    ...whereConditions,
+                    ...whereQuery
+                },
+                skip: paging?.skip,
+                take: paging?.limit,
+                order: sorting
+            });
+
+            const pagination: I_ResponsePagination = setPagination(rows, count, paging.page, paging.limit);
+
             return {
                 success: true,
-                message: MessageDialog.__('success.sppdJenisBiaya.fetch'),
-                record: result
+                message: MessageDialog.__('success.masterOfficer.fetch'),
+                record: pagination
             }
+
         } catch (error: any) {
             return this.setupErrorMessage(error);
         }
     }
 
-    async store(payload: Record<string, any>): Promise<I_ResultService> {
-        try {
-            const result = await this.repository.save(this.repository.create(payload))
-
-            if (!result) {
-                return {
-                    success: false,
-                    message: MessageDialog.__('error.failed.storeSppdJenisBiaya'),
-                    record: result
-                }
-            }
-
-            return {
-                success: true,
-                message: MessageDialog.__('success.sppdJenisBiaya.store'),
-                record: result
-            }
-        } catch (err: any) {
-            return this.setupErrorMessage(err)
-        }
-    }
-
-    async update(id: string, payload: Record<string, any>): Promise<I_ResultService> {
-        try {
-            let result = await this.repository.findOne({
-                where: {
-                    deleted_at: IsNull(),
-                    cost_type_id: id
-                }
-            });
-
-            if (!result) {
-                return {
-                    success: false,
-                    message: MessageDialog.__('error.default.notFoundItem', { item: 'Sppd Jenis Biaya' }),
-                    record: result
-                }
-            }
-
-            result = { ...result, ...payload }
-
-            await this.repository.save(result);
-
-
-            return {
-                success: true,
-                message: MessageDialog.__('success.sppdJenisBiaya.update'),
-                record: {
-                    cost_type_id: result?.cost_type_id,
-                }
-            }
-
-        } catch (error: any) {
-            return this.setupErrorMessage(error)
-        }
-    }
-
-    async softDelete(id: string, payload: Record<string, any>): Promise<I_ResultService> {
-        try {
-            let result = await this.repository.findOne({
-                where: {
-                    cost_type_id: id,
-                    deleted_at: IsNull()
-                }
-            })
-
-            if (!result) {
-                return {
-                    success: false,
-                    message: MessageDialog.__('error.default.notFoundItem', { item: 'Sppd Jenis Biaya' }),
-                    record: result
-                }
-            }
-
-            result = {
-                ...result,
-                ...payload
-            }
-
-            await this.repository.save(result);
-
-            return {
-                success: true,
-                message: MessageDialog.__('success.sppdJenisBiaya.softDelete'),
-                record: {
-                    transportation_type_id: id
-                }
-            }
-        } catch (error: any) {
-            return this.setupErrorMessage(error)
-        }
-    }
 }

@@ -3,21 +3,24 @@ import { sendErrorResponse, sendSuccessResponse } from '../../../lib/utils/respo
 import { I_RequestCustom } from '../../../interfaces/app.interface';
 import { standartDateISO } from '../../../lib/utils/common.util';
 import { defineRequestOrderORM, defineRequestPaginateArgs } from '../../../lib/utils/request.util';
-import { sortDefault, sortRequest } from './constanta';
+import { sortDefaultOfficer, sortDefaultUnitWork, sortRequestOfficer, sortRequestUnitWork } from './constanta';
 import { allSchema as sc } from '../../../constanta'
-import { SPPDJenisBiayaRepository } from './repository';
-import { I_SPPDJenisBiayaService } from '../../../interfaces/sppdJenisBiaya.interface';
+import { I_PejabatSatkerService } from '../../../interfaces/pejabatSatker.interface';
+import { PejabatSatkerRepository } from './repository';
 
-class SPPDJenisBiaya implements I_SPPDJenisBiayaService {
-    private readonly repository = new SPPDJenisBiayaRepository();
+class PejabatSatkerService implements I_PejabatSatkerService {
+    private readonly repository = new PejabatSatkerRepository();
+
+
+
     /** Fetch Data */
-    async fetchGroup(req: Request, res: Response): Promise<Response> {
+    async fetchUnitWorkGroup(req: Request, res: Response): Promise<Response> {
         const filters: Record<string, any> = {
             paging: defineRequestPaginateArgs(req),
-            sorting: defineRequestOrderORM(req, sortDefault, sortRequest),
+            sorting: defineRequestOrderORM(req, sortDefaultUnitWork, sortRequestUnitWork),
         }
 
-        const result = await this.repository.fetch(filters)
+        const result = await this.repository.fetchUnitWorkGroup(filters)
         if (!result?.success) {
             return sendErrorResponse(res, 400, result.message, result.record);
         }
@@ -26,10 +29,29 @@ class SPPDJenisBiaya implements I_SPPDJenisBiayaService {
     }
 
     /** Fetch By Id */
-    async fetchById(req: Request, res: Response): Promise<Response> {
-        const id: string = req?.params?.[sc.sppd_cost.primaryKey]
-        const result = await this.repository.fetchById(id)
+    async fetchOfficerGroup(req: Request, res: Response): Promise<Response> {
+        const id: string = req?.params?.[sc.work_unit.primaryKey]
+        const queries: Record<string, any> = {};
+        if (req?.query?.job_category_id) {
+            queries.job_category_id = req?.query?.job_category_id
+        }
 
+        if (req?.query?.start_date_position) {
+            queries.start_date_position = req?.query?.start_date_position
+        }
+
+        if (req?.query?.end_date_position) {
+            queries.end_date_position = req?.query?.end_date_position
+        }
+
+
+        const filters: Record<string, any> = {
+            paging: defineRequestPaginateArgs(req),
+            sorting: defineRequestOrderORM(req, sortDefaultOfficer, sortRequestOfficer),
+            queries
+        }
+
+        const result = await this.repository.fetchOfficerGroup(id, filters)
         if (!result?.success) {
             return sendErrorResponse(res, 400, result.message, result.record);
         }
@@ -38,4 +60,4 @@ class SPPDJenisBiaya implements I_SPPDJenisBiayaService {
     }
 }
 
-export default new SPPDJenisBiaya();
+export default new PejabatSatkerService();

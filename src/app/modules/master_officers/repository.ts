@@ -115,7 +115,7 @@ export class MasterOfficerRepository implements I_MasterOfficerRepository {
       }
 
       return {
-        success: false,
+        success: true,
         message: MessageDialog.__('success.masterOfficer.store'),
         record: result
       }

@@ -57,7 +57,7 @@ class MasterOfficerService implements I_MasterOfficerService {
     }
 
     if (req?.body?.is_not_specified) {
-      payload.is_not_specified = Boolean(req?.body?.is_not_specified)
+      payload.is_not_specified = req?.body?.is_not_specified
     }
 
 

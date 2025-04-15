@@ -8,12 +8,12 @@ import ReqValidation from './validation';
 class PejabatSatkerController extends MainRoutes {
     public routes(): void {
         /** [GET] - Fetch Data */
-        this.router.get('/list-group-satker', authMiddleware, async (req: Request, res: Response) => {
-            await Services.fetchGroup(req, res)
+        this.router.get('/list-satker', authMiddleware, async (req: Request, res: Response) => {
+            await Services.fetchUnitWorkGroup(req, res)
         });
 
-        this.router.get('/list-pejabat-satker/:unit_id', authMiddleware, async (req: Request, res: Response) => {
-            await Services.fetchById(req, res)
+        this.router.get('/list-pejabat/:unit_id', authMiddleware, async (req: Request, res: Response) => {
+            await Services.fetchOfficerGroup(req, res)
         });
     }
 }

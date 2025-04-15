@@ -1,0 +1,10 @@
+import { Request, Response } from 'express'
+import { I_RequestCustom, I_ResultService } from './app.interface'
+
+export interface I_PejabatSatkerRepository {
+
+}
+
+export interface I_PejabatSatkerService {
+
+}
