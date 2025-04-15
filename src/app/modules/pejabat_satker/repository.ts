@@ -29,10 +29,10 @@ export class PejabatSatkerRepository implements I_PejabatSatkerRepository {
                 .leftJoinAndSelect(MasterOfficers, 'mo', 'mo.unit_id = mwu.unit_id')
                 .where('mwu.deleted_at is null')
                 .select([
-                    'mwu.unit_id',
-                    'mwu.unit_name',
-                    'mwu.unit_code',
-                    'mwu.unit_type',
+                    'mwu.unit_id as unit_id',
+                    'mwu.unit_name as unit_name',
+                    'mwu.unit_code as unit_code',
+                    'mwu.unit_type as unit_type',
                     'count(mo.officers_id) as total_officers'
                 ])
 
@@ -46,18 +46,25 @@ export class PejabatSatkerRepository implements I_PejabatSatkerRepository {
                 })
             }
 
-            queryBuilder.skip(paging?.skip).take(paging?.limit)
-
-            if (sorting && sorting?.length > 0) {
-                sorting.forEach((sort: any) => {
-                    queryBuilder.addOrderBy(`$${sort.column}`, sort.order);
-                });
+            if (sorting) {
+                for (const [key, value] of Object.entries(sorting)) {
+                    queryBuilder.addOrderBy(`${key}`, value as 'ASC' | 'DESC');
+                }
             }
 
+            const rowBuilder = queryBuilder
+            const countBuilder = queryBuilder
 
-            const [rows, count] = await queryBuilder.groupBy('mwu.unit_id').getManyAndCount()
+            const rows = await rowBuilder
+                .skip(paging?.skip)
+                .take(paging?.limit)
+                .groupBy('mwu.unit_id')
+                .getRawMany()
 
-            const pagination: I_ResponsePagination = setPagination(rows, count, paging.page, paging.limit);
+
+            const totals = await countBuilder.groupBy('mwu.unit_id').getCount();
+
+            const pagination: I_ResponsePagination = setPagination(rows, totals, paging.page, paging.limit);
 
             return {
                 success: true,
@@ -88,6 +95,15 @@ export class PejabatSatkerRepository implements I_PejabatSatkerRepository {
                 ];
             }
 
+            if (queries?.job_category_id) {
+                whereQuery = {
+                    ...whereQuery,
+                    job_category: {
+                        job_category_id: queries?.job_category_id
+                    }
+                }
+            }
+
 
             if (queries?.start_date_position && queries?.end_date_position) {
                 whereQuery = {
@@ -108,6 +124,9 @@ export class PejabatSatkerRepository implements I_PejabatSatkerRepository {
                     unit_id: id,
                     ...whereConditions,
                     ...whereQuery
+                },
+                relations: {
+                    job_category: true
                 },
                 skip: paging?.skip,
                 take: paging?.limit,
