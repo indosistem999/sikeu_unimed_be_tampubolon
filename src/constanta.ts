@@ -91,11 +91,13 @@ export const LogType = {
 
 
 export const QueueList = {
-  Email: 'queue_email'
+  Email: 'queue_email',
+  LogActivity: 'queue_log_activity'
 }
 
 export const ExchangeList = {
-  Email: 'exchange_email'
+  Email: 'exchange_email',
+  LogActivity: 'exchange_log_activity'
 }
 
 
