@@ -74,3 +74,10 @@ export interface I_FilterPagination {
   paging: I_PaginateArgs,
   sorting: any
 }
+
+export interface GenerateExcelParams {
+  fileName: string;
+  sheetName: string;
+  records: Record<string, any>[] | any[];
+  headers: string[];
+}

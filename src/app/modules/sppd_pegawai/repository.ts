@@ -304,4 +304,46 @@ export class SppdPegawaiRepository implements I_SppdPegawaiRepository {
             return this.setupErrorMessage(error)
         }
     }
+
+    async downloadTemplateExcel(req: I_RequestCustom): Promise<I_ResultService> {
+        try {
+
+            const result = await this.repository.createQueryBuilder('p')
+                .leftJoinAndSelect(SPPDPangkat, 'sp', 'sp.pangkat_id = p.pangkat_id')
+                .leftJoinAndSelect(MasterWorkUnit, 'mu', 'mu.unit_id = p.unit_id')
+                .where('p.deleted_at IS NULL')
+                .select([
+                    'p.nik',
+                    'p.nip',
+                    'p.nama',
+                    'p.gelar_depan',
+                    'p.email',
+                    'p.phone',
+                    `concat(sp.pangkat,',' sp.golongan_romawi) as pangkat`,
+                    `concat(mu.unit_code, ',' mu.unit_name) as satker`,
+                    'p.jabatan',
+                    'p.jenis_kepegawaian',
+                    'p.status_kepegawaian',
+                    `(case 
+                        when p.status_active = 1
+                        then 'aktif'
+                        else 'tidak aktif'
+                     end) as active_status`,
+                    'simpeg_id',
+                    'username'
+                ])
+                .orderBy('created_at', "DESC")
+                .take(1)
+                .skip(0)
+                .getMany()
+
+            return {
+                success: true,
+                message: MessageDialog.__('success.sppdPegawai.fetch'),
+                record: result && result?.length > 0 ? result : []
+            }
+        } catch (err: any) {
+            return this.setupErrorMessage(err)
+        }
+    }
 }

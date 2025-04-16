@@ -29,7 +29,9 @@ class SppdPegawaiController extends MainRoutes {
             await showFile(req, res);
         });
 
-        this.router.get('/export', async (req: Request, res: Response) => { });
+        this.router.get('/download/template/excel', async (req: Request, res: Response) => {
+            await Services.downloadTemplateExcel(req, res)
+        });
 
         /** [GET] - Find By Id  */
         this.router.get(

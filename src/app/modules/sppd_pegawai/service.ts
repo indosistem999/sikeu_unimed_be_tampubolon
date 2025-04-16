@@ -1,15 +1,16 @@
 import { Request, Response } from 'express';
 import { sendErrorResponse, sendSuccessResponse } from '../../../lib/utils/response.util';
 import { I_RequestCustom } from '../../../interfaces/app.interface';
-import { standartDateISO } from '../../../lib/utils/common.util';
+import { formatDateToday, standartDateISO } from '../../../lib/utils/common.util';
 import { SppdPegawaiRepository } from './repository';
 import { defineRequestOrderORM, defineRequestPaginateArgs } from '../../../lib/utils/request.util';
-import { sortDefault, sortRequest } from './constanta';
+import { excelHeaders, sortDefault, sortRequest } from './constanta';
 import { allSchema as sc } from '../../../constanta'
 import { I_SppdPegawaiService } from '../../../interfaces/sppdPegawai';
 import AppDataSource from '../../../config/dbconfig';
 import path from 'path';
 import { removeFileInStorage } from '../../../config/storages';
+import { makeFileExcel } from '../../../config/excel';
 
 class SppdPegawaiService implements I_SppdPegawaiService {
     private readonly repository = new SppdPegawaiRepository();
@@ -201,6 +202,25 @@ class SppdPegawaiService implements I_SppdPegawaiService {
         }
 
         return sendSuccessResponse(res, 200, result.message, result.record);
+    }
+
+
+    async downloadTemplateExcel(req: I_RequestCustom, res: Response): Promise<Response> {
+        const result = await this.repository.downloadTemplateExcel(req);
+
+        if (!result?.success) {
+            return sendErrorResponse(res, 400, result.message, result.record)
+        }
+
+        const fileName = `SPPD_Pegawai${formatDateToday('YYYYMMDDHHmmss', new Date(standartDateISO()))}`;
+        const headers = excelHeaders.map((x: any) => x.name);
+        return await makeFileExcel(res, {
+            fileName,
+            headers,
+            records: result.record,
+            sheetName: 'Data Pegawai'
+        });
+
     }
 }
 
