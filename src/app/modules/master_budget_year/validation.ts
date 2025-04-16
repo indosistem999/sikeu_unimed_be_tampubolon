@@ -51,7 +51,6 @@ class MasterBudgetYearValidation {
             .select([`p.${sc.budget_year.primaryKey}`, 'p.budget_name', 'p.budget_start_date', `p.budget_end_date`])
             .getOne();
 
-        console.log({ rows: row })
 
         if (row) {
             sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Budget name ${req?.body?.budget_name}` }), { row_existed: row })

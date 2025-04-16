@@ -4,6 +4,7 @@ import { authMiddleware } from '../../middlewares/auth.middleware';
 import { I_RequestCustom } from '../../../interfaces/app.interface';
 import Services from './service';
 import { showFile, uploadImageToStorage } from '../../../config/storages';
+import ReqValidation from './validation';
 
 class SppdPegawaiController extends MainRoutes {
     public routes(): void {
@@ -17,6 +18,7 @@ class SppdPegawaiController extends MainRoutes {
             '/',
             authMiddleware,
             uploadImageToStorage.single('file_image'),
+            ReqValidation.createValidation,
             async (req: I_RequestCustom, res: Response) => {
                 await Services.store(req, res);
             }
@@ -27,27 +29,40 @@ class SppdPegawaiController extends MainRoutes {
             await showFile(req, res);
         });
 
-        /** [GET] - Find By Id  */
-        this.router.get('/:pegawai_id', authMiddleware, async (req: Request, res: Response) => {
-            await Services.fetchById(req, res);
-        });
+        this.router.get('/export', async (req: Request, res: Response) => { });
 
+        /** [GET] - Find By Id  */
+        this.router.get(
+            '/:pegawai_id',
+            authMiddleware,
+            ReqValidation.paramValidation,
+            async (req: Request, res: Response) => {
+                await Services.fetchById(req, res);
+            }
+        );
 
         /** [PUT] - Update Data */
         this.router.put(
             '/:pegawai_id',
             authMiddleware,
             uploadImageToStorage.single('file_image'),
+            ReqValidation.paramValidation,
+            ReqValidation.updateValidation,
             async (req: I_RequestCustom, res: Response) => {
                 await Services.update(req, res);
             }
         );
 
         /** [DELETE] - Delete Data */
-        this.router.delete('/:pegawai_id', authMiddleware, uploadImageToStorage.single('file_image'),
+        this.router.delete(
+            '/:pegawai_id',
+            authMiddleware,
+            uploadImageToStorage.single('file_image'),
+            ReqValidation.paramValidation,
             async (req: Request, res: Response) => {
                 await Services.softDelete(req, res);
-            });
+            }
+        );
     }
 }
 

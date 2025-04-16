@@ -7,17 +7,18 @@ import { allSchema as sc } from "../../../constanta";
 import { MessageDialog } from "../../../lang";
 import AppDataSource from "../../../config/dbconfig";
 import { DTO_ValidationCreate, DTO_ValidationUpdate } from "./dto";
-import { SPPDPangkat } from "../../../database/models/SPPDPangkat";
+import { SPPDPegawai } from "../../../database/models/SPPDPegawai";
+import { IsNull, Like, SelectQueryBuilder } from "typeorm";
 
-class SPPDPangkatValidation {
+class SPPDPegawaiValidation {
 
 
     async paramValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
-        if (!req?.params?.[sc.sppd_pangkat.primaryKey]) {
+        if (!req?.params?.[sc.pegawai.primaryKey]) {
             sendErrorResponse(
                 res,
                 422,
-                MessageDialog.__('error.missing.requiredEntry', { label: 'Pangkat id' }),
+                MessageDialog.__('error.missing.requiredEntry', { label: 'Pegawai id' }),
                 null
             );
         }
@@ -42,29 +43,38 @@ class SPPDPangkatValidation {
                 errors
             );
         }
+        else {
 
-        const row = await AppDataSource.getRepository(SPPDPangkat)
-            .createQueryBuilder('p')
-            .where(`p.golongan_romawi LIKE :GR`, { GR: `%${req.body.golongan_romawi || ''}%` })
-            .andWhere(`p.golongan_angka LIKE :GA`, { GA: `%${req.body.golongan_angka || ''}%` })
-            .andWhere(`p.pangkat LIKE :PP`, { PP: `%${req.body.pangkat || ''}%` })
-            .andWhere(`p.deleted_at IS NULL`)
-            .select([
-                `p.${sc.sppd_pangkat.primaryKey}`
-            ])
-            .getOne();
+            const nik: any = req?.body?.nik || ''
+            const nip: any = req?.body?.nip || ''
 
-        if (row) {
-            sendErrorResponse(res, 400, MessageDialog.__('error.existed.sppdPangkat'), row)
+            const row = await AppDataSource.getRepository(SPPDPegawai)
+                .findOne({
+                    where: [
+                        {
+                            nik: Like(`%${nik}%`),
+                            deleted_at: IsNull(),
+                        },
+                        {
+                            nip: Like(`%${nip}%`),
+                            deleted_at: IsNull()
+                        }
+                    ]
+                })
+
+            if (row) {
+                sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Nip (${nip}) or Nik (${nik})` }), { row_existed: row })
+            }
+            else {
+                next()
+            }
         }
-
-        next()
 
     }
 
     // Update
     async updateValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
-        const id: string = req?.params?.[sc.sppd_pangkat.primaryKey]
+        const id: string = req?.params?.[sc.pegawai.primaryKey]
         const dtoInstance = plainToInstance(DTO_ValidationUpdate, req.body);
         (dtoInstance as any).req = req;
 
@@ -86,35 +96,32 @@ class SPPDPangkatValidation {
         }
         else {
 
-            const row = await AppDataSource.getRepository(SPPDPangkat)
+            const nik: any = req?.body?.nik || ''
+            const nip: any = req?.body?.nip || ''
+
+            const row = await AppDataSource.getRepository(SPPDPegawai)
                 .createQueryBuilder('p')
-                .where(`p.golongan_romawi LIKE :GR`, { GR: `%${req.body.golongan_romawi || ''}%` })
-                .andWhere(`p.golongan_angka LIKE :GA`, { GA: `%${req.body.golongan_angka || ''}%` })
-                .andWhere(`p.pangkat LIKE :PP`, { PP: `%${req.body.pangkat || ''}%` })
-                .andWhere(`p.deleted_at IS NULL`)
+                .where('p.deleted_at is null')
+                .andWhere((builder: SelectQueryBuilder<SPPDPegawai>) => {
+                    builder.where(`p.nik LIKE :nik`, { nik: `%${nik}%` })
+                        .orWhere(`p.nip LIKE :nip`, { nip: `%${nip}%` })
+                })
                 .andWhere(
-                    `p.${sc.sppd_pangkat.primaryKey} != :id`, { id }
+                    `p.${sc.pegawai.primaryKey} != :id`, { id }
                 )
                 .select([
-                    `p.${sc.sppd_pangkat.primaryKey}`
+                    `p.${sc.pegawai.primaryKey}`
                 ])
                 .getOne()
 
-
-            const strMessage = `Data ${req.body.golongan_romawi}, ${req.body.golongan_angka} and ${req.body.pangkat} `
-
             if (row) {
-                sendErrorResponse(
-                    res,
-                    422,
-                    MessageDialog.__('error.existed.universal'),
-                    { item: strMessage }
-                );
+                sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Nip (${nip}) or Nik (${nik})` }), { row_existed: row })
             }
-
-            next();
+            else {
+                next();
+            }
         }
     }
 }
 
-export default new SPPDPangkatValidation();
+export default new SPPDPegawaiValidation();
