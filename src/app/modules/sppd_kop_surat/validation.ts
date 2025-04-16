@@ -23,45 +23,67 @@ class KopSuratValidation {
     }
 
     async createValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
-        const dtoInstance = plainToClass(DTO_ValidationCreate, req?.body);
-        const errors = await validate(dtoInstance);
-
+        const errors = await validate(plainToInstance(DTO_ValidationCreate, req.body));
         if (errors.length > 0) {
-            sendErrorResponse(
-                res,
-                422,
-                errors
-                    .map((err) => {
-                        return Object.values(err.constraints!).join(', ')
-                    })
-                    .flat()
-                    .toString(),
-                errors
-            );
+            sendErrorResponse(res, 422, MessageDialog.__('error.validation.default'), errors);
+        } else {
+            next();
         }
-        else {
+    }
+
+    async createBatchValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
+        if (!Array.isArray(req.body)) {
+            sendErrorResponse(res, 422, MessageDialog.__('error.validation.kopSurat.batchFormat'), null);
+            return;
+        }
+
+        const errors = await Promise.all(
+            req.body.map(async (item) => {
+                return await validate(plainToInstance(DTO_ValidationCreate, item));
+            })
+        );
+
+        const hasErrors = errors.some(error => error.length > 0);
+        if (hasErrors) {
+            sendErrorResponse(res, 422, MessageDialog.__('error.validation.default'), errors);
+        } else {
             next();
         }
     }
 
     async updateValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
-        const dtoInstance = plainToInstance(DTO_ValidationUpdate, req.body);
-        const errors = await validate(dtoInstance);
-
+        const errors = await validate(plainToInstance(DTO_ValidationUpdate, req.body));
         if (errors.length > 0) {
-            sendErrorResponse(
-                res,
-                422,
-                errors
-                    .map((err) => {
-                        return Object.values(err.constraints!).join(', ')
-                    })
-                    .flat()
-                    .toString(),
-                errors
-            );
+            sendErrorResponse(res, 422, MessageDialog.__('error.validation.default'), errors);
+        } else {
+            next();
         }
-        else {
+    }
+
+    async updateBatchValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
+        if (!Array.isArray(req.body)) {
+            sendErrorResponse(res, 422, MessageDialog.__('error.validation.kopSurat.batchFormat'), null);
+            return;
+        }
+
+        const errors = await Promise.all(
+            req.body.map(async (item) => {
+                if (!item.kopsurat_id) {
+                    return [{
+                        property: 'kopsurat_id',
+                        constraints: {
+                            required: MessageDialog.__('error.missing.requiredEntry', { label: 'Kop surat id' })
+                        }
+                    }];
+                }
+                return await validate(plainToInstance(DTO_ValidationUpdate, item));
+            })
+        );
+
+        const hasErrors = errors.some(error => error.length > 0);
+        if (hasErrors) {
+            sendErrorResponse(res, 422, MessageDialog.__('error.validation.default'), errors);
+        } else {
             next();
         }
     }

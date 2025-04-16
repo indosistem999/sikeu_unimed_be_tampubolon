@@ -207,4 +207,79 @@ export class KopSuratRepository implements I_KopSuratRepository {
             return this.setupErrorMessage(error);
         }
     }
+
+    async storeBatch(payloads: Record<string, any>[]): Promise<I_ResultService> {
+        try {
+            const results = await Promise.all(
+                payloads.map(async (payload) => {
+                    return await this.repository.save(this.repository.create(payload));
+                })
+            );
+
+            if (!results || results.length === 0) {
+                return {
+                    success: false,
+                    message: MessageDialog.__('error.failed.storeKopSurat'),
+                    record: results
+                }
+            }
+
+            return {
+                success: true,
+                message: MessageDialog.__('success.kopSurat.store'),
+                record: results
+            }
+        } catch (err: any) {
+            return this.setupErrorMessage(err)
+        }
+    }
+
+    async updateBatch(payloads: { id: string; data: Record<string, any> }[]): Promise<I_ResultService> {
+        try {
+            const results = await Promise.all(
+                payloads.map(async ({ id, data }) => {
+                    let item = await this.repository.findOne({
+                        where: {
+                            deleted_at: IsNull(),
+                            kopsurat_id: id
+                        }
+                    });
+
+                    if (!item) {
+                        return {
+                            success: false,
+                            message: MessageDialog.__('error.default.notFoundItem', { item: 'Kop Surat' }),
+                            record: null,
+                            id
+                        };
+                    }
+
+                    const updatedItem = await this.repository.save({ ...item, ...data });
+                    return {
+                        success: true,
+                        message: MessageDialog.__('success.kopSurat.update'),
+                        record: updatedItem,
+                        id
+                    };
+                })
+            );
+
+            const failedUpdates = results.filter(result => !result.success);
+            if (failedUpdates.length > 0) {
+                return {
+                    success: false,
+                    message: MessageDialog.__('error.failed.updateKopSurat'),
+                    record: failedUpdates
+                };
+            }
+
+            return {
+                success: true,
+                message: MessageDialog.__('success.kopSurat.update'),
+                record: results.map(r => r.record)
+            };
+        } catch (error: any) {
+            return this.setupErrorMessage(error);
+        }
+    }
 } 

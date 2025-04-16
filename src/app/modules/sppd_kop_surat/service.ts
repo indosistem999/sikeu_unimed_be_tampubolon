@@ -11,27 +11,34 @@ import { MessageDialog } from '../../../lang';
 class KopSuratService implements I_KopSuratService {
     private readonly repository = new KopSuratRepository();
 
-    bodyValidation(req: Request): Record<string, any> {
+    bodyValidation(req: Request): Record<string, any> | Record<string, any>[] {
+        if (Array.isArray(req.body)) {
+            return req.body.map(item => this.validateSingleItem(item));
+        }
+        return this.validateSingleItem(req.body);
+    }
+
+    private validateSingleItem(item: any): Record<string, any> {
         const payload: Record<string, any> = {};
 
-        if (req?.body?.order_number) {
-            payload.order_number = req?.body?.order_number
+        if (item?.order_number) {
+            payload.order_number = item.order_number;
         }
 
-        if (req?.body?.description) {
-            payload.description = req?.body?.description
+        if (item?.description) {
+            payload.description = item.description;
         }
 
-        if (req?.body?.font_type) {
-            payload.font_type = req?.body?.font_type
+        if (item?.font_type) {
+            payload.font_type = item.font_type;
         }
 
-        if (req?.body?.font_style) {
-            payload.font_style = req?.body?.font_style
+        if (item?.font_style) {
+            payload.font_style = item.font_style;
         }
 
-        if (req?.body?.font_size) {
-            payload.font_size = req?.body?.font_size
+        if (item?.font_size) {
+            payload.font_size = item.font_size;
         }
 
         return payload;
@@ -132,6 +139,52 @@ class KopSuratService implements I_KopSuratService {
             }
 
             return sendSuccessResponse(res, 200, MessageDialog.__('success.sppdKopSurat.preview'), result.record);
+        } catch (error) {
+            return sendErrorResponse(res, 500, MessageDialog.__('error.failed.storeKopSurat'), error);
+        }
+    }
+
+    async storeBatch(req: Request, res: Response): Promise<Response> {
+        try {
+            const payloads = (this.bodyValidation(req) as Record<string, any>[]).map(item => ({
+                ...item,
+                created_by: (req as I_RequestCustom)?.user?.user_id
+            }));
+
+            const result = await this.repository.storeBatch(payloads);
+
+            if (!result.success) {
+                return sendErrorResponse(res, 400, result.message, result.record);
+            }
+
+            return sendSuccessResponse(res, 200, MessageDialog.__('success.sppdKopSurat.store'), result.record);
+        } catch (error) {
+            return sendErrorResponse(res, 500, MessageDialog.__('error.failed.storeKopSurat'), error);
+        }
+    }
+
+    async updateBatch(req: Request, res: Response): Promise<Response> {
+        try {
+            if (!Array.isArray(req.body)) {
+                return sendErrorResponse(res, 400, MessageDialog.__('error.validation.kopSurat.batchUpdateFormat'), null);
+            }
+
+            const payloads = req.body.map(item => ({
+                id: item.kopsurat_id,
+                data: {
+                    ...this.validateSingleItem(item),
+                    updated_by: (req as I_RequestCustom)?.user?.user_id,
+                    updated_at: new Date()
+                }
+            }));
+
+            const result = await this.repository.updateBatch(payloads);
+
+            if (!result.success) {
+                return sendErrorResponse(res, 404, result.message, result.record);
+            }
+
+            return sendSuccessResponse(res, 200, MessageDialog.__('success.sppdKopSurat.update'), result.record);
         } catch (error) {
             return sendErrorResponse(res, 500, MessageDialog.__('error.failed.storeKopSurat'), error);
         }

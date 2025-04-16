@@ -4,24 +4,73 @@
         "properties": {
             "order_number": {
                 "type": "integer",
-                "description": "Order number of the kop surat"
+                "description": "Order number of the kop surat",
+                "minimum": 1,
+                "maximum": 6
             },
             "description": {
                 "type": "string",
-                "description": "Description of the kop surat"
+                "description": "Description/content of the kop surat"
             },
             "font_type": {
                 "type": "string",
-                "description": "Font type of the kop surat"
+                "description": "Font type/family of the kop surat text"
             },
             "font_style": {
                 "type": "string",
-                "description": "Font style of the kop surat"
+                "description": "Font style of the kop surat text (e.g., normal, bold, italic)"
             },
             "font_size": {
                 "type": "string",
-                "description": "Font size of the kop surat"
+                "description": "Font size of the kop surat text (e.g., 12px, 1rem)"
             }
         }
+    },
+    "KopSuratBatchCreate": {
+        "type": "array",
+        "items": {
+            "$ref": "#/components/schemas/KopSurat"
+        },
+        "minItems": 1,
+        "maxItems": 6,
+        "description": "Array of kop surat entries for batch creation"
+    },
+    "KopSuratBatchUpdate": {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "required": ["kopsurat_id"],
+            "properties": {
+                "kopsurat_id": {
+                    "type": "string",
+                    "description": "ID of the kop surat to update"
+                },
+                "order_number": {
+                    "type": "integer",
+                    "description": "Order number of the kop surat",
+                    "minimum": 1,
+                    "maximum": 6
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description/content of the kop surat"
+                },
+                "font_type": {
+                    "type": "string",
+                    "description": "Font type/family of the kop surat text"
+                },
+                "font_style": {
+                    "type": "string",
+                    "description": "Font style of the kop surat text (e.g., normal, bold, italic)"
+                },
+                "font_size": {
+                    "type": "string",
+                    "description": "Font size of the kop surat text (e.g., 12px, 1rem)"
+                }
+            }
+        },
+        "minItems": 1,
+        "maxItems": 6,
+        "description": "Array of kop surat entries for batch update"
     }
 } 

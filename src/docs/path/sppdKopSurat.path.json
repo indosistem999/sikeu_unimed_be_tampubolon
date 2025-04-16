@@ -45,6 +45,118 @@
             }
         }
     },
+    "/sppd-kop-surat/batch": {
+        "post": {
+            "tags": ["SPPD Kop Surat"],
+            "summary": "Create multiple kop surat entries at once",
+            "security": [{ "bearerAuth": [] }],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/KopSurat"
+                            },
+                            "minItems": 1,
+                            "maxItems": 6,
+                            "description": "Array of kop surat entries (maximum 6 items)"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Success create multiple kop surat entries",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DefaultResponseSchema"
+                            }
+                        }
+                    }
+                },
+                "422": {
+                    "description": "Validation error",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ErrorResponseSchema"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "put": {
+            "tags": ["SPPD Kop Surat"],
+            "summary": "Update multiple kop surat entries at once",
+            "security": [{ "bearerAuth": [] }],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "allOf": [
+                                    {
+                                        "type": "object",
+                                        "required": ["kopsurat_id"],
+                                        "properties": {
+                                            "kopsurat_id": {
+                                                "type": "string",
+                                                "description": "ID of the kop surat to update"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "$ref": "#/components/schemas/KopSurat"
+                                    }
+                                ]
+                            },
+                            "minItems": 1,
+                            "maxItems": 6,
+                            "description": "Array of kop surat entries to update (maximum 6 items)"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Success update multiple kop surat entries",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DefaultResponseSchema"
+                            }
+                        }
+                    }
+                },
+                "422": {
+                    "description": "Validation error",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ErrorResponseSchema"
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "One or more kop surat entries not found",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ErrorResponseSchema"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
     "/sppd-kop-surat/{kopsurat_id}": {
         "get": {
             "tags": ["SPPD Kop Surat"],
@@ -76,7 +188,7 @@
         },
         "put": {
             "tags": ["SPPD Kop Surat"],
-            "summary": "Update kop surat",
+            "summary": "Update kop surat by ID",
             "security": [{ "bearerAuth": [] }],
             "parameters": [
                 {
@@ -114,7 +226,7 @@
         },
         "delete": {
             "tags": ["SPPD Kop Surat"],
-            "summary": "Delete kop surat",
+            "summary": "Delete kop surat by ID",
             "security": [{ "bearerAuth": [] }],
             "parameters": [
                 {
@@ -144,7 +256,7 @@
     "/sppd-kop-surat/{kopsurat_id}/preview": {
         "get": {
             "tags": ["SPPD Kop Surat"],
-            "summary": "Preview kop surat",
+            "summary": "Preview kop surat by ID",
             "security": [{ "bearerAuth": [] }],
             "parameters": [
                 {
