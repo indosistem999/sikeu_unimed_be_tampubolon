@@ -45,6 +45,7 @@ export const Config = {
   AppAllowHeader: process?.env?.APP_ALLOW_HEADER ?? 'POST,PUT,DELETE,GET,OPTIONS',
   AppExposeHeader: process?.env?.APP_EXPOSE_HEADER ?? 'POST,PUT,DELETE,GET,OPTIONS',
   AppDomain: process?.env?.APP_DOMAIN || '',
+  FrontendDomain: process?.env?.FRONTEND_DOMAIN || 'https://sikeu-unimed.vercel.app',
 
   // Database
   DbHost: process.env.DB_HOST?.toString() || 'localhost',

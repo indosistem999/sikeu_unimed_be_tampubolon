@@ -52,6 +52,7 @@ export class App {
     const whitelist = [
       /^http:\/\/localhost:\d+$/, // Allow all localhost ports
       cfg.AppDomain,  // Replace with your production domain
+      cfg.FrontendDomain
     ];
 
     // cors
