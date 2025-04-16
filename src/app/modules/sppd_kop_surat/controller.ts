@@ -17,6 +17,11 @@ class KopSuratController extends MainRoutes {
             await Services.store(req, res);
         });
 
+        // Batch Create
+        this.router.post('/batch', authMiddleware, ReqValidation.createBatchValidation, async (req: I_RequestCustom, res: Response) => {
+            await Services.storeBatch(req, res);
+        });
+
         // Get By Id
         this.router.get('/:kopsurat_id', authMiddleware, ReqValidation.paramValidation, async (req: Request, res: Response) => {
             await Services.fetchById(req, res);
@@ -30,6 +35,16 @@ class KopSuratController extends MainRoutes {
             ReqValidation.updateValidation,
             async (req: I_RequestCustom, res: Response) => {
                 await Services.update(req, res);
+            }
+        );
+
+        // Batch Update
+        this.router.put(
+            '/batch',
+            authMiddleware,
+            ReqValidation.updateBatchValidation,
+            async (req: I_RequestCustom, res: Response) => {
+                await Services.updateBatch(req, res);
             }
         );
 
