@@ -10,6 +10,8 @@ import { I_SppdPegawaiRepository } from "../../../interfaces/sppdPegawai";
 import { SPPDPegawai } from "../../../database/models/SPPDPegawai";
 import { snapLogActivity } from "../../../events/publishers/logUser.publisher";
 import { TypeLogActivity } from "../../../lib/utils/global.util";
+import { makeFullUrlFile } from "../../../config/storages";
+import { MasterWorkUnit } from "../../../database/models/MasterWorkUnit";
 
 
 export class SppdPegawaiRepository implements I_SppdPegawaiRepository {
@@ -23,23 +25,80 @@ export class SppdPegawaiRepository implements I_SppdPegawaiRepository {
         }
     }
 
+    whereReqQuery(queries: any): Record<string, any> {
+        const whereQuery: Record<string, any> = {}
+
+        if (queries?.unit_id) {
+            whereQuery.unit_id = queries?.unit_id
+        }
+
+        if (queries?.jenis_kepegawaian && queries?.jenis_kepegawaian != 'all') {
+            whereQuery.jenis_kepegawaian = queries.jenis_kepegawaian.toLowerCase()
+        }
+
+        if (queries?.status_kepegawaian && queries?.status_kepegawaian != 'all') {
+            whereQuery.status_kepegawaian = queries.status_kepegawaian.toLowerCase()
+        }
+
+        if (queries?.status_active && Number(queries?.status_active) != 2) {
+            whereQuery.status_active = Number(queries?.status_active)
+        }
+
+        return whereQuery
+    }
+
+
     async fetch(filters: Record<string, any>): Promise<I_ResultService> {
         try {
-            const { paging, sorting } = filters
+            const { paging, sorting, queries } = filters
+            const whereQuery: Record<string, any> = { ...this.whereReqQuery(queries), deleted_at: IsNull() }
             let whereConditions: Record<string, any>[] = []
 
+
+            console.log(queries);
 
             if (paging?.search && paging?.search != '' && paging?.search != null) {
                 const searchTerm: string = paging?.search
                 whereConditions = [
-                    { golongan_romawi: Like(`%${searchTerm}%`), deleted_at: IsNull() }, // Partial match
-                    { golongan_angka: Like(`%${searchTerm}%`), deleted_at: IsNull() }, // Partial match
-                    { pangkat: Like(`%${searchTerm}%`), deleted_at: IsNull() },             // Exact match
+                    { nik: Like(`%${searchTerm}%`), ...whereQuery }, // Partial match
+                    { nip: Like(`%${searchTerm}%`), ...whereQuery }, // Partial match
+                    { nama: Like(`%${searchTerm}%`), ...whereQuery },
+                    {
+                        work_unit: {
+                            unit_name: Like(`%${searchTerm}%`)
+                        },
+                        ...whereQuery
+                    },
                 ];
             }
 
             let [rows, count] = await this.repository.findAndCount({
-                where: whereConditions,
+                where: whereConditions?.length > 0 ? whereConditions : whereQuery,
+                relations: {
+                    work_unit: true
+                },
+                select: {
+                    pegawai_id: true,
+                    nik: true,
+                    nip: true,
+                    nama: true,
+                    email: true,
+                    phone: true,
+                    work_unit: {
+                        unit_id: true,
+                        unit_code: true,
+                        unit_name: true,
+                        unit_type: true,
+                        created_at: true,
+                        updated_at: true
+                    },
+                    gelar_depan: true,
+                    jenis_kepegawaian: true,
+                    status_kepegawaian: true,
+                    status_active: true,
+                    created_at: true,
+                    updated_at: true
+                },
                 skip: paging?.skip,
                 take: paging?.limit,
                 order: sorting
@@ -60,12 +119,42 @@ export class SppdPegawaiRepository implements I_SppdPegawaiRepository {
 
     async fetchById(id: string): Promise<I_ResultService> {
         try {
-
             const result = await this.repository.findOne({
                 where: {
                     deleted_at: IsNull(),
                     pegawai_id: id
                 },
+                relations: ["work_unit", "pangkat_golongan"],
+                select: {
+                    pegawai_id: true,
+                    nik: true,
+                    nip: true,
+                    nama: true,
+                    gelar_depan: true,
+                    email: true,
+                    phone: true,
+                    photo: true,
+                    unit_id: true,
+                    work_unit: {
+                        unit_id: true,
+                        unit_name: true,
+                    },
+                    pangkat_id: true,
+                    pangkat_golongan: {
+                        pangkat_id: true,
+                        pangkat: true,
+                        golongan_angka: true,
+                        golongan_romawi: true,
+                    },
+                    jenis_kepegawaian: true,
+                    status_kepegawaian: true,
+                    status_active: true,
+                    simpeg_id: true,
+                    username: true,
+                    created_at: true,
+                    updated_at: true
+                }
+
             });
 
             if (!result) {
@@ -75,6 +164,9 @@ export class SppdPegawaiRepository implements I_SppdPegawaiRepository {
                     record: result
                 }
             }
+
+
+            result.photo = makeFullUrlFile(result.photo, 'sppd-pegawai')
 
             return {
                 success: true,

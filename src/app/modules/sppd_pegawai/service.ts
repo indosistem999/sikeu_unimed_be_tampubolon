@@ -62,6 +62,14 @@ class SppdPegawaiService implements I_SppdPegawaiService {
             payload.simpeg_id = req?.body?.simpeg_id
         }
 
+        if (req?.body?.pangkat_id) {
+            payload.pangkat_id = req?.body?.pangkat_id
+        }
+
+        if (req?.body?.unit_id) {
+            payload.unit_id = req?.body?.unit_id
+        }
+
         return payload;
     }
 
@@ -70,7 +78,9 @@ class SppdPegawaiService implements I_SppdPegawaiService {
         const filters: Record<string, any> = {
             paging: defineRequestPaginateArgs(req),
             sorting: defineRequestOrderORM(req, sortDefault, sortRequest),
+            queries: req?.query
         }
+
 
         const result = await this.repository.fetch(filters)
         if (!result?.success) {
@@ -111,7 +121,6 @@ class SppdPegawaiService implements I_SppdPegawaiService {
                 const fileName = req?.file ? req?.file?.filename : null
                 payload.photo = fileName !== null ? path.join('images', fileName) : null
             }
-
 
             const result = await this.repository.store(req, payload);
 

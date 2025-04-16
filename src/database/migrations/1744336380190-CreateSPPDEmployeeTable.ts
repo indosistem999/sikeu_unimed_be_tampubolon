@@ -14,6 +14,7 @@ export class CreateSPDEmployeeTable1744336380190 implements MigrationInterface {
           phone VARCHAR(50) DEFAULT NULL,
           pangkat_id CHAR(36) DEFAULT NULL,
           unit_id CHAR(36) DEFAULT NULL,
+          jabatan TEXT DEFAULT NULL,
           jenis_kepegawaian VARCHAR(150) DEFAULT NULL,
           status_kepegawaian VARCHAR(150) DEFAULT NULL,
           status_active TINYINT(1) DEFAULT FALSE,

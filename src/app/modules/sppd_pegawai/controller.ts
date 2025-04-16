@@ -3,6 +3,7 @@ import MainRoutes from '../../../config/mainRoute';
 import { authMiddleware } from '../../middlewares/auth.middleware';
 import { I_RequestCustom } from '../../../interfaces/app.interface';
 import Services from './service';
+import { showFile, uploadImageToStorage } from '../../../config/storages';
 
 class SppdPegawaiController extends MainRoutes {
     public routes(): void {
@@ -15,29 +16,38 @@ class SppdPegawaiController extends MainRoutes {
         this.router.post(
             '/',
             authMiddleware,
+            uploadImageToStorage.single('file_image'),
             async (req: I_RequestCustom, res: Response) => {
                 await Services.store(req, res);
             }
         );
+
+        /** Fetch File */
+        this.router.get('/files/:type/:filename', async (req: Request, res: Response) => {
+            await showFile(req, res);
+        });
 
         /** [GET] - Find By Id  */
         this.router.get('/:pegawai_id', authMiddleware, async (req: Request, res: Response) => {
             await Services.fetchById(req, res);
         });
 
+
         /** [PUT] - Update Data */
         this.router.put(
             '/:pegawai_id',
             authMiddleware,
+            uploadImageToStorage.single('file_image'),
             async (req: I_RequestCustom, res: Response) => {
                 await Services.update(req, res);
             }
         );
 
         /** [DELETE] - Delete Data */
-        this.router.delete('/:pegawai_id', authMiddleware, async (req: Request, res: Response) => {
-            await Services.softDelete(req, res);
-        });
+        this.router.delete('/:pegawai_id', authMiddleware, uploadImageToStorage.single('file_image'),
+            async (req: Request, res: Response) => {
+                await Services.softDelete(req, res);
+            });
     }
 }
 

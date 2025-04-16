@@ -3,11 +3,86 @@ import AppDataSource from '../../config/dbconfig';
 import { MasterModule } from '../models/MasterModule';
 import { MasterMenu } from '../models/MasterMenu';
 
-
 export const moduleList = [
   {
     module_name: 'Pengaturan',
-    module_menus: []
+    module_menus: [
+      {
+        name: 'Beranda',
+        slug: '/pengaturan/beranda',
+        order_number: 5
+      },
+      {
+        name: 'Umum',
+        slug: '/pengaturan/umum',
+        order_number: 6
+      },
+      {
+        name: 'Modul',
+        slug: '/pengaturan/modul',
+        order_number: 7
+      },
+      {
+        name: 'Hak Akses',
+        slug: '/pengaturan/hak-akses',
+        order_number: 8
+      },
+
+      {
+        name: 'Tahun Anggaran',
+        slug: '/pengaturan/tahun-anggaran',
+        order_number: 9
+      },
+
+
+      {
+        name: 'Satuan Kerja',
+        slug: '/pengaturan/umum/satuan-kerja',
+        order_number: 10,
+        parent_to: 'Umum'
+      },
+      {
+        name: 'Pejabat',
+        slug: '/pengaturan/umum/pejabat',
+        order_number: 11,
+        parent_to: 'Umum'
+      },
+
+      {
+        name: 'Identitas',
+        slug: '/pengaturan/umum/identitas',
+        order_number: 12,
+        parent_to: 'Umum'
+      },
+      {
+        name: 'Sumber Dana',
+        slug: '/pengaturan/umum/sumber-dana',
+        order_number: 13,
+        parent_to: 'Umum'
+      },
+
+      {
+        name: 'Role Akses',
+        parent_to: 'Hak Akses',
+        slug: '/pengaturan/hak-akses/role-akses',
+        order_number: 14
+      },
+
+      {
+        name: 'Daftar User',
+        parent_to: 'Hak Akses',
+        slug: '/pengaturan/hak-akses/user',
+        order_number: 15
+      },
+
+
+      {
+        name: 'Pejabat',
+        slug: '/pejabat',
+        order_number: 16,
+        parent_to: 'Umum'
+      },
+    ]
   },
   {
     module_name: 'SPPD',

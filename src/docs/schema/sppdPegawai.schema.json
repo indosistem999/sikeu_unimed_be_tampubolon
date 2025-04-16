@@ -1,4 +1,178 @@
 {
-  "SchemaCreateSppdPegawai": {},
-  "SchemaUpdateSppdPegawai": {}
+  "SchemaCreateSppdPegawai": {
+    "type": "object",
+    "properties": {
+      "file_image": {
+        "type": "string",
+        "format": "base64",
+        "description": "Upload Foto Pegawai"
+      },
+
+      "nik": {
+        "type": "string",
+        "description": "NIK",
+        "default": "1232445778745"
+      },
+      "nip": {
+        "type": "string",
+        "description": "NIP",
+        "default": "71236234834546"
+      },
+      "nama": {
+        "type": "string",
+        "description": "Nama Lengkap",
+        "default": "Bambang Pacul"
+      },
+      "gelar_depan": {
+        "type": "string",
+        "description": "Gelar",
+        "default": "Dr."
+      },
+      "email": {
+        "type": "string",
+        "description": "Email",
+        "default": "bambang.pacul@ymail.com"
+      },
+      "phone": {
+        "type": "string",
+        "description": "Phone Number",
+        "default": "0812232455656"
+      },
+
+      "pangkat_id": {
+        "type": "string",
+        "description": "Pangkat/Golongan (uuid)"
+      },
+
+      "unit_id": {
+        "type": "string",
+        "description": "Satker ID (uuid)"
+      },
+
+      "jabatan": {
+        "type": "string",
+        "description": "Jabatan",
+        "default": "Pranata Komputer"
+      },
+
+      "jenis_kepegawaian": {
+        "type": "string",
+        "enum": ["dosen", "pegawai"],
+        "description": "Jenis Kepegawaian (dosen atau pegawai)",
+        "default": "dosen"
+      },
+      "status_kepegawaian": {
+        "type": "string",
+        "enum": ["pns", "cpns", "p3k", "honor"],
+        "description": "Status Kepegawaian (pns, cpns, p3k atau honor)",
+        "default": "pns"
+      },
+      "status_active": {
+        "type": "number",
+        "enum": [0, 1],
+        "description": "Status Aktif (0: Tidak Aktif;  1: Aktif)",
+        "default": 1
+      },
+
+      "simpeg_id": {
+        "type": "string",
+        "description": "Simpeg ID",
+        "default": "8238473484343"
+      },
+
+      "username": {
+        "type": "string",
+        "description": "Username",
+        "default": "bang_pacul"
+      }
+    }
+  },
+  "SchemaUpdateSppdPegawai": {
+    "type": "object",
+    "properties": {
+      "file_image": {
+        "type": "string",
+        "format": "base64",
+        "description": "Upload Foto Pegawai"
+      },
+
+      "nik": {
+        "type": "string",
+        "description": "NIK",
+        "default": "1232445778745"
+      },
+      "nip": {
+        "type": "string",
+        "description": "NIP",
+        "default": "71236234834546"
+      },
+      "nama": {
+        "type": "string",
+        "description": "Nama Lengkap",
+        "default": "Bambang Pacul"
+      },
+      "gelar_depan": {
+        "type": "string",
+        "description": "Gelar",
+        "default": "Dr."
+      },
+      "email": {
+        "type": "string",
+        "description": "Email",
+        "default": "bambang.pacul@ymail.com"
+      },
+      "phone": {
+        "type": "string",
+        "description": "Phone Number",
+        "default": "0812232455656"
+      },
+
+      "pangkat_id": {
+        "type": "string",
+        "description": "Pangkat/Golongan (uuid)"
+      },
+
+      "unit_id": {
+        "type": "string",
+        "description": "Satker ID (uuid)"
+      },
+
+      "jabatan": {
+        "type": "string",
+        "description": "Jabatan",
+        "default": "Pranata Komputer"
+      },
+
+      "jenis_kepegawaian": {
+        "type": "string",
+        "enum": ["dosen", "pegawai"],
+        "description": "Jenis Kepegawaian (dosen atau pegawai)",
+        "default": "dosen"
+      },
+      "status_kepegawaian": {
+        "type": "string",
+        "enum": ["pns", "cpns", "p3k", "honor"],
+        "description": "Status Kepegawaian (pns, cpns, p3k atau honor)",
+        "default": "pns"
+      },
+      "status_active": {
+        "type": "number",
+        "enum": [0, 1],
+        "description": "Status Aktif (0: Tidak Aktif;  1: Aktif)",
+        "default": 1
+      },
+
+      "simpeg_id": {
+        "type": "string",
+        "description": "Simpeg ID",
+        "default": "8238473484343"
+      },
+
+      "username": {
+        "type": "string",
+        "description": "Username",
+        "default": "bang_pacul"
+      }
+    }
+  }
 }

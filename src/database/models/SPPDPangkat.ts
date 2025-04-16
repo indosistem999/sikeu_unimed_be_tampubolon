@@ -6,6 +6,7 @@ import {
     DeleteDateColumn,
     PrimaryGeneratedColumn,
     OneToMany,
+    ManyToOne,
 } from 'typeorm';
 import { SPPDPegawai } from './SPPDPegawai';
 
@@ -26,21 +27,21 @@ export class SPPDPangkat {
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
     created_at!: Date;
 
-    @Column({ name: 'created_by', type: 'uuid' })
+    @Column({ name: 'created_by', type: 'uuid', select: false })
     created_by!: string;
 
     @UpdateDateColumn({ type: 'timestamp', nullable: true, name: 'updated_at' })
     updated_at!: Date;
 
-    @Column({ name: 'updated_by', type: 'uuid' })
+    @Column({ name: 'updated_by', type: 'uuid', select: false })
     updated_by!: string;
 
-    @DeleteDateColumn({ type: 'timestamp', nullable: true, name: 'deleted_at' })
+    @DeleteDateColumn({ type: 'timestamp', nullable: true, name: 'deleted_at', select: false })
     deleted_at!: Date;
 
-    @Column({ name: 'deleted_by', type: 'uuid' })
+    @Column({ name: 'deleted_by', type: 'uuid', select: false })
     deleted_by!: string;
 
-    @OneToMany(() => SPPDPegawai, (value: any) => value.pangkat_golongan, { eager: true })
+    @OneToMany(() => SPPDPegawai, (value) => value.pangkat_golongan)
     pegawai!: SPPDPegawai[]
 }
