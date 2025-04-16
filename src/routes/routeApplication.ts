@@ -25,6 +25,7 @@ import PejabatSatkerController from '../app/modules/pejabat_satker/controller'
 import SPPDSuratTugasController from '../app/modules/sppd_surat_tugas/controller'
 import MasterBudgetYearController from '../app/modules/master_budget_year/controller'
 import UserLogController from '../app/modules/user_log/controller'
+import SppdPegawaiController from '../app/modules/sppd_pegawai/controller'
 
 const tagVersionOne: string = '/api/v1';
 
@@ -93,6 +94,8 @@ class RouteApplication extends MainRoutes {
     this.router.use(`${tagVersionOne}/pejabat-satker`, PejabatSatkerController)
 
     this.router.use(`${tagVersionOne}/user-log-activity`, UserLogController)
+
+    this.router.use(`${tagVersionOne}/sppd-pegawai`, SppdPegawaiController)
   }
 }
 

@@ -61,6 +61,14 @@ export const TypeLogActivity = {
         API: {
             Create: 'Pengguna Menetapkan Akses Fitur Menu Ke Role Akses Tertentu',
         }
+    },
+    SppdEmployee: {
+        Label: 'Master Menu/Sub Menu',
+        API: {
+            Create: 'Pengguna Menambahkan Data SPPD Pegawai Baru',
+            Update: 'Pengguna Mengubah Data SPPD Pegawai Jabatan',
+            Delete: 'Pengguna Menghapus Data SPPD Pegawai Jabatan',
+        }
     }
 
 

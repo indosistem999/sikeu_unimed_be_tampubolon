@@ -170,5 +170,9 @@ export const allSchema = {
   kop_surat: {
     tableName: 'sppd_kopsurat',
     primaryKey: 'kopsurat_id',
+  },
+  pegawai: {
+    tableName: 'sppd_pegawai',
+    primaryKey: 'pegawai_id',
   }
 }

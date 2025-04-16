@@ -134,6 +134,13 @@
       "update": "Surat Tugas edited successfully",
       "softDelete": "Surat Tugas deleted successfully",
       "previewPegawai": "Preview Pegawai by Surat Tugas successfully"
+    },
+    "sppdPegawai": {
+      "findItem": "Get employee {{item}} successfully",
+      "fetch": "Get employee successfully",
+      "store": "Employee added successfully",
+      "update": "Employee edited successfully",
+      "softDelete": "Employee deleted successfully"
     }
   },
   "error": {
@@ -190,7 +197,8 @@
       "storeSPPD": "Failed to store SPPD",
       "updateSPPD": "Failed to update SPPD",
       "deleteSPPD": "Failed to delete SPPD",
-      "previewSPPD": "Failed to preview SPPD details"
+      "previewSPPD": "Failed to preview SPPD details",
+      "storeEmployee": "Failed to store employee"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",
