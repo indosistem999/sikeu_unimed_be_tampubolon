@@ -2,6 +2,7 @@ import { Request } from 'express';
 import { I_PaginateArgs } from '../../interfaces/pagination.interface';
 import { standartDateISO } from './common.util';
 import { I_RequestCustom } from '../../interfaces/app.interface';
+import { UAParser } from 'ua-parser-js';
 
 export const defineRequestQuery = (req: Request, columns: string[]): { [key: string]: any } => {
   try {
@@ -113,5 +114,30 @@ export const getRequestProperties = (req: Request): { [key: string]: any } => {
   return {
     request_ip: req?.headers['x-forwarded-for'] || req?.socket?.remoteAddress,
     request_host: req?.hostname
+  }
+}
+
+
+export const getRequestSecure = (req: Request): { [key: string]: any } => {
+  const parser = new UAParser(req.headers['user-agent'])
+  return {
+    ip_address: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+    hostname: req.hostname,
+    agent: {
+      user_agent: parser.getUA(),
+      browser_name: parser.getBrowser().name,
+      architecture: parser.getCPU().architecture,
+      device: {
+        type: parser.getDevice().type,
+        vendor: parser.getDevice().vendor,
+        model: parser.getDevice().model
+      },
+      engine: {
+        name: parser.getEngine().name,
+        version: parser.getEngine().version
+      },
+    },
+    referrer: req.headers['referer'] || req.headers['referrer'],
+    language: req.headers['accept-language'],
   }
 }

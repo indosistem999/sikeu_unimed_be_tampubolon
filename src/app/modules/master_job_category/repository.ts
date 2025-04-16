@@ -1,11 +1,13 @@
 import { IsNull, Like } from "typeorm";
 import AppDataSource from "../../../config/dbconfig";
-import { I_ResultService } from "../../../interfaces/app.interface";
+import { I_RequestCustom, I_ResultService } from "../../../interfaces/app.interface";
 import { MessageDialog } from "../../../lang";
 import { I_ResponsePagination } from "../../../interfaces/pagination.interface";
 import { setPagination } from "../../../lib/utils/pagination.util";
 import { I_MasterJobCategoryRepository } from "../../../interfaces/masterJobCategory.interface";
 import { MasterJobCategory } from "../../../database/models/MasterJobCategory";
+import { snapLogActivity } from "../../../events/publishers/logUser.publisher";
+import { TypeLogActivity } from "../../../lib/utils/global.util";
 
 
 export class MasterJobCategoryRepository implements I_MasterJobCategoryRepository {
@@ -81,7 +83,7 @@ export class MasterJobCategoryRepository implements I_MasterJobCategoryRepositor
         }
     }
 
-    async store(payload: Record<string, any>): Promise<I_ResultService> {
+    async store(req: I_RequestCustom, payload: Record<string, any>): Promise<I_ResultService> {
         try {
             const result = await this.repository.save(this.repository.create(payload))
 
@@ -93,6 +95,17 @@ export class MasterJobCategoryRepository implements I_MasterJobCategoryRepositor
                 }
             }
 
+            const userId: any = req?.user?.user_id
+            await snapLogActivity(
+                req,
+                userId,
+                TypeLogActivity.JobCategory.Label,
+                TypeLogActivity.JobCategory.API.Create,
+                payload.created_at,
+                null,
+                result
+            )
+
             return {
                 success: true,
                 message: MessageDialog.__('success.jobCategory.store'),
@@ -103,9 +116,9 @@ export class MasterJobCategoryRepository implements I_MasterJobCategoryRepositor
         }
     }
 
-    async update(id: string, payload: Record<string, any>): Promise<I_ResultService> {
+    async update(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService> {
         try {
-            let result = await this.repository.findOne({
+            const result = await this.repository.findOne({
                 where: {
                     deleted_at: IsNull(),
                     job_category_id: id
@@ -120,10 +133,21 @@ export class MasterJobCategoryRepository implements I_MasterJobCategoryRepositor
                 }
             }
 
-            result = { ...result, ...payload }
+            const updateResult = { ...result, ...payload }
 
-            await this.repository.save(result);
+            await this.repository.save(updateResult);
 
+
+            const userId: any = req?.user?.user_id
+            await snapLogActivity(
+                req,
+                userId,
+                TypeLogActivity.JobCategory.Label,
+                TypeLogActivity.JobCategory.API.Update,
+                payload.updated_at,
+                result,
+                updateResult
+            )
 
             return {
                 success: true,
@@ -138,9 +162,9 @@ export class MasterJobCategoryRepository implements I_MasterJobCategoryRepositor
         }
     }
 
-    async softDelete(id: string, payload: Record<string, any>): Promise<I_ResultService> {
+    async softDelete(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService> {
         try {
-            let result = await this.repository.findOne({
+            const result = await this.repository.findOne({
                 where: {
                     job_category_id: id,
                     deleted_at: IsNull()
@@ -155,12 +179,23 @@ export class MasterJobCategoryRepository implements I_MasterJobCategoryRepositor
                 }
             }
 
-            result = {
+            const updateResult = {
                 ...result,
                 ...payload
             }
 
-            await this.repository.save(result);
+            await this.repository.save(updateResult);
+
+            const userId: any = req?.user?.user_id
+            await snapLogActivity(
+                req,
+                userId,
+                TypeLogActivity.JobCategory.Label,
+                TypeLogActivity.JobCategory.API.Delete,
+                payload.deleted_at,
+                result,
+                updateResult
+            )
 
             return {
                 success: true,

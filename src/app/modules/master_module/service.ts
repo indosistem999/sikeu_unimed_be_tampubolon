@@ -29,7 +29,7 @@ class MasterModuleService implements I_MasterModuleService {
         };
 
 
-        const result = await this.repository.store(payload)
+        const result = await this.repository.store(req, payload)
         if (!result?.success) {
             return sendErrorResponse(res, 400, result.message, result.record);
         }
@@ -74,7 +74,7 @@ class MasterModuleService implements I_MasterModuleService {
             deleted_by: req?.user?.user_id
         }
 
-        const result = await this.repository.softDelete(req?.params?.[propSchema.primaryKey], payload)
+        const result = await this.repository.softDelete(req, req?.params?.[propSchema.primaryKey], payload)
         if (!result?.success) {
             return sendErrorResponse(res, 400, result.message, result.record);
         }
@@ -101,7 +101,7 @@ class MasterModuleService implements I_MasterModuleService {
             }
         }
 
-        const result = await this.repository.update(id, payload)
+        const result = await this.repository.update(req, id, payload)
         if (!result?.success) {
             return sendErrorResponse(res, 400, result.message, result.record);
         }

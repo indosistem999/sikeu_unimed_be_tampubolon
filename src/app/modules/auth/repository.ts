@@ -1,3 +1,4 @@
+import { Request } from 'express'
 import AppDataSource from '../../../config/dbconfig';
 import { Users } from '../../../database/models/Users';
 import { I_ResultService } from '../../../interfaces/app.interface';
@@ -13,10 +14,8 @@ import {
 } from '../../../interfaces/auth.interface';
 import { MessageDialog } from '../../../lang';
 import { encryptPassword, generateSalt, hashedPassword } from '../../../lib/utils/bcrypt.util';
-import { formatDateToday, generateOTPCode, getTotalDays, getTotalMinutes, standartDateISO } from '../../../lib/utils/common.util';
+import { formatDateToday, generateOTPCode, getTotalMinutes, standartDateISO } from '../../../lib/utils/common.util';
 import { generatedToken, verifiedToken } from '../../../lib/utils/jwt.util';
-import UserLogRepository from '../user_log/repository'
-import { LogType as logType } from '../../../constanta'
 import RoleRepository from '../role/repository';
 import { eventPublishMessageToSendEmail } from '../../../events/publishers/email.publisher';
 import { optionalEmail } from '../../../constanta'
@@ -26,17 +25,16 @@ import { IsNull } from 'typeorm';
 import { RoleModuleAssociation } from '../../../database/models/RoleModuleAssociation';
 import { selectDetailMenu } from '../master_menu/constanta';
 import { makeFullUrlFile } from '../../../config/storages';
-import { Roles } from '../../../database/models/Roles';
+import { snapLogActivity } from '../../../events/publishers/logUser.publisher';
+import { TypeLogActivity } from '../../../lib/utils/global.util';
 
 class AuthRepository implements I_AuthRepository {
   private userRepo = AppDataSource.getRepository(Users);
   private roleModuleAssocRepo = AppDataSource.getRepository(RoleModuleAssociation)
 
-  private userLogRepository: UserLogRepository;
   private roleRepository: RoleRepository;
 
   constructor() {
-    this.userLogRepository = new UserLogRepository();
     this.roleRepository = new RoleRepository();
   }
 
@@ -49,7 +47,7 @@ class AuthRepository implements I_AuthRepository {
   }
 
   /** Login */
-  async signIn(payload: I_LoginRequest, others: any): Promise<I_ResultService> {
+  async signIn(req: Request, payload: I_LoginRequest, others: any): Promise<I_ResultService> {
     try {
       let user = await this.userRepo.findOne({
         where: {
@@ -91,31 +89,13 @@ class AuthRepository implements I_AuthRepository {
       const access_token = generatedToken(jwtPayload);
       const refresh_token = generatedToken(jwtPayload, '7d');
 
-
-      // const today = others?.last_login
-      // const totalDays = user?.last_login == null ? 1 : getTotalDays(today, user?.last_login)
-
-
-      // user.last_login = today;
-      // user.last_ip = others?.request_ip,
-      //   user.last_hostname = others?.request_host
-      // user.security_question_answer = payload.security_question_answer;
-      // user.refresh_token = refresh_token;
-      // user = await this.userRepo.save(user);
-
-      // // Create Log Activity
-      // if (totalDays >= 1) {
-      //   const resultLog = await this.userLogRepository.store({
-      //     activity_time: others.last_login,
-      //     activity_type: logType.Login,
-      //     user,
-      //     description: `User has signed in at ${today} on IP: ${others?.request_ip}, Hostname: ${others?.request_host}`
-      //   })
-
-      //   if (!resultLog.success) {
-      //     return resultLog;
-      //   }
-      // }
+      await snapLogActivity(
+        req,
+        user.user_id,
+        TypeLogActivity.Auth.Label,
+        TypeLogActivity.Auth.API.Login,
+        new Date(standartDateISO()),
+      )
 
       return {
         success: true,
@@ -162,17 +142,6 @@ class AuthRepository implements I_AuthRepository {
           message: MessageDialog.__('error.failed.registerAccount'),
           record: user,
         };
-      }
-
-      const resultLog = await this.userLogRepository.store({
-        activity_time: today,
-        activity_type: logType.Register,
-        user,
-        description: `User ${user.email} has registered at ${today}`
-      })
-
-      if (!resultLog.success) {
-        return resultLog;
       }
 
       return {
@@ -546,7 +515,7 @@ class AuthRepository implements I_AuthRepository {
     }
   }
 
-  async manualChangePassword(userId: string, payload: Record<string, any>): Promise<I_ResultService> {
+  async manualChangePassword(req: Request, userId: string, payload: Record<string, any>): Promise<I_ResultService> {
     try {
       const user = await this.userRepo.findOne({
         where: { user_id: userId, deleted_at: IsNull() }
@@ -573,7 +542,13 @@ class AuthRepository implements I_AuthRepository {
 
       await this.userRepo.save(user);
 
-
+      await snapLogActivity(
+        req,
+        user.user_id,
+        TypeLogActivity.Auth.Label,
+        TypeLogActivity.Auth.API.ManualChangePassword,
+        today
+      )
 
       return {
         success: true,

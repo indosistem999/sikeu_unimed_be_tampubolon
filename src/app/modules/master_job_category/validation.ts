@@ -42,26 +42,29 @@ class MasterJobCategoryValidation {
                 errors
             );
         }
+        else {
+            const code: string = req?.body?.code || ''
+            const name: string = req?.body?.name || ''
 
-        const code: string = req?.body?.code || ''
-        const name: string = req?.body?.name || ''
+            const row = await AppDataSource.getRepository(MasterJobCategory)
+                .createQueryBuilder('p')
+                .where(`p.deleted_at IS NULL`)
+                .andWhere((builder: SelectQueryBuilder<MasterJobCategory>) => {
+                    builder.where(`p.code = :CODE`, { CODE: code })
+                        .orWhere(`p.name LIKE :NAME`, { NAME: `%${name}%` })
+                })
+                .select([`p.${sc.job_category.primaryKey}`, 'p.code', 'p.name'])
+                .getOne();
 
-        const row = await AppDataSource.getRepository(MasterJobCategory)
-            .createQueryBuilder('p')
-            .where(`p.deleted_at IS NULL`)
-            .andWhere((builder: SelectQueryBuilder<MasterJobCategory>) => {
-                builder.where(`p.code = :CODE`, { CODE: code })
-                    .orWhere(`p.name LIKE :NAME`, { NAME: `%${name}%` })
-            })
-            .select([`p.${sc.job_category.primaryKey}`, 'p.code', 'p.name'])
-            .getOne();
+            if (row) {
+                sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Job Code: ${code} or Job Name: ${name}` }), { row_existed: row })
+            }
+            else {
+                next()
+            }
 
-        if (row) {
-            sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Job Code: ${code} or Job Name: ${name}` }), { row_existed: row })
+
         }
-
-        next()
-
     }
 
     async updateValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
@@ -111,8 +114,9 @@ class MasterJobCategoryValidation {
             if (row) {
                 sendErrorResponse(res, 400, MessageDialog.__('error.existed.universal', { item: `Job Code: ${code} or Job Name: ${name}` }), { row_existed: row })
             }
-
-            next();
+            else {
+                next();
+            }
         }
     }
 }

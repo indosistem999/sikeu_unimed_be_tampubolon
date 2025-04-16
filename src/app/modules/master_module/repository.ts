@@ -1,5 +1,5 @@
 
-import { I_ResultService } from "../../../interfaces/app.interface";
+import { I_RequestCustom, I_ResultService } from "../../../interfaces/app.interface";
 import { I_MasterModuleRepository } from "../../../interfaces/masterModule.interface";
 import AppDataSource from "../../../config/dbconfig";
 import { MasterModule } from "../../../database/models/MasterModule";
@@ -7,32 +7,45 @@ import { MessageDialog } from "../../../lang";
 import { propSchema } from "./constanta";
 import { IsNull } from "typeorm";
 import { makeFullUrlFile, removeFileInStorage } from "../../../config/storages";
+import { snapLogActivity } from "../../../events/publishers/logUser.publisher";
+import { TypeLogActivity } from "../../../lib/utils/global.util";
 
 
 class MasterModuleRepository implements I_MasterModuleRepository {
     private moduleRepo = AppDataSource.getRepository(MasterModule)
 
-    async store(payload: Record<string, any>): Promise<I_ResultService> {
+    async store(req: I_RequestCustom, payload: Record<string, any>): Promise<I_ResultService> {
         try {
-            const masterModule = await this.moduleRepo.save(this.moduleRepo.create(payload))
+            const result = await this.moduleRepo.save(this.moduleRepo.create(payload))
 
-            if (!masterModule) {
+            if (!result) {
                 return {
                     success: false,
                     message: MessageDialog.__('error.default.notFoundItem', { item: 'Master module' }),
-                    record: masterModule
+                    record: result
                 }
             }
+
+            const userId: any = req?.user?.user_id
+            await snapLogActivity(
+                req,
+                userId,
+                TypeLogActivity.Module.Label,
+                TypeLogActivity.Module.API.Create,
+                payload.created_at,
+                null,
+                result
+            )
 
             return {
                 success: true,
                 message: MessageDialog.__('success.masterModule.create'),
                 record: {
-                    module_id: masterModule?.module_id,
-                    module_name: masterModule?.module_name,
-                    module_path: masterModule?.module_path,
-                    order_number: masterModule?.order_number,
-                    icon: makeFullUrlFile(masterModule?.icon)
+                    module_id: result?.module_id,
+                    module_name: result?.module_name,
+                    module_path: result?.module_path,
+                    order_number: result?.order_number,
+                    icon: makeFullUrlFile(result?.icon)
                 },
             };
         } catch (err: any) {
@@ -145,29 +158,41 @@ class MasterModuleRepository implements I_MasterModuleRepository {
     }
 
     /** Delete By Id */
-    async softDelete(id: string, payload: Record<string, any>): Promise<I_ResultService> {
+    async softDelete(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService> {
         try {
-            let masterModule = await this.moduleRepo.findOne({
+            let result = await this.moduleRepo.findOne({
                 where: {
                     module_id: id,
                     deleted_at: IsNull()
                 }
             });
 
-            if (!masterModule) {
+            if (!result) {
                 return {
                     success: false,
                     message: MessageDialog.__('error.default.notFoundItem', { item: 'Module' }),
-                    record: masterModule
+                    record: result
                 }
             }
 
-            masterModule = {
-                ...masterModule,
+            const updateResult = {
+                ...result,
                 ...payload
             };
 
-            await this.moduleRepo.save(masterModule);
+            await this.moduleRepo.save(updateResult);
+
+
+            const userId: any = req?.user?.user_id
+            await snapLogActivity(
+                req,
+                userId,
+                TypeLogActivity.Module.Label,
+                TypeLogActivity.Module.API.Delete,
+                payload.deleted_at,
+                result,
+                updateResult
+            )
 
             return {
                 success: true,
@@ -187,31 +212,44 @@ class MasterModuleRepository implements I_MasterModuleRepository {
     }
 
     /** Update */
-    async update(id: string, payload: Record<string, any>): Promise<I_ResultService> {
+    async update(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService> {
         try {
-            let masterModule = await this.moduleRepo.findOne({
+            let result = await this.moduleRepo.findOne({
                 where: {
                     module_id: id,
                     deleted_at: IsNull(),
                 },
             })
 
-            if (!masterModule) {
+            if (!result) {
                 return {
                     success: false,
                     message: MessageDialog.__('error.default.notFoundItem', { item: 'Module' }),
-                    record: masterModule
+                    record: result
                 }
             }
 
-            const fileName: string = masterModule?.icon
+            const fileName: string = result?.icon
 
-            masterModule = {
-                ...masterModule,
+            const updateResult = {
+                ...result,
                 ...payload
             }
 
-            await this.moduleRepo.save(masterModule);
+            await this.moduleRepo.save(updateResult);
+
+            const userId: any = req?.user?.user_id
+            await snapLogActivity(
+                req,
+                userId,
+                TypeLogActivity.Module.Label,
+                TypeLogActivity.Module.API.Update,
+                payload.updated_at,
+                result,
+                updateResult
+            )
+
+
 
             // Delete old file
             if (fileName !== null && fileName !== '') {
@@ -222,11 +260,11 @@ class MasterModuleRepository implements I_MasterModuleRepository {
                         success: true,
                         message: `${MessageDialog.__('success.masterModule.update')}. But ${removeFile.message}.`,
                         record: {
-                            module_id: masterModule?.module_id,
-                            module_name: masterModule?.module_name,
-                            module_path: masterModule?.module_path,
-                            order_number: masterModule?.order_number,
-                            icon: makeFullUrlFile(masterModule?.icon)
+                            module_id: updateResult?.module_id,
+                            module_name: updateResult?.module_name,
+                            module_path: updateResult?.module_path,
+                            order_number: updateResult?.order_number,
+                            icon: makeFullUrlFile(updateResult?.icon)
                         }
                     }
                 }
@@ -237,11 +275,11 @@ class MasterModuleRepository implements I_MasterModuleRepository {
                 success: true,
                 message: MessageDialog.__('success.masterModule.update'),
                 record: {
-                    module_id: masterModule?.module_id,
-                    module_name: masterModule?.module_name,
-                    module_path: masterModule?.module_path,
-                    order_number: masterModule?.order_number,
-                    icon: makeFullUrlFile(masterModule?.icon)
+                    module_id: updateResult?.module_id,
+                    module_name: updateResult?.module_name,
+                    module_path: updateResult?.module_path,
+                    order_number: updateResult?.order_number,
+                    icon: makeFullUrlFile(updateResult?.icon)
                 }
             }
         } catch (error: any) {

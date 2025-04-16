@@ -11,7 +11,7 @@ export class AddColumnToUserLogTable1744710496617 implements MigrationInterface 
         }));
 
         await queryRunner.addColumn("user_log", new TableColumn({
-            name: "device_name",
+            name: "browser_name",
             type: "text",
             isNullable: true,
             default: null
@@ -35,7 +35,7 @@ export class AddColumnToUserLogTable1744710496617 implements MigrationInterface 
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.dropColumn("user_log", "ip_address");
-        await queryRunner.dropColumn("user_log", "device_name");
+        await queryRunner.dropColumn("user_log", "browser_name");
         await queryRunner.dropColumn("user_log", "request_properties");
         await queryRunner.dropColumn("user_log", "capture_activity");
     }

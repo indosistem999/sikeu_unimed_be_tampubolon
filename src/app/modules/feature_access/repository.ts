@@ -1,6 +1,6 @@
 import { getConnection, IsNull } from 'typeorm';
 import { Roles } from '../../../database/models/Roles';
-import { I_ResultService } from '../../../interfaces/app.interface';
+import { I_RequestCustom, I_ResultService } from '../../../interfaces/app.interface';
 import { MessageDialog } from '../../../lang';
 import AppDataSource from '../../../config/dbconfig';
 import { MasterModule } from '../../../database/models/MasterModule';
@@ -9,6 +9,8 @@ import { I_FeatureAccessRepository } from '../../../interfaces/featureAccess.int
 import { ModuleMenuAssociation } from '../../../database/models/ModuleMenuAssociation';
 import { MasterMenu } from '../../../database/models/MasterMenu';
 import { selectDetailMenu } from '../master_menu/constanta';
+import { snapLogActivity } from '../../../events/publishers/logUser.publisher';
+import { TypeLogActivity } from '../../../lib/utils/global.util';
 
 class FeatureAccessRepository implements I_FeatureAccessRepository {
   private roleRepo = AppDataSource.getRepository(Roles);
@@ -224,7 +226,7 @@ class FeatureAccessRepository implements I_FeatureAccessRepository {
   }
 
   /** Store Data */
-  async store(roleId: string, payload: Record<string, any>): Promise<I_ResultService> {
+  async store(req: I_RequestCustom, roleId: string, payload: Record<string, any>): Promise<I_ResultService> {
     try {
       const { created_at, created_by, features } = payload
       const rowRole = await this.roleRepo.findOne({
@@ -331,6 +333,16 @@ class FeatureAccessRepository implements I_FeatureAccessRepository {
 
       }
 
+      const userId: any = req?.user?.user_id
+      await snapLogActivity(
+        req,
+        userId,
+        TypeLogActivity.FeatureAccess.Label,
+        TypeLogActivity.FeatureAccess.API.Create,
+        payload.created_at,
+        null,
+        { operation: successCapture }
+      )
 
       const msg: string = errorCapture?.length > 0 ? MessageDialog.__('error.failed.assignMenuAccess') : MessageDialog.__('success.accessMenu.assigned')
 

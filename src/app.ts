@@ -24,9 +24,9 @@ export class App {
   constructor() {
     this.app = express();
 
-    // if(cfg.AppEnv?.toLowerCase() !== 'test') {
-    //   RunSubscribers()
-    // }
+    if (cfg.AppEnv?.toLowerCase() !== 'test') {
+      RunSubscribers()
+    }
 
 
     this.initializeMiddleware();

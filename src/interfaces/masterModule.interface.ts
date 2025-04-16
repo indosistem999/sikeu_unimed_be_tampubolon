@@ -2,11 +2,11 @@ import { Request, Response } from 'express'
 import { I_RequestCustom, I_ResultService } from './app.interface'
 
 export interface I_MasterModuleRepository {
-    store?(payload: Record<string, any>): Promise<I_ResultService>
+    store?(req: I_RequestCustom, payload: Record<string, any>): Promise<I_ResultService>
     fetchAll?(req: Request): Promise<I_ResultService>
     fetchById?(id: string): Promise<I_ResultService>
-    softDelete?(id: string, payload: Record<string, any>): Promise<I_ResultService>
-    update?(id: string, payload: Record<string, any>): Promise<I_ResultService>
+    softDelete?(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService>
+    update?(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService>
 }
 
 export interface I_MasterModuleService {

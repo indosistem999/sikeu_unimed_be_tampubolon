@@ -26,7 +26,7 @@ export default new (class AuthService implements I_AuthService {
       last_login: today
     }
 
-    const result = await this.authRepo.signIn(payload, otherProperty);
+    const result = await this.authRepo.signIn(req, payload, otherProperty);
 
     if (!result?.success) {
       return sendErrorResponse(res, 400, result.message, result.record);
@@ -150,7 +150,7 @@ export default new (class AuthService implements I_AuthService {
       confirm_password: req?.body?.confirm_password
     }
     const userId: any = req?.user?.user_id
-    const result = await this.authRepo.manualChangePassword(userId, payload);
+    const result = await this.authRepo.manualChangePassword(req, userId, payload);
 
     if (!result?.success) {
       return sendErrorResponse(res, 400, result.message, result.record);

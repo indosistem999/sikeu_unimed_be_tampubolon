@@ -1,11 +1,14 @@
 import { IsNull, Like } from "typeorm";
+import { Request } from 'express'
 import AppDataSource from "../../../config/dbconfig";
-import { I_ResultService } from "../../../interfaces/app.interface";
+import { I_RequestCustom, I_ResultService } from "../../../interfaces/app.interface";
 import { MessageDialog } from "../../../lang";
 import { I_ResponsePagination } from "../../../interfaces/pagination.interface";
 import { setPagination } from "../../../lib/utils/pagination.util";
 import { I_MasterBudgetYearRepository } from "../../../interfaces/masteBudgetYear.interface";
 import { MasterBudgetYear } from "../../../database/models/MasterBudgetYear";
+import { TypeLogActivity } from "../../../lib/utils/global.util";
+import { snapLogActivity } from "../../../events/publishers/logUser.publisher";
 
 
 
@@ -81,7 +84,7 @@ export class MasterBudgetYearRepository implements I_MasterBudgetYearRepository 
         }
     }
 
-    async store(payload: Record<string, any>): Promise<I_ResultService> {
+    async store(req: I_RequestCustom, payload: Record<string, any>): Promise<I_ResultService> {
         try {
             const result = await this.repository.save(this.repository.create(payload))
 
@@ -93,6 +96,19 @@ export class MasterBudgetYearRepository implements I_MasterBudgetYearRepository 
                 }
             }
 
+            const userId: any = req?.user?.user_id
+
+            await snapLogActivity(
+                req,
+                userId,
+                TypeLogActivity.BudgetYear.Label,
+                TypeLogActivity.BudgetYear.API.Create,
+                payload.created_at,
+                null,
+                result
+            )
+
+
             return {
                 success: true,
                 message: MessageDialog.__('success.budgetYear.store'),
@@ -103,9 +119,9 @@ export class MasterBudgetYearRepository implements I_MasterBudgetYearRepository 
         }
     }
 
-    async update(id: string, payload: Record<string, any>): Promise<I_ResultService> {
+    async update(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService> {
         try {
-            let result = await this.repository.findOne({
+            const result = await this.repository.findOne({
                 where: {
                     deleted_at: IsNull(),
                     budget_id: id
@@ -120,9 +136,20 @@ export class MasterBudgetYearRepository implements I_MasterBudgetYearRepository 
                 }
             }
 
-            result = { ...result, ...payload }
+            const updateResult = { ...result, ...payload }
 
-            await this.repository.save(result);
+            await this.repository.save(updateResult);
+
+            const userId: any = req?.user?.user_id
+            await snapLogActivity(
+                req,
+                userId,
+                TypeLogActivity.BudgetYear.Label,
+                TypeLogActivity.BudgetYear.API.Update,
+                payload.updated_at,
+                result,
+                updateResult
+            )
 
 
             return {
@@ -138,9 +165,9 @@ export class MasterBudgetYearRepository implements I_MasterBudgetYearRepository 
         }
     }
 
-    async softDelete(id: string, payload: Record<string, any>): Promise<I_ResultService> {
+    async softDelete(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService> {
         try {
-            let result = await this.repository.findOne({
+            const result = await this.repository.findOne({
                 where: {
                     budget_id: id,
                     deleted_at: IsNull()
@@ -155,12 +182,24 @@ export class MasterBudgetYearRepository implements I_MasterBudgetYearRepository 
                 }
             }
 
-            result = {
+            const updateResult = {
                 ...result,
                 ...payload
             }
 
-            await this.repository.save(result);
+            await this.repository.save(updateResult);
+
+            const userId: any = req?.user?.user_id
+            await snapLogActivity(
+                req,
+                userId,
+                TypeLogActivity.BudgetYear.Label,
+                TypeLogActivity.BudgetYear.API.Delete,
+                payload.deleted_at,
+                result,
+                updateResult
+            )
+
 
             return {
                 success: true,

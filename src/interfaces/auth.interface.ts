@@ -4,7 +4,7 @@ import { I_ResultService } from './app.interface';
 
 /* Auth Repository Interface */
 export interface I_AuthRepository {
-  signIn?(payload: I_LoginRequest, others:any): Promise<I_ResultService>;
+  signIn?(req: Request, payload: I_LoginRequest, others: any): Promise<I_ResultService>;
   signUp?(payload: I_RegisterRequest): Promise<I_ResultService>;
   refreshToken?(payload: I_RequestToken): Promise<I_ResultService>;
   verifyAccount?(payload: I_RequestToken): Promise<I_ResultService>;
@@ -57,7 +57,7 @@ export interface I_RequestToken {
 }
 
 export interface I_RequestVerifiedOTP {
-  email:  string;
+  email: string;
   reset_token_code: string;
 }
 

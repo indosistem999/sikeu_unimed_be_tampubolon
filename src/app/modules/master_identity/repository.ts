@@ -2,11 +2,13 @@ import AppDataSource from '../../../config/dbconfig';
 import { I_MasterIdentityRepository } from '../../../interfaces/masterIdentity.interface';
 import { MasterIdentity } from '../../../database/models/MasterIdentiry';
 import { Request } from 'express';
-import { I_ResultService } from '../../../interfaces/app.interface';
+import { I_RequestCustom, I_ResultService } from '../../../interfaces/app.interface';
 import { IsNull } from 'typeorm';
 import { MessageDialog } from '../../../lang';
 import { makeFullUrlFile, removeFileInStorage } from '../../../config/storages';
 import { MasterModule } from '../../../database/models/MasterModule';
+import { TypeLogActivity } from '../../../lib/utils/global.util';
+import { snapLogActivity } from '../../../events/publishers/logUser.publisher';
 
 class MasterIdentityRepository implements I_MasterIdentityRepository {
   private repository = AppDataSource.getRepository(MasterIdentity);
@@ -79,17 +81,26 @@ class MasterIdentityRepository implements I_MasterIdentityRepository {
   }
 
   /** Store Data */
-  async store(payload: Record<string, any>): Promise<I_ResultService> {
+  async store(req: I_RequestCustom, payload: Record<string, any>): Promise<I_ResultService> {
     try {
       const { created_at, created_by, ...rest } = payload
+      let operationType: string = 'create'
+      let result: MasterIdentity | any
+      const userId: any = req?.user?.user_id
+
+      let snapcut: {
+        before: Record<string, any> | null,
+        after: Record<string, any> | null
+      } = {
+        before: null,
+        after: null
+      }
 
       const identity = await this.repository.findOne({
         where: {
           deleted_at: IsNull(),
         }
       })
-
-      let result: MasterIdentity | any
 
       if (!identity) {
         // Create new 
@@ -100,11 +111,17 @@ class MasterIdentityRepository implements I_MasterIdentityRepository {
           updated_at: created_at,
           updated_by: created_by
         }))
+
+        snapcut.after = result;
       }
       else {
+        snapcut.before = result
+
         // Update
-        const data: Record<string, any> = { ...identity, ...rest }
-        result = await this.repository.save(data)
+        result = { ...identity, ...rest }
+        result = await this.repository.save(result)
+        snapcut.after = result
+        operationType = 'update'
       }
 
       if (!result) {
@@ -114,6 +131,16 @@ class MasterIdentityRepository implements I_MasterIdentityRepository {
           record: result
         }
       }
+
+      await snapLogActivity(
+        req,
+        userId,
+        TypeLogActivity.Identity.Label,
+        operationType == 'create' ? TypeLogActivity.Identity.API.Create : TypeLogActivity.Identity.API.Update,
+        created_at,
+        snapcut.before,
+        snapcut.after
+      )
 
       return {
         success: true,
@@ -130,14 +157,16 @@ class MasterIdentityRepository implements I_MasterIdentityRepository {
 
 
   /** Update Data By Id */
-  async update(id: string, payload: Record<string, any>): Promise<I_ResultService> {
+  async update(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService> {
     try {
-      let result = await this.repository.findOne({
+      const result = await this.repository.findOne({
         where: {
           identity_id: id,
           deleted_at: IsNull()
         }
       })
+      const userId: any = req?.user?.user_id
+
 
       if (!result) {
         return {
@@ -149,12 +178,22 @@ class MasterIdentityRepository implements I_MasterIdentityRepository {
 
       const fileName: string = result?.logo
 
-      result = {
+      const updateResult: Record<string, any> = {
         ...result,
         ...payload
       }
 
-      await this.repository.save(result);
+      await this.repository.save(updateResult);
+
+      await snapLogActivity(
+        req,
+        userId,
+        TypeLogActivity.Identity.Label,
+        TypeLogActivity.Identity.API.Update,
+        payload?.updated_at,
+        result,
+        updateResult
+      )
 
 
       if (fileName !== null && fileName !== '') {
@@ -185,9 +224,10 @@ class MasterIdentityRepository implements I_MasterIdentityRepository {
   }
 
   /** Soft Delete Data By Id */
-  async softDelete(id: string, payload: Record<string, any>): Promise<I_ResultService> {
+  async softDelete(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService> {
     try {
-      let result = await this.repository.findOne({
+      const userId: any = req?.user?.user_id
+      const result = await this.repository.findOne({
         where: {
           identity_id: id,
           deleted_at: IsNull()
@@ -202,12 +242,22 @@ class MasterIdentityRepository implements I_MasterIdentityRepository {
         }
       }
 
-      result = {
+      const updateResult = {
         ...result,
         ...payload
       }
 
-      await this.repository.save(result);
+      await this.repository.save(updateResult);
+
+      await snapLogActivity(
+        req,
+        userId,
+        TypeLogActivity.Identity.Label,
+        TypeLogActivity.Identity.API.Delete,
+        payload?.updated_at,
+        result,
+        updateResult
+      )
 
       return {
         success: true,

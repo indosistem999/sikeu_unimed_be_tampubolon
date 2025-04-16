@@ -1,12 +1,14 @@
 import AppDataSource from '../../../config/dbconfig';
 import { Request } from 'express';
-import { I_ResultService } from '../../../interfaces/app.interface';
+import { I_RequestCustom, I_ResultService } from '../../../interfaces/app.interface';
 import { FindOptionsWhere, IsNull } from 'typeorm';
 import { MessageDialog } from '../../../lang';
 import { makeFullUrlFile, removeFileInStorage } from '../../../config/storages';
 import { I_MasterMenuRepository } from '../../../interfaces/masterMenu.interface';
 import { MasterMenu } from '../../../database/models/MasterMenu';
 import { selectDetailMenu, selectOnlyChildMenu } from './constanta';
+import { snapLogActivity } from '../../../events/publishers/logUser.publisher';
+import { TypeLogActivity } from '../../../lib/utils/global.util';
 
 class MasterMenuRepository implements I_MasterMenuRepository {
   private repository = AppDataSource.getRepository(MasterMenu);
@@ -132,7 +134,7 @@ class MasterMenuRepository implements I_MasterMenuRepository {
   }
 
   /** Store Data */
-  async store(payload: Record<string, any>): Promise<I_ResultService> {
+  async store(req: I_RequestCustom, payload: Record<string, any>): Promise<I_ResultService> {
     try {
       const { type_store, ...rest } = payload
 
@@ -152,6 +154,18 @@ class MasterMenuRepository implements I_MasterMenuRepository {
         optMsg = MessageDialog.__('success.masterMenu.storeSubMenu')
       }
 
+
+      const userId: any = req?.user?.user_id
+      await snapLogActivity(
+        req,
+        userId,
+        type_store == 'child' ? TypeLogActivity.SubMenu.Label : TypeLogActivity.Menu.Label,
+        type_store == 'child' ? TypeLogActivity.SubMenu.API.Create : TypeLogActivity.Menu.API.Create,
+        payload.created_at,
+        null,
+        result
+      )
+
       return {
         success: true,
         message: optMsg,
@@ -166,7 +180,7 @@ class MasterMenuRepository implements I_MasterMenuRepository {
 
 
   /** Update Data By Id */
-  async update(id: string, payload: Record<string, any>): Promise<I_ResultService> {
+  async update(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService> {
     try {
       let result = await this.repository.findOne({
         where: {
@@ -185,9 +199,22 @@ class MasterMenuRepository implements I_MasterMenuRepository {
 
       const fileName: string = result?.icon
 
-      result = { ...result, ...payload }
+      const updateResult = { ...result, ...payload }
 
-      await this.repository.save(result);
+      await this.repository.save(updateResult);
+
+
+      /** Create Log Activity User */
+      const userId: any = req?.user?.user_id
+      await snapLogActivity(
+        req,
+        userId,
+        TypeLogActivity.Menu.Label,
+        TypeLogActivity.Menu.API.Update,
+        payload.updated_at,
+        result,
+        updateResult
+      )
 
 
       if (fileName !== null && fileName !== '') {
@@ -198,7 +225,7 @@ class MasterMenuRepository implements I_MasterMenuRepository {
             success: true,
             message: `${MessageDialog.__('success.masterMenu.update')}. But ${removeFile.message}.`,
             record: {
-              menu_id: result?.menu_id,
+              menu_id: updateResult?.menu_id,
             }
           }
         }
@@ -208,7 +235,7 @@ class MasterMenuRepository implements I_MasterMenuRepository {
         success: true,
         message: MessageDialog.__('success.masterMenu.update'),
         record: {
-          menu_id: result?.menu_id,
+          menu_id: updateResult?.menu_id,
         }
       }
 
@@ -218,8 +245,14 @@ class MasterMenuRepository implements I_MasterMenuRepository {
   }
 
   /** Soft Delete Data By Id */
-  async softDelete(id: string, payload: Record<string, any>): Promise<I_ResultService> {
+  async softDelete(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService> {
     try {
+
+      const snapcut: {
+        before: Record<string, any> | null,
+        after: Record<string, any> | null
+      } = { before: null, after: null }
+
       let result = await this.repository.findOne({
         where: {
           menu_id: id,
@@ -238,6 +271,8 @@ class MasterMenuRepository implements I_MasterMenuRepository {
         }
       }
 
+      snapcut.before = result;
+
 
       if (result?.children && result?.children?.length > 0) {
         result.children.forEach(child => {
@@ -246,13 +281,26 @@ class MasterMenuRepository implements I_MasterMenuRepository {
         });
       }
 
-      result = {
+      const updateResult = {
         ...result,
         ...payload
       }
 
-      await this.repository.save(result);
-      await this.repository.save(result.children);
+      await this.repository.save(updateResult);
+      await this.repository.save(updateResult.children);
+
+      snapcut.after = updateResult;
+
+      const userId: any = req?.user?.user_id
+      await snapLogActivity(
+        req,
+        userId,
+        TypeLogActivity.Menu.Label,
+        TypeLogActivity.Menu.API.Delete,
+        payload.deleted_at,
+        snapcut.before,
+        snapcut.after
+      )
 
       return {
         success: true,

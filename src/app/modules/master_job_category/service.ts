@@ -63,7 +63,7 @@ class MasterJobCategoryService implements I_MasterJobCategoryService {
         }
 
 
-        const result = await this.repository.store(payload);
+        const result = await this.repository.store(req, payload);
 
         if (!result?.success) {
             return sendErrorResponse(res, 400, result.message, result.record);
@@ -82,7 +82,7 @@ class MasterJobCategoryService implements I_MasterJobCategoryService {
             ...this.bodyValidation(req)
         }
 
-        const result = await this.repository.update(id, payload)
+        const result = await this.repository.update(req, id, payload)
         if (!result?.success) {
             return sendErrorResponse(res, 400, result.message, result.record);
         }
@@ -100,7 +100,7 @@ class MasterJobCategoryService implements I_MasterJobCategoryService {
             deleted_by: req?.user?.user_id,
         }
 
-        const result = await this.repository.softDelete(id, payload)
+        const result = await this.repository.softDelete(req, id, payload)
         if (!result?.success) {
             return sendErrorResponse(res, 400, result.message, result.record);
         }

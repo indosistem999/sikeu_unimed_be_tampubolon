@@ -89,7 +89,7 @@ class MasterMenuService implements I_MasterMenuService {
         payload.logo = fileName !== null ? path.join('icon', fileName) : null
       }
 
-      const result = await this.repository.store(payload);
+      const result = await this.repository.store(req, payload);
 
       if (!result?.success) {
         // If store fails, cleanup uploaded file if any
@@ -133,7 +133,7 @@ class MasterMenuService implements I_MasterMenuService {
         }
       }
 
-      const result = await this.repository.update(id, payload);
+      const result = await this.repository.update(req, id, payload);
 
       if (!result?.success) {
         // If update fails, cleanup newly uploaded file if any
@@ -164,7 +164,7 @@ class MasterMenuService implements I_MasterMenuService {
       deleted_by: req?.user?.user_id,
     }
 
-    const result = await this.repository.softDelete(id, payload)
+    const result = await this.repository.softDelete(req, id, payload)
     if (!result?.success) {
       return sendErrorResponse(res, 400, result.message, result.record);
     }

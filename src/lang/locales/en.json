@@ -13,7 +13,7 @@
       "changePassword": "Change password successfully"
     },
     "log": {
-      "storeUserLog": "Success to store user log"
+      "fetch": "Get user log activity successfully"
     },
     "masterModule": {
       "create": "New Master module added successfully",

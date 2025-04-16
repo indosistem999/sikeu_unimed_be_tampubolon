@@ -46,8 +46,11 @@ class MasterModuleValidation {
         if (!req?.file) {
             sendErrorResponse(res, 422, MessageDialog.__('error.missing.fileUpload'), req.file);
         }
+        else {
+            next();
+        }
 
-        next();
+
     }
 
     async updateValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
@@ -71,8 +74,10 @@ class MasterModuleValidation {
                 errors
             );
         }
+        else {
+            next();
+        }
 
-        next();
     }
 }
 

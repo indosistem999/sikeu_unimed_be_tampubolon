@@ -4,6 +4,7 @@ import AuthService from './service';
 import AuthValidation from './validation';
 import { authMiddleware } from '../../middlewares/auth.middleware';
 import { I_RequestCustom } from '../../../interfaces/app.interface';
+import { getRequestSecure } from '../../../lib/utils/request.util';
 
 class AuthController extends MainRoutes {
   public routes(): void {

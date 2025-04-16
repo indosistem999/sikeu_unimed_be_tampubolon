@@ -48,9 +48,7 @@ class FeatureAccessService implements I_FeatureAccessService {
       ...this.bodyValidation(req),
     }
 
-    console.log({ AktifitasFeatures: payload?.features })
-
-    const result = await this.repository.store(roleId, payload);
+    const result = await this.repository.store(req, roleId, payload);
 
     if (!result?.success) {
       return sendErrorResponse(res, 400, result.message, result.record);
