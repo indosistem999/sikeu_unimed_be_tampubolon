@@ -24,7 +24,7 @@ export class CreatePaguAnggaranTable1744772601764 implements MigrationInterface 
           CONSTRAINT fk_pagu_anggaran_component_id FOREIGN KEY (component_id) REFERENCES master_data_component(component_id) ON DELETE SET NULL,
           CONSTRAINT fk_pagu_anggaran_mak_id FOREIGN KEY (mak_id) REFERENCES master_data_mak(mak_id) ON DELETE SET NULL,
           CONSTRAINT fk_pagu_anggaran_unit_id FOREIGN KEY (unit_id) REFERENCES master_work_unit(unit_id) ON DELETE SET NULL,
-          CONSTRAINT fk_pagu_anggaran_sumber_dana_id(sumber_dana_id) REFERENCES master_sumber_dana(sumber_dana_id) ON DELETE SET NULL
+          CONSTRAINT fk_pagu_anggaran_sumber_dana_id FOREIGN KEY (sumber_dana_id) REFERENCES master_sumber_dana(sumber_dana_id) ON DELETE SET NULL
         );`);
     }
 
