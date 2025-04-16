@@ -23,6 +23,7 @@ import KopSuratController from '../app/modules/sppd_kop_surat/controller'
 import MasterOfficerController from '../app/modules/master_officers/controller'
 import PejabatSatkerController from '../app/modules/pejabat_satker/controller'
 import SPPDSuratTugasController from '../app/modules/sppd_surat_tugas/controller'
+import MasterBudgetYearController from '../app/modules/master_budget_year/controller'
 
 const tagVersionOne: string = '/api/v1';
 
@@ -44,6 +45,9 @@ class RouteApplication extends MainRoutes {
 
     // API Master Work Unit
     this.router.use(`${tagVersionOne}/work-unit`, WorkUnitController)
+
+    // API Master Budget Year (Tahun Anggaran)
+    this.router.use(`${tagVersionOne}/master-budget-year`, MasterBudgetYearController)
 
     // API Master Job Category
     this.router.use(`${tagVersionOne}/master-job-category`, MasterJobCategoryController)
