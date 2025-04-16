@@ -72,6 +72,7 @@ class SppdSuratTugasController extends MainRoutes {
 
         /** [GET] - Get File Undangan */
         this.router.get('/files/undangan/:filename', async (req: Request, res: Response) => {
+            req.params.type = 'undangan';
             await showFile(req, res);
         });
 

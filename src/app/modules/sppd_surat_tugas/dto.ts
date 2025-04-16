@@ -14,7 +14,7 @@ export class DTO_ValidationCreate {
     nomor_surat?: string;
 
     @IsOptional()
-    @IsDate()
+    @IsDateString()
     tanggal_surat?: Date;
 
     @IsNotEmpty()
@@ -22,11 +22,11 @@ export class DTO_ValidationCreate {
     kegiatan!: string;
 
     @IsOptional()
-    @IsDate()
+    @IsDateString()
     awal_kegiatan?: Date;
 
     @IsOptional()
-    @IsDate()
+    @IsDateString()
     akhir_kegiatan?: Date;
 
     @IsOptional()
@@ -60,7 +60,7 @@ export class DTO_ValidationUpdate {
     nomor_surat?: string;
 
     @IsOptional()
-    @IsDate()
+    @IsDateString()
     tanggal_surat?: Date;
 
     @IsOptional()
@@ -68,11 +68,11 @@ export class DTO_ValidationUpdate {
     kegiatan?: string;
 
     @IsOptional()
-    @IsDate()
+    @IsDateString()
     awal_kegiatan?: Date;
 
     @IsOptional()
-    @IsDate()
+    @IsDateString()
     akhir_kegiatan?: Date;
 
     @IsOptional()

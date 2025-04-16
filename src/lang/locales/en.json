@@ -126,6 +126,14 @@
       "update": "Officer edited successfully",
       "softDelete": "Officer deleted successfully",
       "preview": "Preview officer successfully"
+    },
+    "sppdSuratTugas": {
+      "findItem": "Get Surat Tugas {{item}} successfully",
+      "fetch": "Get Surat Tugas successfully",
+      "store": "Surat Tugas added successfully",
+      "update": "Surat Tugas edited successfully",
+      "softDelete": "Surat Tugas deleted successfully",
+      "previewPegawai": "Preview Pegawai by Surat Tugas successfully"
     }
   },
   "error": {
@@ -177,7 +185,12 @@
       "storeBagianSurat": "Failed to store bagian surat",
       "storeKopSurat": "Failed to store kop surat",
       "storeOfficer": "Failed to store officer",
-      "uploadUndangan": "Failed to upload undangan file"
+      "uploadUndangan": "Failed to upload undangan file",
+      "storeSuratTugas": "Failed to store surat tugas",
+      "storeSPPD": "Failed to store SPPD",
+      "updateSPPD": "Failed to update SPPD",
+      "deleteSPPD": "Failed to delete SPPD",
+      "previewSPPD": "Failed to preview SPPD details"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",
@@ -208,6 +221,9 @@
         "fontStyle": "Font style must be a string",
         "fontSize": "Font size must be a string"
       }
+    },
+    "notFound": {
+      "sppdSuratTugas": "Surat Tugas not found"
     }
   }
 }

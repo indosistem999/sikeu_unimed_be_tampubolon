@@ -197,60 +197,60 @@
           }
         }
       }
-    },
-    "upload-undangan": {
-      "post": {
-        "tags": ["SPPD Surat Tugas"],
-        "summary": "Upload undangan file for a surat tugas",
-        "security": [{ "bearerAuth": [] }],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "surat_tugas_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Surat Tugas ID"
-          }
-        ],
-        "requestBody": {
+    }
+  },
+  "/sppd-surat-tugas/{surat_tugas_id}/upload-undangan": {
+    "post": {
+      "tags": ["SPPD Surat Tugas"],
+      "summary": "Upload undangan file for a surat tugas",
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "surat_tugas_id",
           "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Surat Tugas ID"
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "file_undangan": {
+                  "type": "string",
+                  "format": "binary",
+                  "description": "Undangan file to upload"
+                }
+              },
+              "required": ["file_undangan"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Success upload undangan",
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "file_undangan": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "message": {
                     "type": "string",
-                    "format": "binary",
-                    "description": "Undangan file to upload"
-                  }
-                },
-                "required": ["file_undangan"]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success upload undangan",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Success upload undangan"
-                    },
-                    "record": {
-                      "$ref": "#/components/schemas/SppdSuratTugasResponse/properties/record"
-                    }
+                    "example": "Success upload undangan"
+                  },
+                  "record": {
+                    "$ref": "#/components/schemas/SppdSuratTugasResponse/properties/record"
                   }
                 }
               }

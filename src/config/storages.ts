@@ -60,14 +60,28 @@ export const uploadImageToStorage = multer({
         fileSize: 10 * 1024 * 1024 // Limit file size to 10MB
     },
     fileFilter: function (req: Request, file: Express.Multer.File, cb: Function) {
-        const filetypes = /jpeg|jpg|png|gif/; // Allowed file types
-        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-        const mimetype = filetypes.test(file.mimetype);
+        if (file.fieldname === 'file_undangan') {
+            // Allow PDF files for undangan
+            const filetypes = /jpeg|jpg|png|gif|pdf/;
+            const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+            const mimetype = /jpeg|jpg|png|gif|pdf/.test(file.mimetype);
 
-        if (extname && mimetype) {
-            return cb(null, true);
+            if (extname && mimetype) {
+                return cb(null, true);
+            } else {
+                cb(new Error('Invalid file type. Allowed types: JPG, PNG, GIF, PDF'), false);
+            }
         } else {
-            cb(new Error('Invalid file type'), false);
+            // For other fields, only allow images
+            const filetypes = /jpeg|jpg|png|gif/; // Allowed file types
+            const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+            const mimetype = filetypes.test(file.mimetype);
+
+            if (extname && mimetype) {
+                return cb(null, true);
+            } else {
+                cb(new Error('Invalid file type. Allowed types: JPG, PNG, GIF'), false);
+            }
         }
     }
 });
@@ -84,7 +98,7 @@ export const makeFullUrlFile = (filePath: string, pathSlug: string = 'master-mod
 
 
 export const getFileFromStorage = (type: string, filename: string): I_ResultService => {
-    const validTypes = ['icon', 'logo', 'images']; // Ensure valid directories
+    const validTypes = ['icon', 'logo', 'images', 'undangan']; // Ensure valid directories
 
     if (!validTypes.includes(type)) {
         return {

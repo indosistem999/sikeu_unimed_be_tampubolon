@@ -87,6 +87,7 @@ class SppdSuratTugasService {
     async store(req: Request, res: Response): Promise<Response> {
         try {
             const payload = {
+                surat_tugas_id: uuidv4(),
                 ...this.bodyValidation(req),
                 created_by: (req as I_RequestCustom)?.user?.user_id
             };
