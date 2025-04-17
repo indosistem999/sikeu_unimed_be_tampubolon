@@ -5,70 +5,12 @@ import { ExchangeList, QueueList } from "../../constanta";
 import AppDataSource from "../../config/dbconfig";
 import { SPPDPegawai } from "../../database/models/SPPDPegawai";
 import { IsNull, Like } from "typeorm";
-import { MasterWorkUnit } from "../../database/models/MasterWorkUnit";
-import { SPPDPangkat } from "../../database/models/SPPDPangkat";
 import { HistoryImportPegawai } from "../../database/models/HistoryImportPegawai";
 import { standartDateISO } from "../../lib/utils/common.util";
+import { findAndCreateWorkUnit, findAndCreatePangkat } from "../../app/modules/sppd_pegawai/helper";
+import { I_HistoryDescription } from "../../interfaces/app.interface";
 
 
-const findAndCreateWorkUnit = async (data: Record<string, any>): Promise<Record<string, any>> => {
-    const repository = AppDataSource.getRepository(MasterWorkUnit);
-
-    const row = await repository.findOne({
-        where: { deleted_at: IsNull(), unit_code: Like(`%${data.unit_code}%`) }
-    });
-
-    if (row) {
-        return {
-            success: true,
-            data: row
-        }
-    }
-
-    const result = await repository.save(repository.create(data))
-
-    if (!result) {
-        return {
-            success: false,
-            data: result,
-        }
-    }
-
-    return {
-        success: true,
-        data: result
-    }
-}
-
-
-const findAndCreatePangkat = async (data: Record<string, any>): Promise<Record<string, any>> => {
-    const repository = AppDataSource.getRepository(SPPDPangkat);
-
-    const row = await repository.findOne({
-        where: { deleted_at: IsNull(), golongan_romawi: Like(`%${data.golongan_romawi}%`), pangkat: Like(`%${data.pangkat}%`) }
-    });
-
-    if (row) {
-        return {
-            success: true,
-            data: row
-        }
-    }
-
-    const result = await repository.save(repository.create(data))
-
-    if (!result) {
-        return {
-            success: false,
-            data: result,
-        }
-    }
-
-    return {
-        success: true,
-        data: result
-    }
-}
 
 
 const importSppdPegawaiIntegration = async (exchangeName: string, queueName: string, message: string): Promise<void> => {
@@ -79,13 +21,7 @@ const importSppdPegawaiIntegration = async (exchangeName: string, queueName: str
     const { origin, history_id } = JSON.parse(message)?.row_data
     const { data, today, created_by } = origin;
 
-    const optionProp: {
-        total_created: number
-        total_updated: number
-        total_failed: number
-        total_row: number,
-        message: string,
-    } = {
+    const optionProp: I_HistoryDescription = {
         total_created: 0,
         total_row: 0,
         total_updated: 0,

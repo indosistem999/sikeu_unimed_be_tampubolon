@@ -232,6 +232,21 @@ class SppdPegawaiService implements I_SppdPegawaiService {
 
         return sendSuccessResponse(res, 200, result.message, result.record);
     }
+
+    async postSynchronize(req: I_RequestCustom, res: Response): Promise<Response> {
+        const payload: Record<string, any> = {
+            type_name: req?.body?.type_name,
+            user: req?.user,
+            today: new Date(standartDateISO())
+        }
+        const result = await this.repository.postSynchronize(req, payload);
+
+        if (!result?.success) {
+            return sendErrorResponse(res, 400, result.message, result.record);
+        }
+
+        return sendSuccessResponse(res, 200, result.message, result.record);
+    }
 }
 
 export default new SppdPegawaiService();

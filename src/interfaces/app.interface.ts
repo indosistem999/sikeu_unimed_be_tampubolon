@@ -96,3 +96,11 @@ export interface I_MulterInterface {
   readonly name: string;
   readonly limit?: number;
 }
+
+export interface I_HistoryDescription {
+  total_created: number
+  total_updated: number
+  total_failed: number
+  total_row: number,
+  message: string,
+} 

@@ -68,7 +68,8 @@ export const TypeLogActivity = {
             Create: 'Pengguna Menambahkan Data SPPD Pegawai Baru',
             Update: 'Pengguna Mengubah Data SPPD Pegawai Jabatan',
             Delete: 'Pengguna Menghapus Data SPPD Pegawai Jabatan',
-            ImportFile: 'Pengguna Melakukan Import Excel Untuk Sinkronisasi Dengan Data Di Sistem'
+            ImportFile: 'Pengguna Melakukan Import Excel Untuk Sinkronisasi Dengan Data Di Sistem',
+            SyncData: (name: string) => `Pengguna Melakukan Sinkronisasi SPPD Pegawai Untuk Data ${name}`
         }
     }
 
@@ -76,6 +77,9 @@ export const TypeLogActivity = {
 
 }
 
-export const TagNameImported = {
-    SppdPegawai: 'sppd-pegawai'
+export const TagNameIntegration = {
+    SppdPegawai: {
+        Import: 'sppd-pegawai-import',
+        Sync: 'sppd-pegawai-sync'
+    }
 }

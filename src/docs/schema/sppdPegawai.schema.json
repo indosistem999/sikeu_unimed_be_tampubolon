@@ -183,5 +183,16 @@
         "format": "base64"
       }
     }
+  },
+  "SchemaSynchronizeSimpeg": {
+    "type": "object",
+    "properties": {
+      "type_name": {
+        "type": "string",
+        "enum": ["dosen", "pegawai"],
+        "default": "dosen",
+        "description": "Tipe sinkronisasi"
+      }
+    }
   }
 }

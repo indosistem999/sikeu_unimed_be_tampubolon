@@ -40,6 +40,10 @@ class SppdPegawaiController extends MainRoutes {
             await Services.downloadTemplateExcel(req, res)
         });
 
+        this.router.post('/synchronize-sppd-pegawai', authMiddleware, multerUpload({ type: 'single', name: 'file' }), async (req: Request, res: Response) => {
+            await Services.postSynchronize(req, res)
+        });
+
         /** [GET] - Find By Id  */
         this.router.get(
             '/:pegawai_id',
