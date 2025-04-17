@@ -14,6 +14,7 @@ import { UserLog } from './UserLog';
 import { Roles } from './Roles';
 import { MasterWorkUnit } from './MasterWorkUnit';
 import { Expose } from 'class-transformer';
+import { HistoryImportPegawai } from './HistoryImportPegawai';
 
 @Entity({ name: 'users' })
 export class Users {
@@ -145,8 +146,8 @@ export class Users {
   @Column({ type: 'tinyint', default: false })
   has_determined!: number;
 
-
-
+  @OneToMany(() => HistoryImportPegawai, (value) => value.user)
+  history_import_pegawai!: HistoryImportPegawai[];
 
   // Virtual property to concatenate firstName and lastName
   @Expose()

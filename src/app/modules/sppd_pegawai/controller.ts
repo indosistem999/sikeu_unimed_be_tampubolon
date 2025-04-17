@@ -3,7 +3,7 @@ import MainRoutes from '../../../config/mainRoute';
 import { authMiddleware } from '../../middlewares/auth.middleware';
 import { I_RequestCustom } from '../../../interfaces/app.interface';
 import Services from './service';
-import { showFile, uploadImageToStorage } from '../../../config/storages';
+import { multerUpload, showFile, uploadImageToStorage } from '../../../config/storages';
 import ReqValidation from './validation';
 
 class SppdPegawaiController extends MainRoutes {
@@ -12,6 +12,7 @@ class SppdPegawaiController extends MainRoutes {
         this.router.get('/', authMiddleware, async (req: Request, res: Response) => {
             await Services.fetch(req, res);
         });
+
 
         /** [POST] - Create Data */
         this.router.post(
@@ -24,12 +25,18 @@ class SppdPegawaiController extends MainRoutes {
             }
         );
 
+
+        this.router.post('/import/excel', authMiddleware, multerUpload({ type: 'single', name: 'file' }), async (req: Request, res: Response) => {
+            await Services.excelImport(req, res)
+        });
+
+
         /** Fetch File */
         this.router.get('/files/:type/:filename', async (req: Request, res: Response) => {
             await showFile(req, res);
         });
 
-        this.router.get('/download/template/excel', async (req: Request, res: Response) => {
+        this.router.get('/download/template/excel', authMiddleware, async (req: Request, res: Response) => {
             await Services.downloadTemplateExcel(req, res)
         });
 

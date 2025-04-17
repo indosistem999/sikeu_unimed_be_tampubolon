@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs'
 import crypto from 'crypto'
 import { Config as cfg } from '../constanta';
-import { I_ResultService } from '../interfaces/app.interface';
+import { I_MulterInterface, I_ResultService } from '../interfaces/app.interface';
 import { sendErrorResponse } from '../lib/utils/response.util';
 
 
@@ -160,4 +160,20 @@ export const showFile = (req: Request, res: Response): Response | any => {
     }
 
 }
+
+
+
+/**
+ * Khusus untuk handle multipart-form with file any extension
+ * Contoh penggunaan : 
+ * multerUpload({ type: 'single', name: 'nama_body_req' })
+ */
+export const multerUpload = (options: I_MulterInterface) => {
+    const upload = multer({});
+    if (options?.type === 'single') {
+        return upload.single(options.name);
+    }
+    return upload.any();
+};
+
 

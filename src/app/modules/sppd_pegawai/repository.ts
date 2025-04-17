@@ -9,13 +9,19 @@ import { setPagination } from "../../../lib/utils/pagination.util";
 import { I_SppdPegawaiRepository } from "../../../interfaces/sppdPegawai";
 import { SPPDPegawai } from "../../../database/models/SPPDPegawai";
 import { snapLogActivity } from "../../../events/publishers/logUser.publisher";
-import { TypeLogActivity } from "../../../lib/utils/global.util";
+import { TagNameImported, TypeLogActivity } from "../../../lib/utils/global.util";
 import { makeFullUrlFile } from "../../../config/storages";
 import { MasterWorkUnit } from "../../../database/models/MasterWorkUnit";
+import { extractFileExcel } from "../../../config/excel";
+import { excelHeaders } from "./constanta";
+import { executeImported } from "../../../events/publishers/executeImport.publisher";
+import { standartDateISO } from "../../../lib/utils/common.util";
+import { HistoryImportPegawai } from "../../../database/models/HistoryImportPegawai";
 
 
 export class SppdPegawaiRepository implements I_SppdPegawaiRepository {
     private repository = AppDataSource.getRepository(SPPDPegawai);
+    private repoHistory = AppDataSource.getRepository(HistoryImportPegawai)
 
     setupErrorMessage(error: any): I_ResultService {
         return {
@@ -305,43 +311,100 @@ export class SppdPegawaiRepository implements I_SppdPegawaiRepository {
         }
     }
 
-    async downloadTemplateExcel(req: I_RequestCustom): Promise<I_ResultService> {
+    async downloadTemplateExcel(): Promise<I_ResultService> {
         try {
 
-            const result = await this.repository.createQueryBuilder('p')
-                .leftJoinAndSelect(SPPDPangkat, 'sp', 'sp.pangkat_id = p.pangkat_id')
-                .leftJoinAndSelect(MasterWorkUnit, 'mu', 'mu.unit_id = p.unit_id')
-                .where('p.deleted_at IS NULL')
-                .select([
-                    'p.nik',
-                    'p.nip',
-                    'p.nama',
-                    'p.gelar_depan',
-                    'p.email',
-                    'p.phone',
-                    `concat(sp.pangkat,',' sp.golongan_romawi) as pangkat`,
-                    `concat(mu.unit_code, ',' mu.unit_name) as satker`,
-                    'p.jabatan',
-                    'p.jenis_kepegawaian',
-                    'p.status_kepegawaian',
-                    `(case 
-                        when p.status_active = 1
-                        then 'aktif'
-                        else 'tidak aktif'
-                     end) as active_status`,
-                    'simpeg_id',
-                    'username'
-                ])
-                .orderBy('created_at', "DESC")
-                .take(1)
-                .skip(0)
-                .getMany()
+            const results: Record<string, any>[] = [
+                {
+                    nik: '120778899283949',
+                    nip: '200120224029484',
+                    nama: 'Alvaro Lautaro Martinez',
+                    gelar_depan: 'Drs.',
+                    email: 'lautaro@gmail.com',
+                    phone: '08133445567',
+                    unit_code: 'FAK-101',
+                    unit_type: 'FTIK',
+                    unit_name: 'Fakultas Teknik Informatika & Komputer',
+                    golongan_romawi: 'II/a',
+                    golongan_angka: '2',
+                    pangkat: 'Pengatur Muda Tingkat II',
+                    jabatan: 'Dosen Rekayasa Perangkat Lunak',
+                    jenis_kepegawaian: 'dosen',
+                    status_kepegawaian: 'pns',
+                    status_active: 'aktif',
+                    simpeg_id: '9988773455',
+                    username: 'alvaro_lautaro'
+                }
+            ]
 
             return {
                 success: true,
                 message: MessageDialog.__('success.sppdPegawai.fetch'),
-                record: result && result?.length > 0 ? result : []
+                record: results
             }
+        } catch (err: any) {
+            return this.setupErrorMessage(err)
+        }
+    }
+
+    async excelImport(req: I_RequestCustom): Promise<I_ResultService> {
+        try {
+
+            const resultExtract = await extractFileExcel(req, excelHeaders);
+
+            if (!resultExtract.status) {
+                return {
+                    success: resultExtract.status,
+                    message: resultExtract.message,
+                    record: resultExtract.origin
+                }
+            }
+
+
+            const rowHistory = await this.repoHistory.save(this.repoHistory.create({
+                description: JSON.stringify({
+                    total_created: 0,
+                    total_row: 0,
+                    total_updated: 0,
+                    total_failed: 0,
+                    message: 'Waiting on background proccess integration'
+                }),
+                execute_status: 'processing',
+                execute_time: resultExtract.origin.today,
+                executor_id: resultExtract.created_by,
+                created_at: resultExtract.origin.today,
+                created_by: resultExtract.created_by
+            }))
+
+            if (!rowHistory) {
+                return {
+                    success: false,
+                    message: MessageDialog.__(''),
+                    record: rowHistory
+                }
+            }
+
+            await executeImported({
+                history_id: rowHistory.history_id,
+                origin: resultExtract.origin
+            }, TagNameImported.SppdPegawai)
+
+            await snapLogActivity(
+                req,
+                resultExtract.created_by,
+                TypeLogActivity.SppdEmployee.Label,
+                TypeLogActivity.SppdEmployee.API.ImportFile,
+                resultExtract.origin?.today || new Date(standartDateISO()),
+                null,
+                resultExtract
+            )
+
+            return {
+                success: resultExtract.status,
+                message: MessageDialog.__('success.extractFile.waitImportIntegration'),
+                record: resultExtract.origin?.data
+            }
+
         } catch (err: any) {
             return this.setupErrorMessage(err)
         }

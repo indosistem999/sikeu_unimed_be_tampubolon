@@ -206,13 +206,13 @@ class SppdPegawaiService implements I_SppdPegawaiService {
 
 
     async downloadTemplateExcel(req: I_RequestCustom, res: Response): Promise<Response> {
-        const result = await this.repository.downloadTemplateExcel(req);
+        const result = await this.repository.downloadTemplateExcel();
 
         if (!result?.success) {
             return sendErrorResponse(res, 400, result.message, result.record)
         }
 
-        const fileName = `SPPD_Pegawai${formatDateToday('YYYYMMDDHHmmss', new Date(standartDateISO()))}`;
+        const fileName = `Template_SPPD_Pegawai_${formatDateToday('YYYYMMDDHHmmss', new Date(standartDateISO()))}`;
         const headers = excelHeaders.map((x: any) => x.name);
         return await makeFileExcel(res, {
             fileName,
@@ -221,6 +221,16 @@ class SppdPegawaiService implements I_SppdPegawaiService {
             sheetName: 'Data Pegawai'
         });
 
+    }
+
+    async excelImport(req: I_RequestCustom, res: Response): Promise<Response> {
+        const result = await this.repository.excelImport(req);
+
+        if (!result?.success) {
+            return sendErrorResponse(res, 400, result.message, result.record);
+        }
+
+        return sendSuccessResponse(res, 200, result.message, result.record);
     }
 }
 

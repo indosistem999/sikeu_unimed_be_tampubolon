@@ -93,12 +93,20 @@ export const LogType = {
 
 export const QueueList = {
   Email: 'queue_email',
-  LogActivity: 'queue_log_activity'
+  LogActivity: 'queue_log_activity',
+  ImportFile: {
+    SppdPegawai: 'queue_import_sppd_pegawai',
+    Default: 'queue_import_default'
+  }
 }
 
 export const ExchangeList = {
   Email: 'exchange_email',
-  LogActivity: 'exchange_log_activity'
+  LogActivity: 'exchange_log_activity',
+  ImportFile: {
+    SppdPegawai: 'exchange_import_sppd_pegawai',
+    Default: 'exchange_import_default'
+  }
 }
 
 

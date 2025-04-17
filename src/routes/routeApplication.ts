@@ -26,6 +26,7 @@ import SPPDSuratTugasController from '../app/modules/sppd_surat_tugas/controller
 import MasterBudgetYearController from '../app/modules/master_budget_year/controller'
 import UserLogController from '../app/modules/user_log/controller'
 import SppdPegawaiController from '../app/modules/sppd_pegawai/controller'
+import HistoryImportPegawaiController from '../app/modules/history_import_pegawai/controller'
 
 const tagVersionOne: string = '/api/v1';
 
@@ -89,13 +90,20 @@ class RouteApplication extends MainRoutes {
     // SPPD Surat Tugas
     this.router.use(`${tagVersionOne}/sppd-surat-tugas`, SPPDSuratTugasController)
 
+    // Master Pejabat
     this.router.use(`${tagVersionOne}/master-officers`, MasterOfficerController)
 
+    // Pejabat Pada Satker
     this.router.use(`${tagVersionOne}/pejabat-satker`, PejabatSatkerController)
 
+    // User Log Activity
     this.router.use(`${tagVersionOne}/user-log-activity`, UserLogController)
 
+    // SPPD Pegawai
     this.router.use(`${tagVersionOne}/sppd-pegawai`, SppdPegawaiController)
+
+    // History Import SPPD Pegawai
+    this.router.use(`${tagVersionOne}/history-import-pegawai`, HistoryImportPegawaiController)
   }
 }
 

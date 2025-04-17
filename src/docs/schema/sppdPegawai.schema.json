@@ -174,5 +174,14 @@
         "default": "bang_pacul"
       }
     }
+  },
+  "SchemaSppdPegawaiImportExcel": {
+    "type": "object",
+    "properties": {
+      "file": {
+        "type": "string",
+        "format": "base64"
+      }
+    }
   }
 }

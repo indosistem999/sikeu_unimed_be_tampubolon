@@ -75,9 +75,24 @@ export interface I_FilterPagination {
   sorting: any
 }
 
-export interface GenerateExcelParams {
+export interface I_GenerateExcelParams {
   fileName: string;
   sheetName: string;
   records: Record<string, any>[] | any[];
   headers: string[];
+}
+
+export interface I_ExcelOriginInterface {
+  status: boolean;
+  origin: any;
+  created_by: string;
+  message: string;
+}
+
+
+
+export interface I_MulterInterface {
+  readonly type: string;
+  readonly name: string;
+  readonly limit?: number;
 }

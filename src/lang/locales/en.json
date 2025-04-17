@@ -141,6 +141,13 @@
       "store": "Employee added successfully",
       "update": "Employee edited successfully",
       "softDelete": "Employee deleted successfully"
+    },
+    "extractFile": {
+      "read": "Read data file success",
+      "waitImportIntegration": "Your data has been successfully read. Please check the import history to see the integration results."
+    },
+    "historyImportPegawai": {
+      "fetch": "Get history row successfully"
     }
   },
   "error": {
@@ -149,7 +156,8 @@
       "notFoundItem": "{{item}} not found",
       "notFound": "Data not found",
       "emptyData": "{{item}} is empty",
-      "changePassword": "Password was changed. Please login again."
+      "changePassword": "Password was changed. Please login again.",
+      "emptyDataFile": "Empty your row data file"
     },
     "existed": {
       "slugItem": "{{item}} with {{slug}} already exists",
@@ -198,7 +206,9 @@
       "updateSPPD": "Failed to update SPPD",
       "deleteSPPD": "Failed to delete SPPD",
       "previewSPPD": "Failed to preview SPPD details",
-      "storeEmployee": "Failed to store employee"
+      "storeEmployee": "Failed to store employee",
+      "readFileStream": "Failed to read your import {{type}} file",
+      "loadFileStream": "Failed to load your {{type}} file"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",
