@@ -15,6 +15,7 @@ import { Roles } from './Roles';
 import { MasterWorkUnit } from './MasterWorkUnit';
 import { Expose } from 'class-transformer';
 import { HistoryImportPegawai } from './HistoryImportPegawai';
+import { HistorySyncPegawai } from './HistorySyncPegawai';
 
 @Entity({ name: 'users' })
 export class Users {
@@ -148,6 +149,9 @@ export class Users {
 
   @OneToMany(() => HistoryImportPegawai, (value) => value.user)
   history_import_pegawai!: HistoryImportPegawai[];
+
+  @OneToMany(() => HistorySyncPegawai, (value) => value.user)
+  history_sync_pegawai!: HistorySyncPegawai[];
 
   // Virtual property to concatenate firstName and lastName
   @Expose()

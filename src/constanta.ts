@@ -79,8 +79,11 @@ export const Config = {
 
   // Customer
   CustomerPhone: process.env.CUSTOMER_PHONE ?? '0612234556',
-  CustomerEmail: process.env.CUSTOMER_EMAIL ?? 'cs@support.com'
+  CustomerEmail: process.env.CUSTOMER_EMAIL ?? 'cs@support.com',
 
+  // Simpeg Platform
+  SimpegDosen: process.env.SIMPEG_DOSEN ?? 'https://simpeg.unimed.ac.id/jsonsimpeg/data/dosenDtaBuk.php?api_key=0dcd0d2a145c193a14d12e9226b4edbd798a0325',
+  SimpegPegawai: process.env.SIMPEG_PEGAWAI ?? 'https://simpeg.unimed.ac.id/jsonsimpeg/data/tendikDtaBuk.php?api_key=0a3d643d8c2d238da5d920cb46453ab4e80b7b61',
 
 };
 
@@ -96,8 +99,11 @@ export const QueueList = {
   LogActivity: 'queue_log_activity',
   ImportFile: {
     SppdPegawai: 'queue_import_sppd_pegawai',
-    Default: 'queue_import_default'
-  }
+  },
+  SyncFile: {
+    SppdPegawai: 'queue_sync_sppd_pegawai'
+  },
+  Default: 'queue_default'
 }
 
 export const ExchangeList = {
@@ -105,8 +111,11 @@ export const ExchangeList = {
   LogActivity: 'exchange_log_activity',
   ImportFile: {
     SppdPegawai: 'exchange_import_sppd_pegawai',
-    Default: 'exchange_import_default'
-  }
+  },
+  SyncFile: {
+    SppdPegawai: 'exchange_sync_sppd_pegawai'
+  },
+  Default: 'exchange_default'
 }
 
 

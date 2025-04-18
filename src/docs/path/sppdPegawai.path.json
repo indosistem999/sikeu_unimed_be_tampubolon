@@ -274,6 +274,38 @@
       }
     }
   },
+  "/sppd-pegawai/synchronize-sppd-pegawai": {
+    "post": {
+      "tags": ["SPPD - Pegawai"],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "required": false,
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "$ref": "#/components/schemas/SchemaSynchronizeSimpeg"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultResponseSchema"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
   "/sppd-pegawai/download/template/excel": {
     "get": {
       "tags": ["SPPD - Pegawai"],

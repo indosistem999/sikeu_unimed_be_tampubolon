@@ -146,6 +146,9 @@
       "read": "Read data file success",
       "waitImportIntegration": "Your data has been successfully read. Please check the import history to see the integration results."
     },
+    "syncData": {
+      "sppdPegawai": "Employee data synchronization request will be processed immediately. Please check the status of employee data synchronization results in the synchronization history"
+    },
     "historyImportPegawai": {
       "fetch": "Get history row successfully"
     }
@@ -208,7 +211,8 @@
       "previewSPPD": "Failed to preview SPPD details",
       "storeEmployee": "Failed to store employee",
       "readFileStream": "Failed to read your import {{type}} file",
-      "loadFileStream": "Failed to load your {{type}} file"
+      "loadFileStream": "Failed to load your {{type}} file",
+      "storeHistory": "Failed to store data to history"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",

@@ -1,27 +1,26 @@
 import { IsNull, Like } from "typeorm";
 import AppDataSource from "../../../config/dbconfig";
-import { SPPDPangkat } from "../../../database/models/SPPDPangkat";
 import { I_RequestCustom, I_ResultService } from "../../../interfaces/app.interface";
-import { I_SPPDPangkatRepository } from "../../../interfaces/sppdPangkat.interface";
 import { MessageDialog } from "../../../lang";
 import { I_ResponsePagination } from "../../../interfaces/pagination.interface";
 import { setPagination } from "../../../lib/utils/pagination.util";
 import { I_SppdPegawaiRepository } from "../../../interfaces/sppdPegawai";
 import { SPPDPegawai } from "../../../database/models/SPPDPegawai";
 import { snapLogActivity } from "../../../events/publishers/logUser.publisher";
-import { TagNameImported, TypeLogActivity } from "../../../lib/utils/global.util";
+import { TagNameIntegration, TypeLogActivity } from "../../../lib/utils/global.util";
 import { makeFullUrlFile } from "../../../config/storages";
-import { MasterWorkUnit } from "../../../database/models/MasterWorkUnit";
 import { extractFileExcel } from "../../../config/excel";
 import { excelHeaders } from "./constanta";
-import { executeImported } from "../../../events/publishers/executeImport.publisher";
+import { executeIntegration } from "../../../events/publishers/executeIntegration.publisher";
 import { standartDateISO } from "../../../lib/utils/common.util";
 import { HistoryImportPegawai } from "../../../database/models/HistoryImportPegawai";
+import { HistorySyncPegawai } from "../../../database/models/HistorySyncPegawai";
 
 
 export class SppdPegawaiRepository implements I_SppdPegawaiRepository {
     private repository = AppDataSource.getRepository(SPPDPegawai);
     private repoHistory = AppDataSource.getRepository(HistoryImportPegawai)
+    private repoSync = AppDataSource.getRepository(HistorySyncPegawai)
 
     setupErrorMessage(error: any): I_ResultService {
         return {
@@ -379,15 +378,15 @@ export class SppdPegawaiRepository implements I_SppdPegawaiRepository {
             if (!rowHistory) {
                 return {
                     success: false,
-                    message: MessageDialog.__(''),
+                    message: MessageDialog.__('error.failed.storeHistory'),
                     record: rowHistory
                 }
             }
 
-            await executeImported({
+            await executeIntegration({
                 history_id: rowHistory.history_id,
                 origin: resultExtract.origin
-            }, TagNameImported.SppdPegawai)
+            }, TagNameIntegration.SppdPegawai.Import)
 
             await snapLogActivity(
                 req,
@@ -407,6 +406,60 @@ export class SppdPegawaiRepository implements I_SppdPegawaiRepository {
 
         } catch (err: any) {
             return this.setupErrorMessage(err)
+        }
+    }
+
+    async postSynchronize(req: I_RequestCustom, payload: Record<string, any>): Promise<I_ResultService> {
+        try {
+            const userId: any = req?.user?.user_id
+            const rowHistory = await this.repoSync.save(this.repoSync.create({
+                type_name: payload?.type_name?.toString(),
+                description: JSON.stringify({
+                    total_created: 0,
+                    total_row: 0,
+                    total_updated: 0,
+                    total_failed: 0,
+                    message: 'Waiting on background proccess synchronize'
+                }),
+                execute_status: 'processing',
+                execute_time: payload.today,
+                executor_id: userId,
+                created_at: payload.today,
+                created_by: userId
+            }))
+
+            if (!rowHistory) {
+                return {
+                    success: false,
+                    message: MessageDialog.__('error.failed.storeHistory'),
+                    record: rowHistory
+                }
+            }
+
+            await executeIntegration({
+                history_id: rowHistory.history_id,
+                payload // 
+            }, TagNameIntegration.SppdPegawai.Sync)
+
+            await snapLogActivity(
+                req,
+                userId,
+                TypeLogActivity.SppdEmployee.Label,
+                TypeLogActivity.SppdEmployee.API.SyncData(payload?.type_name),
+                payload?.today,
+                null,
+                payload
+            )
+
+            return {
+                success: true,
+                message: MessageDialog.__('success.syncData.sppdPegawai'),
+                record: payload
+            }
+
+
+        } catch (error: any) {
+            return this.setupErrorMessage(error)
         }
     }
 }
