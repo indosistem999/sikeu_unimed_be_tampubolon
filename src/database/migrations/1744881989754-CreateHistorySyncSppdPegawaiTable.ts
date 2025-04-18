@@ -17,7 +17,7 @@ export class CreateHistorySyncSppdPegawaiTable1744881989754 implements Migration
           updated_by CHAR(36) NULL,
           deleted_at TIMESTAMP NULL,
           deleted_by CHAR(36) NULL,
-          CONSTRAINT fk_history_import_executor_id FOREIGN KEY (executor_id) REFERENCES users(user_id) ON DELETE SET NULL  
+          CONSTRAINT fk_history_sync_executor_id FOREIGN KEY (executor_id) REFERENCES users(user_id) ON DELETE SET NULL  
         );`);
     }
 
