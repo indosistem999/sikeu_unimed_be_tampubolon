@@ -413,7 +413,7 @@ export class SppdPegawaiRepository implements I_SppdPegawaiRepository {
         try {
             const userId: any = req?.user?.user_id
             const rowHistory = await this.repoSync.save(this.repoSync.create({
-                type_name: payload?.type_name?.toString(),
+                type_name: payload?.type_name,
                 description: JSON.stringify({
                     total_created: 0,
                     total_row: 0,

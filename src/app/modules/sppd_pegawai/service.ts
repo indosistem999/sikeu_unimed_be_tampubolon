@@ -235,7 +235,7 @@ class SppdPegawaiService implements I_SppdPegawaiService {
 
     async postSynchronize(req: I_RequestCustom, res: Response): Promise<Response> {
         const payload: Record<string, any> = {
-            type_name: req?.body?.type_name,
+            type_name: req?.body?.type_name?.toLowerCase(),
             user: req?.user,
             today: new Date(standartDateISO())
         }

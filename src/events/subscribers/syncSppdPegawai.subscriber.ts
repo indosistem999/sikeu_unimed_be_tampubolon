@@ -11,22 +11,10 @@ import { standartDateISO } from "../../lib/utils/common.util";
 import { synchronizeSimpeg } from "../../lib/utils/thirdParty.util";
 
 
-const syncDataDosen = async (
-    history_id: string,
-    rowData: Record<string, any>[],
-    option: I_HistoryDescription,
-    errorCapture: Record<string, any>[],
-    successCapture: Record<string, any>[],
-    created_at: Date,
-    created_by: any
-): Promise<void> => {
-    const repoPegawai = AppDataSource.getRepository(SPPDPegawai)
-    const repoHistory = AppDataSource.getRepository(HistorySyncPegawai)
-
-    for (let i = 0; i < rowData.length; i++) {
-        const element = rowData[i];
-
-        const payload: Record<string, any> = {
+const definePayload = (type_name: string, element: Record<string, any>, created_at: Date): Record<string, any> => {
+    let payload: Record<string, any> = {}
+    if (type_name.toLowerCase() == 'dosen') {
+        payload = {
             nip: element.nip,
             nik: null,
             nama: `${element.namaNogelar}, ${element.gelarBlkng}`,
@@ -34,7 +22,7 @@ const syncDataDosen = async (
             email: element.email,
             phone: element.noHp,
             jabatan: element.jabatan_fung,
-            jenis_kepegawaian: 'dosen',
+            jenis_kepegawaian: type_name,
             status_kepegawaian: null,
             status_active: element.statusAktif,
             simpeg_id: element.nidn,
@@ -53,147 +41,206 @@ const syncDataDosen = async (
             }
         }
 
-        const { work_unit, golongan, ...rest } = payload
-
-        //  Update data
-        const resultWorkUnit = await findAndCreateWorkUnit({
-            ...work_unit,
-            created_by,
-            created_at
-        })
-
-
-        if (!resultWorkUnit?.success) {
-            option.total_failed = option.total_failed + 1;
-            errorCapture.push({
-                error_row: element,
-                message: `Failed found, create work unit ${element['kodeUnit']}`
-            })
-            continue;
-        }
-
-        const resultPangkat = await findAndCreatePangkat({
-            ...golongan,
-            created_by,
-            created_at
-        })
-
-
-        if (!resultPangkat?.success) {
-            option.total_failed = option.total_failed + 1;
-            errorCapture.push({
-                error_row: element,
-                message: `Failed found, create pangkat ${element['golongan']}, ${element['pangkat']}`
-            })
-            continue
-        }
-
-        const employee = await repoPegawai.findOne({
-            where: [
-                { nip: Like(`%${rest.nip}%`), deleted_at: IsNull() }
-            ]
-        });
-
-        if (rest?.status_active != null && rest?.status_active == '00') {
-            rest.status_active = 0
+        if (payload?.status_active != null && payload?.status_active == '00') {
+            payload.status_active = 0
         }
         else {
-            rest.status_active == 1
+            payload.status_active == 1
+        }
+    } else {
+        payload = {
+            nip: element.nip,
+            nik: element.noKtp,
+            nama: element.nama,
+            gelar_depan: null,
+            email: element.email,
+            phone: element.noHp,
+            jabatan: element.jabatanJft || element.jabatanJfu || element.jabatanStruktural,
+            jenis_kepegawaian: type_name,
+            status_kepegawaian: null,
+            status_active: element.statusAktif,
+            simpeg_id: null,
+            photo: element.foto_tendik,
+            synchronize_date: created_at,
+            work_unit: {
+                unit_code: element.kodeUnit,
+                unit_type: null,
+                unit_name: element.unit,
+
+            },
+            golongan: {
+                pangkat: element.pangkat,
+                golongan_romawi: element.golongan,
+                golongan_angka: element.kodeGolongan,
+            }
         }
 
-        if (employee) {
-            const resultUpdate = await repoPegawai.update(employee.pegawai_id, {
-                ...employee,
-                ...rest,
-                pangkat_golongan: resultPangkat.data,
-                work_unit: resultWorkUnit.data,
-                updated_by: created_by,
-                updated_at: created_at
-            })
-
-            if (!resultUpdate) {
-                option.total_failed = option.total_failed + 1;
-                errorCapture.push({
-                    error_row: resultUpdate,
-                    message: `Failed to update  sppd pegawai Nik : (${rest.nik}), Nip : (${rest.nip})`
-                })
-                continue;
-            }
-
-            option.total_updated = option.total_updated + 1;
-
-            successCapture.push({
-                row: resultUpdate,
-                message: `Success insert a new sppd pegawai Nik : (${rest.nik}), Nip : (${rest.nip})`
-            })
-
-
+        if (payload?.status_active != null && payload?.status_active == '00') {
+            payload.status_active = 0
         }
         else {
-
-            // Insert new Data
-            const payloadInsert: Record<string, any> = {
-                ...rest,
-                created_by: created_by,
-                created_at: created_at,
-                pangkat_golongan: resultPangkat.data,
-                work_unit: resultWorkUnit.data
-            }
-
-            const resultInsert = await repoPegawai.save(repoPegawai.create(payloadInsert))
-
-            if (!resultInsert) {
-                option.total_failed = option.total_failed + 1;
-                errorCapture.push({
-                    error_row: payloadInsert,
-                    message: `Failed to create a new sppd pegawai Nik : (${rest.nik}), Nip : (${rest.nip})`
-                })
-                continue;
-            }
-
-            option.total_created = option.total_created + 1;
-
-            successCapture.push({
-                row: resultInsert,
-                message: `Success insert a new sppd pegawai Nik : (${rest.nik}), Nip : (${rest.nip})`
-            })
-
-
+            payload.status_active == 1
         }
-
-
     }
 
-    await repoHistory.update(history_id, {
-        description: JSON.stringify(option),
-        type_name: 'dosen',
-        execute_status: 'success',
-        execute_report: JSON.stringify({
-            success: successCapture,
-            errors: errorCapture
-        }),
-        execute_time: created_at,
-        executor_id: created_by,
-        updated_at: new Date(standartDateISO()),
-        created_by: created_by
-    })
+
+    return payload;
+
 }
 
 
 const syncDataPegawai = async (
+    type_name: string,
     history_id: string,
     rowData: Record<string, any>[],
     option: I_HistoryDescription,
     errorCapture: Record<string, any>[],
     successCapture: Record<string, any>[],
+    created_at: Date,
+    created_by: any
 ): Promise<void> => {
     const repoPegawai = AppDataSource.getRepository(SPPDPegawai)
+    const repoHistory = AppDataSource.getRepository(HistorySyncPegawai)
 
-    for (let i = 0; i < rowData.length; i++) {
-        const element = rowData[i];
+    const queryRunner = AppDataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
+    try {
+        for (let i = 0; i < rowData.length; i++) {
+            const element = rowData[i];
+
+            const payload: Record<string, any> = definePayload(type_name, element, created_at);
+
+            const { work_unit, golongan, ...rest } = payload
+
+            //  Update data
+            const resultWorkUnit = await findAndCreateWorkUnit({
+                ...work_unit,
+                created_by,
+                created_at
+            })
+
+
+            if (!resultWorkUnit?.success) {
+                option.total_failed = option.total_failed + 1;
+                errorCapture.push({
+                    error_row: element,
+                    message: `Failed found, create work unit ${work_unit.unit_code}`
+                })
+                continue;
+            }
+
+            const resultPangkat = await findAndCreatePangkat({
+                ...golongan,
+                created_by,
+                created_at
+            })
+
+
+            if (!resultPangkat?.success) {
+                option.total_failed = option.total_failed + 1;
+                errorCapture.push({
+                    error_row: element,
+                    message: `Failed found, create pangkat ${golongan.golongan_romawi}, ${golongan.pangkat}`
+                })
+                continue
+            }
+
+            const employee = await repoPegawai.findOne({
+                where: [
+                    { nip: Like(`%${rest.nip}%`), deleted_at: IsNull() }
+                ]
+            });
+
+
+
+            if (employee) {
+                const resultUpdate = await repoPegawai.update(employee.pegawai_id, {
+                    ...employee,
+                    ...rest,
+                    pangkat_golongan: resultPangkat.data,
+                    work_unit: resultWorkUnit.data,
+                    updated_by: created_by,
+                    updated_at: created_at
+                })
+
+                if (!resultUpdate) {
+                    option.total_failed = option.total_failed + 1;
+                    errorCapture.push({
+                        error_row: resultUpdate,
+                        message: `Failed to update  sppd pegawai Nip : (${rest.nip})`
+                    })
+                    continue;
+                }
+
+                option.total_updated = option.total_updated + 1;
+
+                successCapture.push({
+                    row: resultUpdate,
+                    message: `Success insert a new sppd pegawai Nip : (${rest.nip})`
+                })
+
+
+            }
+            else {
+
+                // Insert new Data
+                const payloadInsert: Record<string, any> = {
+                    ...rest,
+                    created_by: created_by,
+                    created_at: created_at,
+                    pangkat_golongan: resultPangkat.data,
+                    work_unit: resultWorkUnit.data
+                }
+
+                const resultInsert = await repoPegawai.save(repoPegawai.create(payloadInsert))
+
+                if (!resultInsert) {
+                    option.total_failed = option.total_failed + 1;
+                    errorCapture.push({
+                        error_row: payloadInsert,
+                        message: `Failed to create a new sppd pegawai Nip : (${rest.nip})`
+                    })
+                    continue;
+                }
+
+                option.total_created = option.total_created + 1;
+
+                successCapture.push({
+                    row: resultInsert,
+                    message: `Success insert a new sppd pegawai Nip : (${rest.nip})`
+                })
+
+
+            }
+
+
+        }
+
+        await repoHistory.update(history_id, {
+            description: JSON.stringify(option),
+            type_name,
+            execute_status: 'success',
+            execute_report: JSON.stringify({
+                success: successCapture,
+                errors: errorCapture
+            }),
+            execute_time: created_at,
+            executor_id: created_by,
+            updated_at: new Date(standartDateISO()),
+            created_by: created_by
+        })
+
+        await queryRunner.commitTransaction();
+    } catch (error: any) {
+        console.log(`Error sync data dosen`, error)
+        await queryRunner.rollbackTransaction();
+    } finally {
+        await queryRunner.release();
     }
 }
+
 
 const integrateSyncSppdPegawai = async (exchangeName: string, queueName: string, message: string): Promise<void> => {
     console.log({ MESSAGE: JSON.parse(message), EXCHANGE: exchangeName, QUEUE: queueName })
@@ -217,26 +264,16 @@ const integrateSyncSppdPegawai = async (exchangeName: string, queueName: string,
 
         if (rowSync?.success) {
             // Syncronize success
-            if (type_name == 'dosen') {
-                await syncDataDosen(
-                    history_id,
-                    rowSync?.record,
-                    optionProp,
-                    errorCapture,
-                    successCapture,
-                    today,
-                    user?.user_id
-                )
-            }
-            else {
-                await syncDataPegawai(
-                    history_id,
-                    rowSync?.record,
-                    optionProp,
-                    errorCapture,
-                    successCapture,
-                )
-            }
+            await syncDataPegawai(
+                type_name,
+                history_id,
+                rowSync?.record,
+                optionProp,
+                errorCapture,
+                successCapture,
+                today,
+                user?.user_id
+            )
         }
         else {
             errorCapture.push({
@@ -246,6 +283,7 @@ const integrateSyncSppdPegawai = async (exchangeName: string, queueName: string,
             optionProp.message = rowSync?.message
 
             await repoHistory.update(history_id, {
+                type_name,
                 description: JSON.stringify(optionProp),
                 execute_status: 'failed',
                 execute_report: JSON.stringify({
@@ -265,6 +303,7 @@ const integrateSyncSppdPegawai = async (exchangeName: string, queueName: string,
     } catch (error: any) {
         optionProp.message = error.message
         await repoHistory.update(history_id, {
+            type_name,
             description: JSON.stringify(optionProp),
             execute_status: 'failed',
             execute_report: JSON.stringify({

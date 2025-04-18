@@ -109,3 +109,10 @@ export class DTO_ValidationUpdate {
     @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Simpeg Id' }) })
     simpeg_id!: string;
 }
+
+
+export class DTO_ValidationSync {
+
+    @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Type name' }) })
+    type_name!: string;
+}

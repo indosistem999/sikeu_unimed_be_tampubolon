@@ -178,7 +178,8 @@
       "requiredEntry": "{{label}} is required",
       "passwordMatch": "Confirm password must match password",
       "fileUpload": "Files are not uploaded or missing.",
-      "requiredFile": "Field {{value}} is missing or required"
+      "requiredFile": "Field {{value}} is missing or required",
+      "syncPegawai": "Type name does not match"
     },
     "failed": {
       "registerAccount": "Failed to register a new account",

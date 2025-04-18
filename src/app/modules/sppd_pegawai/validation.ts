@@ -6,7 +6,7 @@ import { sendErrorResponse } from "../../../lib/utils/response.util";
 import { allSchema as sc } from "../../../constanta";
 import { MessageDialog } from "../../../lang";
 import AppDataSource from "../../../config/dbconfig";
-import { DTO_ValidationCreate, DTO_ValidationUpdate } from "./dto";
+import { DTO_ValidationCreate, DTO_ValidationSync, DTO_ValidationUpdate } from "./dto";
 import { SPPDPegawai } from "../../../database/models/SPPDPegawai";
 import { IsNull, Like, SelectQueryBuilder } from "typeorm";
 
@@ -119,6 +119,38 @@ class SPPDPegawaiValidation {
             }
             else {
                 next();
+            }
+        }
+    }
+
+
+    async syncValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
+        const dtoInstance = plainToInstance(DTO_ValidationSync, req.body);
+        (dtoInstance as any).req = req;
+
+
+        const errors = await validate(dtoInstance);
+
+        if (errors.length > 0) {
+            sendErrorResponse(
+                res,
+                422,
+                errors
+                    .map((err: any) => {
+                        return Object.values(err.constraints!).join(', ')
+                    })
+                    .flat()
+                    .toString(),
+                errors
+            );
+        }
+        else {
+            const typeName: string = req?.body?.type_name
+            if (['dosen', 'pegawai'].includes(typeName.toLowerCase())) {
+                next()
+            }
+            else {
+                sendErrorResponse(res, 400, MessageDialog.__('error.missing.syncPegawai'), { type_name: typeName })
             }
         }
     }
