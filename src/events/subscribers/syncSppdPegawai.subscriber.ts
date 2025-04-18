@@ -246,42 +246,63 @@ const integrateSyncSppdPegawai = async (exchangeName: string, queueName: string,
     console.log({ MESSAGE: JSON.parse(message), EXCHANGE: exchangeName, QUEUE: queueName })
     const repoHistory = AppDataSource.getRepository(HistorySyncPegawai)
 
-    const { history_id, payload } = JSON.parse(message)?.row_data;
-    const { type_name, user, today } = payload
-    let errorCapture: Record<string, any>[] = [];
-    let successCapture: Record<string, any>[] = [];
+    if (message && message != null && message != '' && JSON.parse(message)?.raw_data) {
+        const { history_id, payload } = JSON.parse(message)?.row_data;
+        const { type_name, user, today } = payload
+        let errorCapture: Record<string, any>[] = [];
+        let successCapture: Record<string, any>[] = [];
 
-    const optionProp: I_HistoryDescription = {
-        total_created: 0,
-        total_row: 0,
-        total_updated: 0,
-        total_failed: 0,
-        message: ''
-    }
-
-    try {
-        const rowSync = await synchronizeSimpeg(type_name)
-
-        if (rowSync?.success) {
-            // Syncronize success
-            await syncDataPegawai(
-                type_name,
-                history_id,
-                rowSync?.record,
-                optionProp,
-                errorCapture,
-                successCapture,
-                today,
-                user?.user_id
-            )
+        const optionProp: I_HistoryDescription = {
+            total_created: 0,
+            total_row: 0,
+            total_updated: 0,
+            total_failed: 0,
+            message: ''
         }
-        else {
-            errorCapture.push({
-                error_row: rowSync?.record
-            })
 
-            optionProp.message = rowSync?.message
+        try {
+            const rowSync = await synchronizeSimpeg(type_name)
 
+            if (rowSync?.success) {
+                // Syncronize success
+                await syncDataPegawai(
+                    type_name,
+                    history_id,
+                    rowSync?.record,
+                    optionProp,
+                    errorCapture,
+                    successCapture,
+                    today,
+                    user?.user_id
+                )
+            }
+            else {
+                errorCapture.push({
+                    error_row: rowSync?.record
+                })
+
+                optionProp.message = rowSync?.message
+
+                await repoHistory.update(history_id, {
+                    type_name,
+                    description: JSON.stringify(optionProp),
+                    execute_status: 'failed',
+                    execute_report: JSON.stringify({
+                        success: successCapture,
+                        errors: errorCapture
+                    }),
+                    execute_time: today,
+                    executor_id: user?.user_id,
+                    updated_at: new Date(standartDateISO()),
+                    updated_by: user?.user_id
+                })
+
+
+                Logger().info(`Rows data are empty`, rowSync?.record)
+            }
+
+        } catch (error: any) {
+            optionProp.message = error.message
             await repoHistory.update(history_id, {
                 type_name,
                 description: JSON.stringify(optionProp),
@@ -293,32 +314,13 @@ const integrateSyncSppdPegawai = async (exchangeName: string, queueName: string,
                 execute_time: today,
                 executor_id: user?.user_id,
                 updated_at: new Date(standartDateISO()),
-                updated_by: user?.user_id
+                created_by: user?.user_id
             })
 
-
-            Logger().info(`Rows data are empty`, rowSync?.record)
+            Logger().error(
+                `Error import integration sppd pegawai from exchange ${exchangeName}, queue '${queueName}'`, error
+            );
         }
-
-    } catch (error: any) {
-        optionProp.message = error.message
-        await repoHistory.update(history_id, {
-            type_name,
-            description: JSON.stringify(optionProp),
-            execute_status: 'failed',
-            execute_report: JSON.stringify({
-                success: successCapture,
-                errors: errorCapture
-            }),
-            execute_time: today,
-            executor_id: user?.user_id,
-            updated_at: new Date(standartDateISO()),
-            created_by: user?.user_id
-        })
-
-        Logger().error(
-            `Error import integration sppd pegawai from exchange ${exchangeName}, queue '${queueName}'`, error
-        );
     }
 }
 
