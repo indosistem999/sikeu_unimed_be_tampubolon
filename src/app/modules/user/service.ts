@@ -87,7 +87,7 @@ class UserService implements I_UserService {
     /** Store Identity */
     async store(req: I_RequestCustom, res: Response): Promise<Response> {
         const today: Date = new Date(standartDateISO())
-        const { salt, password_hash } = await encryptPassword(Config.UserDefaultPassword);
+        const { salt, password_hash } = await encryptPassword(req?.body?.password);
 
         let payload: Record<string, any> = {
             created_at: today,

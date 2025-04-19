@@ -20,6 +20,10 @@
         "type": "string",
         "description": "Enter your phone number"
       },
+      "password": {
+        "type": "string",
+        "description": "Enter your password"
+      },
       "gender": {
         "type": "string",
         "enum": ["male", "female"],

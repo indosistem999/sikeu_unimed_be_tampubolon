@@ -160,7 +160,8 @@
       "notFound": "Data not found",
       "emptyData": "{{item}} is empty",
       "changePassword": "Password was changed. Please login again.",
-      "emptyDataFile": "Empty your row data file"
+      "emptyDataFile": "Empty your row data file",
+      "passwordLength": "Minimum password is {{value}} characters"
     },
     "existed": {
       "slugItem": "{{item}} with {{slug}} already exists",

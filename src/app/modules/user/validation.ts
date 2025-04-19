@@ -44,6 +44,12 @@ class UserValidation {
             );
         }
 
+        if (req?.body?.password?.length < 8) {
+            sendErrorResponse(res, 400, MessageDialog.__('error.default.passwordLength', { value: '8' }), { body: req?.body })
+        }
+
+
+
         if (!req?.file) {
             sendErrorResponse(res, 422, MessageDialog.__('error.missing.fileUpload'), req.file);
         }

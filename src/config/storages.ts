@@ -8,7 +8,7 @@ import { I_MulterInterface, I_ResultService } from '../interfaces/app.interface'
 import { sendErrorResponse } from '../lib/utils/response.util';
 
 
-const BASE_URL = `${cfg.AppHost}:${cfg.AppPort}`
+const BASE_URL = cfg?.AppDomain ? cfg?.AppDomain : `${cfg.AppHost}:${cfg.AppPort}`
 
 const uploadPath = path.join(__dirname, '../../uploads');
 

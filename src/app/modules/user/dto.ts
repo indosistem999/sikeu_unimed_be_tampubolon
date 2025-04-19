@@ -14,6 +14,9 @@ export class DTO_ValidationUserCreate {
 
     @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Phone Number' }) })
     phone_number!: string;
+
+    @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Password' }) })
+    password!: string;
 }
 
 export class DTO_ValidationUserUpdate {
