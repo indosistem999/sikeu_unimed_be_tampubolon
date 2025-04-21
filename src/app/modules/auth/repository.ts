@@ -386,6 +386,7 @@ class AuthRepository implements I_AuthRepository {
           'u.user_id',
           'u.first_name',
           'u.last_name',
+          'u.nip',
           'u.email',
           'u.phone_number',
           'u.gender',
@@ -402,7 +403,7 @@ class AuthRepository implements I_AuthRepository {
         ])
         .where('u.user_id = :id', { id })
         .andWhere('u.deleted_at IS NULL')
-        .getMany();
+        .getOne();
 
       if (!row) {
         return {
@@ -411,6 +412,8 @@ class AuthRepository implements I_AuthRepository {
           record: row,
         };
       }
+
+      row.photo = makeFullUrlFile(row?.photo, 'user')
 
       return {
         success: true,
