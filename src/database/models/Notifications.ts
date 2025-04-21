@@ -10,7 +10,7 @@ export class Notifications {
     @Column({ name: 'sender_id', type: 'uuid', default: null, nullable: true })
     sender_id!: string
 
-    @Column({ name: 'sender_id', type: 'uuid', default: null, nullable: true })
+    @Column({ name: 'receiver_id', type: 'uuid', default: null, nullable: true })
     receiver_id!: string
 
 

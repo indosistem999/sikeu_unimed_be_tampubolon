@@ -70,7 +70,6 @@ export const eventPublishNotification = async (
         }
     }
 
-
-
-    await publishMessage(ExchangeList.Notification, QueueList.Notification, { row_data: rowInserts })
+    const data: Record<string, any> = { row_data: rowInserts }
+    await publishMessage(ExchangeList.Notification, QueueList.Notification, data)
 }

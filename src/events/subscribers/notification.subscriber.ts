@@ -5,19 +5,16 @@ import { ExchangeList, QueueList } from "../../constanta";
 import { Notifications } from "../../database/models/Notifications";
 
 const createNotification = async (exchangeName: string, queueName: string, message: string): Promise<void> => {
-    console.log(`Subscribe message from queue`, message)
 
     if (message && message != null && message != '') {
-        const { raw_data } = JSON.parse(message);
+        const objectData = JSON.parse(message);
 
-        console.log('ROW_DATA: ', raw_data)
-
-        if (raw_data?.length > 0) {
+        if (objectData?.row_data?.length > 0) {
             const queryRunner = AppDataSource.createQueryRunner();
             await queryRunner.connect();
             await queryRunner.startTransaction();
             try {
-                await AppDataSource.getRepository(Notifications).insert(raw_data)
+                await AppDataSource.getRepository(Notifications).insert(objectData?.row_data)
                 await queryRunner.commitTransaction();
             } catch (error: any) {
                 await queryRunner.rollbackTransaction();
