@@ -26,7 +26,8 @@ import SPPDSuratTugasController from '../app/modules/sppd_surat_tugas/controller
 import MasterBudgetYearController from '../app/modules/master_budget_year/controller'
 import UserLogController from '../app/modules/user_log/controller'
 import SppdPegawaiController from '../app/modules/sppd_pegawai/controller'
-import HistoryImportPegawaiController from '../app/modules/history_import_pegawai/controller'
+import HistoryImportPegawaiController from '../app/modules/history_import_pegawai/controller';
+import NotificationController from '../app/modules/notifications/controller'
 
 const tagVersionOne: string = '/api/v1';
 
@@ -104,6 +105,9 @@ class RouteApplication extends MainRoutes {
 
     // History Import SPPD Pegawai
     this.router.use(`${tagVersionOne}/history-import-pegawai`, HistoryImportPegawaiController)
+
+    // Notifications
+    this.router.use(`${tagVersionOne}/notifications`, NotificationController)
   }
 }
 

@@ -16,6 +16,7 @@ import { MasterWorkUnit } from './MasterWorkUnit';
 import { Expose } from 'class-transformer';
 import { HistoryImportPegawai } from './HistoryImportPegawai';
 import { HistorySyncPegawai } from './HistorySyncPegawai';
+import { Notifications } from './Notifications';
 
 @Entity({ name: 'users' })
 export class Users {
@@ -158,4 +159,12 @@ export class Users {
   get full_name(): string {
     return `${this.first_name} ${this.last_name}`;
   }
+
+
+  @OneToMany(() => Notifications, (value) => value.user_sender)
+  senders!: Notifications[];
+
+  @OneToMany(() => Notifications, (value) => value.user_receiver)
+  receivers!: Notifications[];
+
 }

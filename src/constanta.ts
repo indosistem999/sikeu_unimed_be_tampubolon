@@ -191,5 +191,9 @@ export const allSchema = {
   pegawai: {
     tableName: 'sppd_pegawai',
     primaryKey: 'pegawai_id',
+  },
+  notification: {
+    tableName: 'notifications',
+    primaryKey: 'notification_id',
   }
 }

@@ -1,0 +1,18 @@
+{
+  "SchemaSetReadNotification": {
+    "type": "object",
+    "properties": {
+      "list_notification": {
+        "type": "array",
+        "default": [
+          {
+            "notification_id": "6ea2a187-d663-432a-98ff-3ee099d6918e"
+          },
+          {
+            "notification_id": "cce4ea57-098f-405f-879b-69fc07485dc3"
+          }
+        ]
+      }
+    }
+  }
+}

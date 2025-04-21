@@ -1,0 +1,101 @@
+{
+  "/notifications": {
+    "get": {
+      "tags": ["Pengaturan - Notifications"],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "in": "query",
+          "name": "view_more",
+          "required": false,
+          "schema": {
+            "type": "boolean",
+            "enum": [true, false],
+            "default": false
+          },
+          "description": "View More - Jika `true` akan menampilkan data notifikasi 90 hari terakhir. Jika `false` hanya menampilkan 5 teratas"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultResponsePaginationSchema"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/notifications/set-read": {
+    "post": {
+      "tags": ["Pengaturan - Notifications"],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "required": false,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SchemaSetReadNotification"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultResponseSchema"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/sppd-pangkat-golongan/{notification_id}": {
+    "get": {
+      "tags": ["Pengaturan - Notifications"],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "notification_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultResponseSchema"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

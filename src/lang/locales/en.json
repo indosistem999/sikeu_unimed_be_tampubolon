@@ -151,6 +151,10 @@
     },
     "historyImportPegawai": {
       "fetch": "Get history row successfully"
+    },
+    "notifications": {
+      "fetch": "Get notification successfully",
+      "read": "Notification read successfully"
     }
   },
   "error": {

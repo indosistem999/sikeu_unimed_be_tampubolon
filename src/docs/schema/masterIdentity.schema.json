@@ -9,23 +9,23 @@
       "file_logo": {
         "type": "string",
         "format": "base64",
-        "description": "Upload image for module icon"
+        "description": "Upload image for module icon (opsional)"
       },
       "phone": {
         "type": "string",
-        "description": "Enter phone"
+        "description": "Enter phone (opsional)"
       },
       "email": {
         "type": "string",
-        "description": "Enter email"
+        "description": "Enter email (opsional)"
       },
       "address": {
         "type": "string",
-        "description": "Enter address"
+        "description": "Enter address (opsional)"
       },
       "website": {
         "type": "string",
-        "description": "Enter website"
+        "description": "Enter website (opsional)"
       }
     }
   },
@@ -39,23 +39,23 @@
       "file_logo": {
         "type": "string",
         "format": "base64",
-        "description": "Upload image for module icon"
+        "description": "Upload image for module icon (opsional)"
       },
       "phone": {
         "type": "string",
-        "description": "Enter phone"
+        "description": "Enter phone (opsional)"
       },
       "email": {
         "type": "string",
-        "description": "Enter email"
+        "description": "Enter email (opsional)"
       },
       "address": {
         "type": "string",
-        "description": "Enter address"
+        "description": "Enter address (opsional)"
       },
       "website": {
         "type": "string",
-        "description": "Enter website"
+        "description": "Enter website (opsional)"
       }
     }
   }
