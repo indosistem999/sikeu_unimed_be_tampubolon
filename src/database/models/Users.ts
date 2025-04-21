@@ -139,11 +139,11 @@ export class Users {
   job_position!: string;
 
 
-  @Column({ type: 'timestamp', nullable: true, default: null })
-  start_work_at!: Date | null;
+  @Column({ type: 'time', nullable: true, default: null })
+  start_work_at!: string | null;
 
-  @Column({ type: 'timestamp', nullable: true, default: null })
-  end_work_at!: Date | null;
+  @Column({ type: 'time', nullable: true, default: null })
+  end_work_at!: string | null;
 
   @Column({ type: 'tinyint', default: false })
   has_determined!: number;
