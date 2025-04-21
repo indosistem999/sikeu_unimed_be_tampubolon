@@ -52,6 +52,10 @@
         "format": "base64",
         "description": "Upload Foto Profile"
       },
+      "nip": {
+        "type": "string",
+        "description": "Enter your nip (opsional)"
+      },
       "name": {
         "type": "string",
         "description": "Enter your name"
@@ -86,12 +90,16 @@
       "start_work_at": {
         "type": "string",
         "default": "08:30",
-        "description": "Jam Kerja (Mulai)"
+        "description": "Jam Kerja (Mulai) - Opsional"
       },
       "end_work_at": {
         "type": "string",
         "default": "18:30",
-        "description": "Jam Kerja (Berakhir)"
+        "description": "Jam Kerja (Berakhir) - Opsional"
+      },
+      "address": {
+        "type": "string",
+        "description": "Enter your address (opsional)"
       }
     }
   }

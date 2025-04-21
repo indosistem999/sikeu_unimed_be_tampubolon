@@ -59,6 +59,15 @@ class UserService implements I_UserService {
             payload.end_work_at = req?.body?.end_work_at
         }
 
+
+        if (req?.body?.nip) {
+            payload.nip = req?.body?.nip
+        }
+
+        if (req?.body?.address) {
+            payload.address = req?.body?.address
+        }
+
         return payload;
     }
 
