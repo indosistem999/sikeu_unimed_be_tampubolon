@@ -14,8 +14,6 @@ export class CreateSppdSuratTugasTable1744366108885 implements MigrationInterfac
             awal_kegiatan DATE DEFAULT NULL,
             akhir_kegiatan DATE DEFAULT NULL,
             lokasi_kegiatan TEXT DEFAULT NULL,
-
-
             description TEXT DEFAULT NULL,
             font_type TEXT DEFAULT NULL,
             font_style TEXT DEFAULT NULL,
