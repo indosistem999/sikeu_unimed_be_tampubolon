@@ -167,3 +167,49 @@ export const getHostProtocol = (req: Request): string => {
 export const getBaseUrl = (req: Request, path: string): string => {
   return `${getHostProtocol(req)}/api/v1/${path}/files`
 }
+
+export const getLastWeekRange = (): any => {
+  const now = new Date(); // contoh: 2025-04-21
+
+  // Awal hari ini
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  // 7 hari ke belakang
+  const startOfLastWeek = new Date(startOfToday);
+  startOfLastWeek.setDate(startOfToday.getDate() - 7);
+
+  // Untuk batas akhir, bisa pakai hari berikutnya biar rentangnya eksklusif
+  const startOfTomorrow = new Date(startOfToday);
+  startOfTomorrow.setDate(startOfToday.getDate() + 1);
+
+  return {
+    startOfLastWeek, startOfTomorrow
+  }
+}
+
+export const getRangeThisMonth = (): any => {
+  const now: Date = new Date()
+  const startOfMonth: Date = new Date(now.getFullYear(), now.getMonth(), 1); // 2025-04-01
+
+  // Akhir bulan ini (pakai awal bulan depan lalu kurangi 1 detik)
+  const startOfNextMonth: Date = new Date(now.getFullYear(), now.getMonth() + 1, 1); // 2025-05-01
+
+  // batasnya jam 23:59:59, bisa juga:
+  const endOfMonth: Date = new Date(startOfNextMonth.getTime() - 1000);
+  return {
+    startOfMonth,
+    startOfNextMonth,
+    endOfMonth
+  }
+}
+
+export const getRangeToday = (): any => {
+  const now = new Date();
+  // Awal hari ini (00:00:00)
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  // Awal hari besok (untuk batas akhir exclusive)
+  const startOfTomorrow = new Date(startOfToday);
+  startOfTomorrow.setDate(startOfToday.getDate() + 1);
+  return { startOfToday, startOfTomorrow }
+}

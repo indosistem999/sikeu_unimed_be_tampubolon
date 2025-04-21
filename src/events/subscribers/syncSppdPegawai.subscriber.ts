@@ -243,7 +243,6 @@ const syncDataPegawai = async (
 
 
 const integrateSyncSppdPegawai = async (exchangeName: string, queueName: string, message: string): Promise<void> => {
-    console.log({ MESSAGE: JSON.parse(message), EXCHANGE: exchangeName, QUEUE: queueName })
     const repoHistory = AppDataSource.getRepository(HistorySyncPegawai)
 
     if (message && message != null && message != '' && JSON.parse(message)?.raw_data) {

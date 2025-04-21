@@ -5,9 +5,9 @@ import { I_FilterPagination, I_RequestCustom, I_ResultService } from './app.inte
 export interface I_UserRepository {
     fetch(filters: Record<string, any>): Promise<I_ResultService>
     fetchById?(id: string): Promise<I_ResultService>
-    store?(payload: Record<string, any>): Promise<I_ResultService>
-    softDelete?(id: string, payload: Record<string, any>): Promise<I_ResultService>
-    update?(id: string, payload: Record<string, any>): Promise<I_ResultService>
+    store?(req: I_RequestCustom, payload: Record<string, any>): Promise<I_ResultService>
+    softDelete?(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService>
+    update?(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService>
 }
 
 export interface I_UserService {

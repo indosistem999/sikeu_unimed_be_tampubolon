@@ -10,14 +10,43 @@
       "parameters": [
         {
           "in": "query",
-          "name": "view_more",
+          "name": "option",
           "required": false,
           "schema": {
-            "type": "boolean",
-            "enum": [true, false],
-            "default": false
+            "type": "string",
+            "enum": ["ninety_days", "one_month", "one_week", "today", "choose_date"],
+            "default": "ninety_days"
           },
-          "description": "View More - Jika `true` akan menampilkan data notifikasi 90 hari terakhir. Jika `false` hanya menampilkan 5 teratas"
+          "description": "Pilih salah satu opsi [`ninety_days`, `one_month`, `one_week`, `today`, `choose_date`] "
+        },
+        {
+          "in": "query",
+          "name": "start_date",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "default": "2025-04-01"
+          },
+          "description": "Mulai Tanggal. (Format : YYYY-MM-DD) - Opsional"
+        },
+        {
+          "in": "query",
+          "name": "end_date",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "default": "2025-04-29"
+          },
+          "description": "Sampai Dengan Tanggal. (Format : YYYY-MM-DD) - Opsional"
+        },
+        {
+          "in": "query",
+          "name": "limit",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "Limit value is number by default limit is 5. ex : ?limit=100"
         }
       ],
       "responses": {

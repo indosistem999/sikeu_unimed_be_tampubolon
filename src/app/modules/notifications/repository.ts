@@ -1,9 +1,10 @@
-import { Equal, IsNull, Like, MoreThanOrEqual } from "typeorm";
+import { Between, Equal, IsNull, Like, MoreThanOrEqual } from "typeorm";
 import AppDataSource from "../../../config/dbconfig";
 import { I_RequestCustom, I_ResultService } from "../../../interfaces/app.interface";
 import { MessageDialog } from "../../../lang";
 import { Notifications } from "../../../database/models/Notifications";
 import { selectNotifColumns } from "./constanta";
+import { getLastWeekRange, getRangeThisMonth, getRangeToday } from "../../../lib/utils/common.util";
 
 
 export class NotificationRepository {
@@ -25,7 +26,41 @@ export class NotificationRepository {
                 is_read: 0,
             }
 
-            const options: Record<string, any> = {
+            if (filters?.option) {
+                switch (filters?.option?.toLowerCase()) {
+                    case 'ninety_days':
+                        const ninetyDaysAgo = new Date();
+                        ninetyDaysAgo.setDate(new Date().getDate() - 90);
+                        whereQuery.created_at = MoreThanOrEqual(ninetyDaysAgo);
+                        break;
+
+                    case 'one_month':
+                        const rangeMonth = getRangeThisMonth();
+                        whereQuery.created_at = Between(rangeMonth.startOfMonth, rangeMonth.endOfMonth);
+                        break;
+
+                    case 'one_week':
+                        const lastWeek = getLastWeekRange();
+                        whereQuery.created_at = Between(lastWeek.startOfLastWeek, lastWeek.startOfTomorrow)
+                        break;
+
+                    case 'choose_date':
+                        if (filters?.start_date && filters?.end_date) {
+                            whereQuery.created_at = Between(new Date(filters.start_date), new Date(filters.end_date))
+                        } else if (filters?.start_date) {
+                            whereQuery.created_at = MoreThanOrEqual(new Date(filters.start_date))
+                        }
+
+                        break;
+                    default:
+                        const rangeToday = getRangeToday();
+                        whereQuery.created_at = Between(rangeToday.startOfToday, rangeToday.startOfTomorrow)
+                        break;
+                }
+            }
+
+
+            let result = await this.repository.find({
                 where: whereQuery,
                 relations: {
                     user_receiver: true,
@@ -36,19 +71,8 @@ export class NotificationRepository {
                     created_at: 'DESC'
                 },
                 skip: 0,
-                take: 5
-            }
-
-            if (filters?.view_more == true) {
-                const ninetyDaysAgo = new Date();
-                ninetyDaysAgo.setDate(new Date().getDate() - 90);
-                options.where.created_at = MoreThanOrEqual(ninetyDaysAgo);
-                delete options.skip;
-                delete options.take;
-            }
-
-
-            let result = await this.repository.find(options)
+                take: filters?.limit
+            })
 
             return {
                 success: true,

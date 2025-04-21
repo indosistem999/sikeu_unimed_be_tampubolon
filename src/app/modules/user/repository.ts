@@ -1,5 +1,5 @@
 import AppDataSource from '../../../config/dbconfig';
-import { I_ResultService } from '../../../interfaces/app.interface';
+import { I_RequestCustom, I_ResultService } from '../../../interfaces/app.interface';
 import { Brackets, IsNull, Like } from 'typeorm';
 import { MessageDialog } from '../../../lang';
 import { I_UserRepository } from '../../../interfaces/user.interface';
@@ -10,6 +10,9 @@ import { allSchema as sc } from '../../../constanta';
 import { Roles } from '../../../database/models/Roles';
 import { makeFullUrlFile } from '../../../config/storages';
 import { MasterWorkUnit } from '../../../database/models/MasterWorkUnit';
+import { snapLogActivity } from '../../../events/publishers/logUser.publisher';
+import { NotificationOption, NotificationType, TypeLogActivity } from '../../../lib/utils/global.util';
+import { eventPublishNotification } from '../../../events/publishers/notification.publisher';
 
 class UserRepository implements I_UserRepository {
     private repository = AppDataSource.getRepository(Users);
@@ -171,7 +174,7 @@ class UserRepository implements I_UserRepository {
     }
 
     /** Store Data */
-    async store(payload: Record<string, any>): Promise<I_ResultService> {
+    async store(req: I_RequestCustom, payload: Record<string, any>): Promise<I_ResultService> {
         try {
 
             const result = await this.repository.save(this.repository.create(payload));
@@ -183,6 +186,30 @@ class UserRepository implements I_UserRepository {
                     record: result
                 }
             }
+
+            // Log Activity
+            const userId: any = req?.user?.user_id
+            await snapLogActivity(
+                req,
+                userId,
+                TypeLogActivity.Users.Label,
+                TypeLogActivity.Users.API.Create,
+                payload.created_at,
+                null,
+                result
+            )
+
+
+            // Notification
+            await eventPublishNotification(
+                req?.user,
+                NotificationOption.Users.Topic,
+                NotificationOption.Users.Event.Create(`${payload.first_name} ${payload.last_name}`),
+                NotificationType.Information,
+                payload.created_at,
+                result
+            )
+
 
             return {
                 success: true,
@@ -198,7 +225,7 @@ class UserRepository implements I_UserRepository {
 
 
     /** Update Data By Id */
-    async update(id: string, payload: Record<string, any>): Promise<I_ResultService> {
+    async update(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService> {
         try {
             const result = await this.repository.findOne({
                 where: {
@@ -217,8 +244,31 @@ class UserRepository implements I_UserRepository {
 
 
             const { full_name, ...rest } = result;
+            const updateResult = { ...rest, ...payload }
+            await this.repository.save(updateResult);
 
-            await this.repository.save({ ...rest, ...payload });
+
+            const userId: any = req?.user?.user_id
+            await snapLogActivity(
+                req,
+                userId,
+                TypeLogActivity.Users.Label,
+                TypeLogActivity.Users.API.Update,
+                payload.updated_at,
+                rest,
+                updateResult
+            )
+
+
+            // Notification
+            await eventPublishNotification(
+                req?.user,
+                NotificationOption.Users.Topic,
+                NotificationOption.Users.Event.Update(full_name),
+                NotificationType.Information,
+                payload.updated_at,
+                updateResult
+            )
 
 
             return {
@@ -235,7 +285,7 @@ class UserRepository implements I_UserRepository {
     }
 
     /** Soft Delete Data By Id */
-    async softDelete(id: string, payload: Record<string, any>): Promise<I_ResultService> {
+    async softDelete(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService> {
         try {
             const result = await this.repository.findOne({
                 where: {
@@ -253,11 +303,34 @@ class UserRepository implements I_UserRepository {
             }
 
             const { full_name, ...rest } = result
-
-            await this.repository.save({
+            const updateResult = {
                 ...rest,
                 ...payload
-            });
+            }
+            await this.repository.save(updateResult);
+
+
+            const userId: any = req?.user?.user_id
+            await snapLogActivity(
+                req,
+                userId,
+                TypeLogActivity.Users.Label,
+                TypeLogActivity.Users.API.Delete,
+                payload.deleted_at,
+                rest,
+                updateResult
+            )
+
+
+            // Notification
+            await eventPublishNotification(
+                req?.user,
+                NotificationOption.Users.Topic,
+                NotificationOption.Users.Event.Delete(full_name),
+                NotificationType.Information,
+                payload.deleted_at,
+                updateResult
+            )
 
             return {
                 success: true,

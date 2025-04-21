@@ -20,8 +20,21 @@ class NotificationService {
 
     async fetch(req: I_RequestCustom, res: Response): Promise<Response> {
         const filters: Record<string, any> = {
-            view_more: Boolean(req?.query?.view_more ? req?.query?.view_more : false)
+            limit: req?.query?.limit || 5
         }
+
+        if (req?.query?.option) {
+            filters.option = req?.query?.option
+        }
+
+        if (req?.query?.start_date) {
+            filters.start_date = req?.query?.start_date
+        }
+
+        if (req?.query?.end_date) {
+            filters.end_date = req?.query?.end_date
+        }
+
         const result = await this.repository.fetch(req, filters)
         if (!result?.success) {
             return sendErrorResponse(res, 400, result.message, result.record);

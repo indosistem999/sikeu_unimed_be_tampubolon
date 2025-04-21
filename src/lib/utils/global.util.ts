@@ -71,6 +71,14 @@ export const TypeLogActivity = {
             ImportFile: 'Pengguna Melakukan Import Excel Untuk Sinkronisasi Dengan Data Di Sistem',
             SyncData: (name: string) => `Pengguna Melakukan Sinkronisasi SPPD Pegawai Untuk Data ${name}`
         }
+    },
+    Users: {
+        Label: 'Master Pengguna',
+        API: {
+            Create: 'Pengguna Menambahkan Data Pengguna Baru',
+            Update: 'Pengguna Mengubah Data Pengguna',
+            Delete: 'Pengguna Menghapus Data Pengguna',
+        }
     }
 
 
@@ -82,4 +90,37 @@ export const TagNameIntegration = {
         Import: 'sppd-pegawai-import',
         Sync: 'sppd-pegawai-sync'
     }
+}
+
+export const NotificationOption = {
+    Module: {
+        Topic: 'Master Modul',
+        Event: {
+            Create: (value: string) => `Berhasil menambahkan modul baru ${value}`,
+            Update: (value: string) => `Berhasil mengubah modul ${value}`,
+            Delete: (value: string) => `Berahsil menghapus modul ${value}`
+        }
+    },
+    Users: {
+        Topic: 'Master Pengguna',
+        Event: {
+            Create: (value: string) => `Berhasil menambahkan pengguna baru ${value}`,
+            Update: (value: string) => `Berhasil mengubah pengguna ${value}`,
+            Delete: (value: string) => `Berahsil menghapus pengguna ${value}`
+        }
+    },
+    BudgetYear: {
+        Topic: 'Master Tahun Anggaran',
+        Event: {
+            Create: (value: string) => `Berhasil menambahkan tahun anggaran baru ${value}`,
+            Update: (value: string) => `Berhasil mengubah tahun anggaran ${value}`,
+            Delete: (value: string) => `Berahsil menghapus tahun anggaran ${value}`
+        }
+    }
+}
+
+export const NotificationType = {
+    Information: 'info',
+    Error: 'error',
+    Success: 'success'
 }

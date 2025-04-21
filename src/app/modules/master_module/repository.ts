@@ -8,7 +8,8 @@ import { propSchema } from "./constanta";
 import { IsNull } from "typeorm";
 import { makeFullUrlFile, removeFileInStorage } from "../../../config/storages";
 import { snapLogActivity } from "../../../events/publishers/logUser.publisher";
-import { TypeLogActivity } from "../../../lib/utils/global.util";
+import { NotificationOption, NotificationType, TypeLogActivity } from "../../../lib/utils/global.util";
+import { eventPublishNotification } from "../../../events/publishers/notification.publisher";
 
 
 class MasterModuleRepository implements I_MasterModuleRepository {
@@ -26,6 +27,7 @@ class MasterModuleRepository implements I_MasterModuleRepository {
                 }
             }
 
+            // Log Activity
             const userId: any = req?.user?.user_id
             await snapLogActivity(
                 req,
@@ -34,6 +36,16 @@ class MasterModuleRepository implements I_MasterModuleRepository {
                 TypeLogActivity.Module.API.Create,
                 payload.created_at,
                 null,
+                result
+            )
+
+            // Notification
+            await eventPublishNotification(
+                req?.user,
+                NotificationOption.Module.Topic,
+                NotificationOption.Module.Event.Create(payload?.module_name),
+                NotificationType.Information,
+                payload.created_at,
                 result
             )
 
@@ -175,6 +187,8 @@ class MasterModuleRepository implements I_MasterModuleRepository {
                 }
             }
 
+            const moduleName: string = result.module_name
+
             const updateResult = {
                 ...result,
                 ...payload
@@ -183,6 +197,7 @@ class MasterModuleRepository implements I_MasterModuleRepository {
             await this.moduleRepo.save(updateResult);
 
 
+            // Log Activity
             const userId: any = req?.user?.user_id
             await snapLogActivity(
                 req,
@@ -191,6 +206,16 @@ class MasterModuleRepository implements I_MasterModuleRepository {
                 TypeLogActivity.Module.API.Delete,
                 payload.deleted_at,
                 result,
+                updateResult
+            )
+
+            // Notification
+            await eventPublishNotification(
+                req?.user,
+                NotificationOption.Module.Topic,
+                NotificationOption.Module.Event.Delete(moduleName),
+                NotificationType.Information,
+                payload.deleted_at,
                 updateResult
             )
 
@@ -229,6 +254,7 @@ class MasterModuleRepository implements I_MasterModuleRepository {
                 }
             }
 
+            const moduleName: string = result?.module_name;
             const fileName: string = result?.icon
 
             const updateResult = {
@@ -238,6 +264,7 @@ class MasterModuleRepository implements I_MasterModuleRepository {
 
             await this.moduleRepo.save(updateResult);
 
+            // Log Activity
             const userId: any = req?.user?.user_id
             await snapLogActivity(
                 req,
@@ -246,6 +273,16 @@ class MasterModuleRepository implements I_MasterModuleRepository {
                 TypeLogActivity.Module.API.Update,
                 payload.updated_at,
                 result,
+                updateResult
+            )
+
+            // Notification
+            await eventPublishNotification(
+                req?.user,
+                NotificationOption.Module.Topic,
+                NotificationOption.Module.Event.Update(moduleName),
+                NotificationType.Information,
+                payload.updated_at,
                 updateResult
             )
 

@@ -7,8 +7,9 @@ import { I_ResponsePagination } from "../../../interfaces/pagination.interface";
 import { setPagination } from "../../../lib/utils/pagination.util";
 import { I_MasterBudgetYearRepository } from "../../../interfaces/masteBudgetYear.interface";
 import { MasterBudgetYear } from "../../../database/models/MasterBudgetYear";
-import { TypeLogActivity } from "../../../lib/utils/global.util";
+import { NotificationOption, NotificationType, TypeLogActivity } from "../../../lib/utils/global.util";
 import { snapLogActivity } from "../../../events/publishers/logUser.publisher";
+import { eventPublishNotification } from "../../../events/publishers/notification.publisher";
 
 
 
@@ -96,8 +97,8 @@ export class MasterBudgetYearRepository implements I_MasterBudgetYearRepository 
                 }
             }
 
+            // Log Activity
             const userId: any = req?.user?.user_id
-
             await snapLogActivity(
                 req,
                 userId,
@@ -105,6 +106,16 @@ export class MasterBudgetYearRepository implements I_MasterBudgetYearRepository 
                 TypeLogActivity.BudgetYear.API.Create,
                 payload.created_at,
                 null,
+                result
+            )
+
+            // Notification
+            await eventPublishNotification(
+                req?.user,
+                NotificationOption.BudgetYear.Topic,
+                NotificationOption.BudgetYear.Event.Create(payload?.budget_name),
+                NotificationType.Information,
+                payload.created_at,
                 result
             )
 
@@ -136,10 +147,12 @@ export class MasterBudgetYearRepository implements I_MasterBudgetYearRepository 
                 }
             }
 
+            const budgetName: string = result?.budget_name
             const updateResult = { ...result, ...payload }
 
             await this.repository.save(updateResult);
 
+            // Log Activity
             const userId: any = req?.user?.user_id
             await snapLogActivity(
                 req,
@@ -151,6 +164,15 @@ export class MasterBudgetYearRepository implements I_MasterBudgetYearRepository 
                 updateResult
             )
 
+            // Notification
+            await eventPublishNotification(
+                req?.user,
+                NotificationOption.BudgetYear.Topic,
+                NotificationOption.BudgetYear.Event.Update(budgetName),
+                NotificationType.Information,
+                payload.updated_at,
+                updateResult
+            )
 
             return {
                 success: true,
@@ -182,6 +204,8 @@ export class MasterBudgetYearRepository implements I_MasterBudgetYearRepository 
                 }
             }
 
+            const budgetName: string = result?.budget_name
+
             const updateResult = {
                 ...result,
                 ...payload
@@ -189,6 +213,7 @@ export class MasterBudgetYearRepository implements I_MasterBudgetYearRepository 
 
             await this.repository.save(updateResult);
 
+            // Log Activity
             const userId: any = req?.user?.user_id
             await snapLogActivity(
                 req,
@@ -197,6 +222,16 @@ export class MasterBudgetYearRepository implements I_MasterBudgetYearRepository 
                 TypeLogActivity.BudgetYear.API.Delete,
                 payload.deleted_at,
                 result,
+                updateResult
+            )
+
+            // Notification
+            await eventPublishNotification(
+                req?.user,
+                NotificationOption.BudgetYear.Topic,
+                NotificationOption.BudgetYear.Event.Delete(budgetName),
+                NotificationType.Information,
+                payload.deleted_at,
                 updateResult
             )
 
