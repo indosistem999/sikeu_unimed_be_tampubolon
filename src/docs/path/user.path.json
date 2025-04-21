@@ -98,6 +98,80 @@
       }
     }
   },
+  "/user/login-as/{user_id}": {
+    "put": {
+      "tags": ["User"],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "user_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultResponseSchema"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/user/change-password/{user_id}": {
+    "put": {
+      "tags": ["User"],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "user_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": false,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SchemaChangePasswordUser"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultResponseSchema"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
 
   "/user/{user_id}": {
     "get": {

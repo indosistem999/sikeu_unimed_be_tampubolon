@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsOptional } from "class-validator";
+import { IsEmail, IsNotEmpty, IsOptional, MinLength } from "class-validator";
 import { MessageDialog } from "../../../lang";
 
 export class DTO_ValidationUserCreate {
@@ -36,4 +36,15 @@ export class DTO_ValidationUserUpdate {
     @IsOptional()
     @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Phone Number' }) })
     phone_number!: string;
+}
+
+
+export class DTO_ValidationChangePassword {
+    @MinLength(8, { message: MessageDialog.__('error.other.passwordLength', { number: '8' }) })
+    new_password!: string;
+
+    @IsNotEmpty({
+        message: MessageDialog.__('error.missing.requiredEntry', { label: 'Confirm password' }),
+    })
+    confirm_password!: string;
 }

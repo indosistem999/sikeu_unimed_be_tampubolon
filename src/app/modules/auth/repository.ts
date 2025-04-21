@@ -73,6 +73,13 @@ class AuthRepository implements I_AuthRepository {
         };
       }
 
+      await this.userRepo.save({
+        ...user,
+        last_ip: others?.request_ip,
+        last_hostname: others?.request_host,
+        last_login: others?.last_login
+      });
+
       // Create JWT Payload and Generate Token Access
       const jwtPayload: I_AuthUserPayload = {
         user_id: user.user_id,
@@ -523,8 +530,6 @@ class AuthRepository implements I_AuthRepository {
       const user = await this.userRepo.findOne({
         where: { user_id: userId, deleted_at: IsNull() }
       })
-
-      console.log({ users: user, userId, payload })
 
       if (!user) {
         return {

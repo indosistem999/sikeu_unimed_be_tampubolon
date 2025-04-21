@@ -13,7 +13,8 @@ export const eventPublishNotification = async (
     message: string,
     typeNotif: string,
     createdAt: Date,
-    meta: Record<string, any> | null = null
+    meta: Record<string, any> | null = null,
+    receiverList: Record<string, any>[] | [] | any = []
 ): Promise<void> => {
 
     const roleSlug = reqUsers?.role?.role_slug
@@ -22,53 +23,72 @@ export const eventPublishNotification = async (
     const createdBy = reqUsers?.user_id
     let rowInserts: Record<string, any>[] = []
 
-    if (['admin', 'developer'].includes(roleSlug)) {
-        const users = await AppDataSource.getRepository(Users).find({
-            where: { deleted_at: IsNull() }
+    if (receiverList?.length > 0) {
+        rowInserts = receiverList.map((item: any) => {
+            return {
+                sender_id,
+                receiver_id: item,
+                topic,
+                message,
+                is_read: 0,
+                metadata: metaData,
+                type_notif: typeNotif,
+                created_at: createdAt,
+                created_by: createdBy
+            }
         });
-
-        if (users) {
-            rowInserts = users.map((u: any) => {
-                return {
-                    sender_id,
-                    receiver_id: u.user_id,
-                    topic,
-                    message,
-                    is_read: 0,
-                    metadata: metaData,
-                    type_notif: typeNotif,
-                    created_at: createdAt,
-                    created_by: createdBy
-                }
-            });
-        }
     }
     else {
-        const users = await AppDataSource.getRepository(Users).find({
-            where: {
-                deleted_at: IsNull(),
-                role: {
-                    role_slug: In(['admin', 'developer'])
-                }
-            },
-        });
-
-        if (users) {
-            rowInserts = users.map((u: any) => {
-                return {
-                    sender_id,
-                    receiver_id: u.user_id,
-                    topic,
-                    message,
-                    is_read: 0,
-                    metadata: metaData,
-                    type_notif: typeNotif,
-                    created_at: createdAt,
-                    created_by: createdBy
-                }
+        if (['admin', 'developer'].includes(roleSlug)) {
+            const users = await AppDataSource.getRepository(Users).find({
+                where: { deleted_at: IsNull() }
             });
+
+            if (users) {
+                rowInserts = users.map((u: any) => {
+                    return {
+                        sender_id,
+                        receiver_id: u.user_id,
+                        topic,
+                        message,
+                        is_read: 0,
+                        metadata: metaData,
+                        type_notif: typeNotif,
+                        created_at: createdAt,
+                        created_by: createdBy
+                    }
+                });
+            }
+        }
+        else {
+            const users = await AppDataSource.getRepository(Users).find({
+                where: {
+                    deleted_at: IsNull(),
+                    role: {
+                        role_slug: In(['admin', 'developer'])
+                    }
+                },
+            });
+
+            if (users) {
+                rowInserts = users.map((u: any) => {
+                    return {
+                        sender_id,
+                        receiver_id: u.user_id,
+                        topic,
+                        message,
+                        is_read: 0,
+                        metadata: metaData,
+                        type_notif: typeNotif,
+                        created_at: createdAt,
+                        created_by: createdBy
+                    }
+                });
+            }
         }
     }
+
+
 
     const data: Record<string, any> = { row_data: rowInserts }
     await publishMessage(ExchangeList.Notification, QueueList.Notification, data)

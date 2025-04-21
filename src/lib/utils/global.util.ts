@@ -78,6 +78,8 @@ export const TypeLogActivity = {
             Create: 'Pengguna Menambahkan Data Pengguna Baru',
             Update: 'Pengguna Mengubah Data Pengguna',
             Delete: 'Pengguna Menghapus Data Pengguna',
+            ChangePassword: 'Pengguna Mengubah Password Secara Manual',
+            LoginAs: (user: string, account: string) => `Pengguna ${user} login menggunakan akun ${account}`
         }
     },
 
@@ -121,7 +123,9 @@ export const NotificationOption = {
         Event: {
             Create: (value: string) => `Berhasil menambahkan pengguna baru ${value}`,
             Update: (value: string) => `Berhasil mengubah pengguna ${value}`,
-            Delete: (value: string) => `Berahsil menghapus pengguna ${value}`
+            Delete: (value: string) => `Berhasil menghapus pengguna ${value}`,
+            ChangePassword: (value: string) => `Berhasil mengubah password pengguna ${value}`,
+            LoginAs: (user: string) => `Pengguna ${user} login menggunakan akun anda`
         }
     },
     BudgetYear: {

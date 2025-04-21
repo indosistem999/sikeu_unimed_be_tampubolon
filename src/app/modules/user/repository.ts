@@ -13,6 +13,9 @@ import { MasterWorkUnit } from '../../../database/models/MasterWorkUnit';
 import { snapLogActivity } from '../../../events/publishers/logUser.publisher';
 import { NotificationOption, NotificationType, TypeLogActivity } from '../../../lib/utils/global.util';
 import { eventPublishNotification } from '../../../events/publishers/notification.publisher';
+import { I_AuthUserPayload } from '../../../interfaces/auth.interface';
+import { generatedToken } from '../../../lib/utils/jwt.util';
+import { generateSalt, hashedPassword } from '../../../lib/utils/bcrypt.util';
 
 class UserRepository implements I_UserRepository {
     private repository = AppDataSource.getRepository(Users);
@@ -345,81 +348,147 @@ class UserRepository implements I_UserRepository {
     }
 
 
+    async loginAs(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService> {
+        try {
+            const user = await this.repository.findOne({
+                where: {
+                    deleted_at: IsNull(),
+                    user_id: id
+                },
+                relations: ['role']
+            });
 
-    /** Fetch Data */
-    // async fetch(filters: Record<string, any>): Promise<I_ResultService> {
-    //     try {
-    //         const { paging, sorting } = filters
-    //         let whereConditions: Record<string, any> = []
-
-    //         // Where Condition
-    //         if (paging?.search) {
-    //             const searchTerm: string = paging?.search;
-    //             whereConditions = [
-    //                 {
-    //                     role: {
-    //                         role_name: Like(`%${searchTerm}%`)
-    //                     },
-    //                     deleted_at: IsNull()
-    //                 },
-    //                 {
-    //                     work_unit: {
-    //                         unit_name: Like(`%${searchTerm}%`)
-    //                     },
-    //                     deleted_at: IsNull()
-    //                 },
-    //                 {
-    //                     email: Like(`%${searchTerm}%`),
-    //                     deleted_at: IsNull()
-    //                 },
-    //                 {
-    //                     phone_number: Like(`%${searchTerm}%`),
-    //                     deleted_at: IsNull()
-    //                 }
-    //             ]
-    //         }
-
-    //         let [rows, count] = await this.repository.findAndCount({
-    //             where: whereConditions,
-    //             relations: [
-    //                 'role',
-    //                 'work_unit'
-    //             ],
-    //             select: {
-    //                 user_id: true,
-    //                 email: true,
-    //                 first_name: true,
-    //                 last_name: true,
-    //                 role: {
-    //                     role_id: true,
-    //                     role_name: true
-    //                 },
-    //                 work_unit: {
-    //                     unit_id: true,
-    //                     unit_name: true
-    //                 },
-    //                 phone_number: true,
-    //                 gender: true,
-    //                 created_at: true
-    //             },
-    //             skip: paging?.skip,
-    //             take: paging?.limit,
-    //         })
-
-    //         const pagination: I_ResponsePagination = setPagination(rows, count, paging?.page, paging?.limit);
+            if (!user) {
+                return {
+                    success: false,
+                    message: MessageDialog.__('error.default.notFoundItem', { item: 'User' }),
+                    record: payload,
+                };
+            }
 
 
-    //         return {
-    //             success: true,
-    //             message: MessageDialog.__('success.masterMenu.fetch'),
-    //             record: pagination
-    //         }
-    //     } catch (error: any) {
-    //         return this.setupErrorMessage(error)
-    //     }
-    // }
+            await this.repository.save({
+                ...user,
+                last_ip: payload?.request_ip,
+                last_hostname: payload?.request_host,
+                last_login: payload?.last_login
+            })
 
 
+            // Create JWT Payload and Generate Token Access
+            const jwtPayload: I_AuthUserPayload = {
+                user_id: user.user_id,
+                email: user.email,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                role: {
+                    role_id: user.role?.role_id,
+                    role_name: user.role?.role_name,
+                    role_slug: user.role?.role_slug,
+                }
+            };
+
+            const access_token = generatedToken(jwtPayload);
+            const refresh_token = generatedToken(jwtPayload, '7d');
+
+            // Log Acctivity
+            await snapLogActivity(
+                req,
+                req?.user?.user_id as string,
+                TypeLogActivity.Users.Label,
+                TypeLogActivity.Users.API.LoginAs(
+                    `${req?.user?.first_name} ${req?.user?.last_name}`,
+                    `${user?.first_name} ${user?.last_name}`
+                ),
+                payload?.last_login,
+                null,
+                { access_token, refresh_token, user },
+            )
+
+            // Notification
+            await eventPublishNotification(
+                req?.user,
+                NotificationOption.Users.Topic,
+                NotificationOption.Users.Event.LoginAs(
+                    `${req?.user?.first_name} ${req?.user?.last_name}`
+                ),
+                NotificationType.Information,
+                payload?.last_login,
+                { access_token, refresh_token, user },
+                [user?.user_id]
+            )
+
+            return {
+                success: true,
+                message: MessageDialog.__('success.auth.login'),
+                record: {
+                    access_token,
+                    refresh_token,
+                },
+            };
+
+        } catch (error: any) {
+            return this.setupErrorMessage(error)
+        }
+    }
+
+    async changePassword(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService> {
+        try {
+            const user = await this.repository.findOne({
+                where: { user_id: id, deleted_at: IsNull() }
+            })
+
+            if (!user) {
+                return {
+                    success: false,
+                    message: MessageDialog.__('error.default.notFoundItem', { item: 'User' }),
+                    record: user,
+                };
+            }
+
+            const userName: string = `${user.first_name} ${user.last_name}`
+
+            const salt = await generateSalt();
+            user.password = await hashedPassword(payload.new_password, salt);
+            user.salt = salt;
+            user.updated_at = payload?.updated_at;
+            user.password_change_at = payload?.updated_at;
+            user.updated_by = user.user_id;
+
+            await this.repository.save(user);
+
+            // Log Activity
+            await snapLogActivity(
+                req,
+                user.user_id,
+                TypeLogActivity.Users.Label,
+                TypeLogActivity.Users.API.ChangePassword,
+                payload.updated_at
+            )
+
+            // Notification
+            await eventPublishNotification(
+                req?.user,
+                NotificationOption.Users.Topic,
+                NotificationOption.Users.Event.ChangePassword(userName),
+                NotificationType.Information,
+                payload.updated_at,
+                user,
+                [id]
+            )
+
+            return {
+                success: true,
+                message: MessageDialog.__('success.auth.changePassword'),
+                record: {
+                    user_id: user.user_id,
+                },
+            };
+
+        } catch (error: any) {
+            return this.setupErrorMessage(error)
+        }
+    }
 
 
 }

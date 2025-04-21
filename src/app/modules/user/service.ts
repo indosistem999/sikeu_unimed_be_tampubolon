@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { sendErrorResponse, sendSuccessResponse } from '../../../lib/utils/response.util';
 import { I_RequestCustom } from '../../../interfaces/app.interface';
 import { I_UserService } from '../../../interfaces/user.interface';
-import { defineRequestOrderORM, defineRequestPaginateArgs } from '../../../lib/utils/request.util';
+import { defineRequestOrderORM, defineRequestPaginateArgs, getRequestProperties } from '../../../lib/utils/request.util';
 import UserRepository from './repository';
 import { sortDefault, sortRequest } from './constanta';
 import { splitFullName, standartDateISO } from '../../../lib/utils/common.util';
@@ -167,6 +167,44 @@ class UserService implements I_UserService {
         }
 
         const result = await this.repository.softDelete(req, id, payload)
+        if (!result?.success) {
+            return sendErrorResponse(res, 400, result.message, result.record);
+        }
+
+        return sendSuccessResponse(res, 200, result.message, result.record);
+    }
+
+
+    async loginAs(req: I_RequestCustom, res: Response): Promise<Response> {
+        const today: Date = new Date(standartDateISO())
+        const id: string = req?.params?.[sc.user.primaryKey];
+
+        let payload: Record<string, any> = {
+            ...getRequestProperties(req),
+            last_login: today
+        }
+
+
+        const result = await this.repository.loginAs(req, id, payload)
+        if (!result?.success) {
+            return sendErrorResponse(res, 400, result.message, result.record);
+        }
+
+        return sendSuccessResponse(res, 200, result.message, result.record);
+    }
+
+    async changePassword(req: I_RequestCustom, res: Response): Promise<Response> {
+        const today: Date = new Date(standartDateISO())
+        const id: string = req?.params?.[sc.user.primaryKey];
+
+        let payload: Record<string, any> = {
+            new_password: req?.body?.new_password,
+            confirm_password: req?.body?.confirm_password,
+            updated_at: today
+        }
+
+
+        const result = await this.repository.changePassword(req, id, payload)
         if (!result?.success) {
             return sendErrorResponse(res, 400, result.message, result.record);
         }

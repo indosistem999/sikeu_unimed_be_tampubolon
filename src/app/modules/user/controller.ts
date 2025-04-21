@@ -2,10 +2,9 @@ import { Request, Response } from 'express';
 import MainRoutes from '../../../config/mainRoute';
 import { authMiddleware } from '../../middlewares/auth.middleware';
 import { I_RequestCustom } from '../../../interfaces/app.interface';
-import Services from './service'
+import Services from './service';
 import { showFile, uploadImageToStorage } from '../../../config/storages';
 import ReqValidation from './validation';
-
 
 class UserController extends MainRoutes {
     public routes(): void {
@@ -35,6 +34,25 @@ class UserController extends MainRoutes {
             await Services.fetchById(req, res);
         });
 
+        this.router.put(
+            '/login-as/:user_id',
+            authMiddleware,
+            ReqValidation.paramValidation,
+            async (req: I_RequestCustom, res: Response) => {
+                await Services.loginAs(req, res);
+            }
+        );
+
+        this.router.put(
+            '/change-password/:user_id',
+            authMiddleware,
+            ReqValidation.paramValidation,
+            ReqValidation.changePasswordValidation,
+            async (req: I_RequestCustom, res: Response) => {
+                await Services.changePassword(req, res);
+            }
+        );
+
         /** [PUT] - Update Data */
         this.router.put(
             '/:user_id',
@@ -48,9 +66,14 @@ class UserController extends MainRoutes {
         );
 
         /** [DELETE] - Delete Data */
-        this.router.delete('/:user_id', authMiddleware, ReqValidation.paramValidation, async (req: Request, res: Response) => {
-            await Services.softDelete(req, res);
-        });
+        this.router.delete(
+            '/:user_id',
+            authMiddleware,
+            ReqValidation.paramValidation,
+            async (req: Request, res: Response) => {
+                await Services.softDelete(req, res);
+            }
+        );
     }
 }
 

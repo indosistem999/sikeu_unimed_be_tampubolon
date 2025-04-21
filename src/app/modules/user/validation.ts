@@ -4,7 +4,7 @@ import { plainToClass, plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { sendErrorResponse } from "../../../lib/utils/response.util";
 import { MessageDialog } from "../../../lang";
-import { DTO_ValidationUserCreate, DTO_ValidationUserUpdate } from "./dto";
+import { DTO_ValidationChangePassword, DTO_ValidationUserCreate, DTO_ValidationUserUpdate } from "./dto";
 import { allSchema as sc } from '../../../constanta'
 import AppDataSource from "../../../config/dbconfig";
 import { Users } from "../../../database/models/Users";
@@ -115,6 +115,42 @@ class UserValidation {
 
 
         }
+
+    }
+
+    async changePasswordValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {
+        const dtoInstance = plainToInstance(DTO_ValidationChangePassword, req.body);
+        (dtoInstance as any).req = req;
+
+        const errors = await validate(dtoInstance);
+
+        if (errors.length > 0) {
+            sendErrorResponse(
+                res,
+                422,
+                errors
+                    .map((err) => {
+                        return Object.values(err.constraints!).join(', ')
+                    })
+                    .flat()
+                    .toString(),
+                errors
+            );
+        }
+        else {
+            if (req?.body?.confirm_password != req?.body?.new_password) {
+                sendErrorResponse(
+                    res,
+                    400,
+                    MessageDialog.__('error.missing.passwordMatch'),
+                    req.body
+                )
+            }
+            else {
+                next()
+            }
+        }
+
 
     }
 }

@@ -102,5 +102,18 @@
         "description": "Enter your address (opsional)"
       }
     }
+  },
+  "SchemaChangePasswordUser": {
+    "type": "object",
+    "properties": {
+      "new_password": {
+        "type": "string",
+        "description": "Enter your new password"
+      },
+      "confirm_password": {
+        "type": "string",
+        "description": "Enter your confirm password"
+      }
+    }
   }
 }

@@ -8,7 +8,7 @@ export class DTO_ValidationLogin {
   email!: string;
 
   @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Password' }) })
-  @MinLength(6, { message: MessageDialog.__('error.other.passwordLength', { number: '6' }) })
+  @MinLength(8, { message: MessageDialog.__('error.other.passwordLength', { number: '8' }) })
   password!: string;
 
   @IsNotEmpty({ message: MessageDialog.__('error.missing.requiredEntry', { label: 'Security Answer' }) })
@@ -26,7 +26,7 @@ export class DTO_ValidationRegister {
   @IsEmail({}, { message: MessageDialog.__('error.invalid.emailFormatted') })
   email!: string;
 
-  @MinLength(6, { message: MessageDialog.__('error.other.passwordLength', { number: '6' }) })
+  @MinLength(8, { message: MessageDialog.__('error.other.passwordLength', { number: '8' }) })
   password!: string;
 
   @IsNotEmpty({
