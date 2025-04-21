@@ -82,6 +82,16 @@
       "role_id": {
         "type": "string",
         "description": "Enter role_id (uuid). Example: role_id=de189b42-7b63-4e52-9f3c-491e431d046e"
+      },
+      "start_work_at": {
+        "type": "string",
+        "default": "08:30",
+        "description": "Jam Kerja (Mulai)"
+      },
+      "end_work_at": {
+        "type": "string",
+        "default": "18:30",
+        "description": "Jam Kerja (Berakhir)"
       }
     }
   }

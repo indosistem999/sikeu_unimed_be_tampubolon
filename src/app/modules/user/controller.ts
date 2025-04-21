@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import MainRoutes from '../../../config/mainRoute';
-import { adminAuthMiddleware } from '../../middlewares/auth.middleware';
+import { authMiddleware } from '../../middlewares/auth.middleware';
 import { I_RequestCustom } from '../../../interfaces/app.interface';
 import Services from './service'
 import { showFile, uploadImageToStorage } from '../../../config/storages';
@@ -10,14 +10,14 @@ import ReqValidation from './validation';
 class UserController extends MainRoutes {
     public routes(): void {
         /** [GET] - Fetch Data */
-        this.router.get('/', adminAuthMiddleware, async (req: Request, res: Response) => {
+        this.router.get('/', authMiddleware, async (req: Request, res: Response) => {
             await Services.fetch(req, res);
         });
 
         /** [POST] - Create Data */
         this.router.post(
             '/',
-            adminAuthMiddleware,
+            authMiddleware,
             uploadImageToStorage.single('file_image'),
             ReqValidation.createValidation,
             async (req: I_RequestCustom, res: Response) => {
@@ -31,14 +31,14 @@ class UserController extends MainRoutes {
         });
 
         /** [GET] - Find By Id  */
-        this.router.get('/:user_id', adminAuthMiddleware, ReqValidation.paramValidation, async (req: Request, res: Response) => {
+        this.router.get('/:user_id', authMiddleware, ReqValidation.paramValidation, async (req: Request, res: Response) => {
             await Services.fetchById(req, res);
         });
 
         /** [PUT] - Update Data */
         this.router.put(
             '/:user_id',
-            adminAuthMiddleware,
+            authMiddleware,
             uploadImageToStorage.single('file_image'),
             ReqValidation.paramValidation,
             ReqValidation.updateValidation,
@@ -48,7 +48,7 @@ class UserController extends MainRoutes {
         );
 
         /** [DELETE] - Delete Data */
-        this.router.delete('/:user_id', adminAuthMiddleware, ReqValidation.paramValidation, async (req: Request, res: Response) => {
+        this.router.delete('/:user_id', authMiddleware, ReqValidation.paramValidation, async (req: Request, res: Response) => {
             await Services.softDelete(req, res);
         });
     }

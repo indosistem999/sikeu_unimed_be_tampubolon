@@ -103,7 +103,8 @@ export const QueueList = {
   SyncFile: {
     SppdPegawai: 'queue_sync_sppd_pegawai'
   },
-  Default: 'queue_default'
+  Default: 'queue_default',
+  Notification: 'queue_notification'
 }
 
 export const ExchangeList = {
@@ -115,7 +116,8 @@ export const ExchangeList = {
   SyncFile: {
     SppdPegawai: 'exchange_sync_sppd_pegawai'
   },
-  Default: 'exchange_default'
+  Default: 'exchange_default',
+  Notification: 'exchange_notification'
 }
 
 

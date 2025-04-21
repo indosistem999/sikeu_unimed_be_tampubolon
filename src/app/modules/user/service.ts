@@ -51,8 +51,13 @@ class UserService implements I_UserService {
             payload.unit_id = req?.body?.unit_id
         }
 
+        if (req?.body?.start_work_at) {
+            payload.start_work_at = req?.body?.start_work_at
+        }
 
-
+        if (req?.body?.end_work_at) {
+            payload.end_work_at = req?.body?.end_work_at
+        }
 
         return payload;
     }
