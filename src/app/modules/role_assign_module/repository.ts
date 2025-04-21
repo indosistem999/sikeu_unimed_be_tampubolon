@@ -1,6 +1,6 @@
 import { IsNull } from 'typeorm';
 import { Roles } from '../../../database/models/Roles';
-import { I_ResultService } from '../../../interfaces/app.interface';
+import { I_RequestCustom, I_ResultService } from '../../../interfaces/app.interface';
 
 
 import { MessageDialog } from '../../../lang';
@@ -8,6 +8,9 @@ import AppDataSource from '../../../config/dbconfig';
 import { I_RoleAssignModuleRepository } from '../../../interfaces/roleAssignModule.interface';
 import { MasterModule } from '../../../database/models/MasterModule';
 import { RoleModuleAssociation } from '../../../database/models/RoleModuleAssociation';
+import { snapLogActivity } from '../../../events/publishers/logUser.publisher';
+import { NotificationOption, NotificationType, TypeLogActivity } from '../../../lib/utils/global.util';
+import { eventPublishNotification } from '../../../events/publishers/notification.publisher';
 
 class RoleAssignModuleRepository implements I_RoleAssignModuleRepository {
   private roleRepo = AppDataSource.getRepository(Roles);
@@ -69,7 +72,7 @@ class RoleAssignModuleRepository implements I_RoleAssignModuleRepository {
   }
 
   /** Store Data */
-  async store(roleId: string, payload: Record<string, any>): Promise<I_ResultService> {
+  async store(req: I_RequestCustom, roleId: string, payload: Record<string, any>): Promise<I_ResultService> {
     try {
       const { module_id, ...rest } = payload
       const rowRole = await this.roleRepo.findOne({
@@ -144,6 +147,35 @@ class RoleAssignModuleRepository implements I_RoleAssignModuleRepository {
           record: result
         }
       }
+
+      // Log Activity
+      const userId: any = req?.user?.user_id
+      await snapLogActivity(
+        req,
+        userId,
+        TypeLogActivity.RoleModule.Label,
+        TypeLogActivity.RoleModule.API.Create(
+          rowModule.module_name,
+          rowRole.role_name
+        ),
+        payload.created_at,
+        null,
+        result
+      )
+
+      // Notification
+      await eventPublishNotification(
+        req?.user,
+        NotificationOption.RoleModule.Topic,
+        NotificationOption.RoleModule.Event.Create(
+          rowModule.module_name,
+          rowRole.role_name
+        ),
+        NotificationType.Information,
+        payload.created_at,
+        result
+      )
+
       return {
         success: true,
         message: MessageDialog.__('success.roleModule.assigned'),
@@ -162,13 +194,17 @@ class RoleAssignModuleRepository implements I_RoleAssignModuleRepository {
   }
 
   /** Delete Data */
-  async delete(roleId: string, moduleId: string, payload: Record<string, any>): Promise<I_ResultService> {
+  async delete(req: I_RequestCustom, roleId: string, moduleId: string, payload: Record<string, any>): Promise<I_ResultService> {
     try {
       const result = await this.assocRepo.findOne({
         where: {
           deleted_at: IsNull(),
           role: { role_id: roleId },
           master_module: { module_id: moduleId }
+        },
+        relations: {
+          role: true,
+          master_module: true
         }
       })
 
@@ -180,10 +216,44 @@ class RoleAssignModuleRepository implements I_RoleAssignModuleRepository {
         }
       }
 
-      await this.assocRepo.save({
+      const roleName: string = result?.role?.role_name;
+      const moduleName: string = result?.master_module?.module_name
+      const updateResult = {
         ...result,
         ...payload
-      })
+      }
+
+      await this.assocRepo.save(updateResult)
+
+
+      // Log Activity
+      const userId: any = req?.user?.user_id
+      await snapLogActivity(
+        req,
+        userId,
+        TypeLogActivity.RoleModule.Label,
+        TypeLogActivity.RoleModule.API.Delete(
+          roleName,
+          moduleName
+        ),
+        payload.deleted_at,
+        result,
+        updateResult
+      )
+
+      // Notification
+      await eventPublishNotification(
+        req?.user,
+        NotificationOption.RoleModule.Topic,
+        NotificationOption.RoleModule.Event.Delete(
+          roleName,
+          moduleName
+        ),
+        NotificationType.Information,
+        payload.deleted_at,
+        updateResult
+      )
+
 
       return {
         success: true,

@@ -63,7 +63,7 @@ class RoleService implements I_RoleService {
       ...this.bodyValidation(req),
     }
 
-    const result = await this.repository.store(payload);
+    const result = await this.repository.store(req, payload);
 
     if (!result?.success) {
       return sendErrorResponse(res, 400, result.message, result.record);
@@ -82,7 +82,7 @@ class RoleService implements I_RoleService {
       ...this.bodyValidation(req)
     }
 
-    const result = await this.repository.update(id, payload)
+    const result = await this.repository.update(req, id, payload)
     if (!result?.success) {
       return sendErrorResponse(res, 400, result.message, result.record);
     }
@@ -100,7 +100,7 @@ class RoleService implements I_RoleService {
       deleted_by: req?.user?.user_id,
     }
 
-    const result = await this.repository.softDelete(id, payload)
+    const result = await this.repository.softDelete(req, id, payload)
     if (!result?.success) {
       return sendErrorResponse(res, 400, result.message, result.record);
     }

@@ -7,7 +7,8 @@ import { setPagination } from "../../../lib/utils/pagination.util";
 import { I_MasterJobCategoryRepository } from "../../../interfaces/masterJobCategory.interface";
 import { MasterJobCategory } from "../../../database/models/MasterJobCategory";
 import { snapLogActivity } from "../../../events/publishers/logUser.publisher";
-import { TypeLogActivity } from "../../../lib/utils/global.util";
+import { NotificationOption, NotificationType, TypeLogActivity } from "../../../lib/utils/global.util";
+import { eventPublishNotification } from "../../../events/publishers/notification.publisher";
 
 
 export class MasterJobCategoryRepository implements I_MasterJobCategoryRepository {
@@ -95,6 +96,7 @@ export class MasterJobCategoryRepository implements I_MasterJobCategoryRepositor
                 }
             }
 
+            // Log Activity
             const userId: any = req?.user?.user_id
             await snapLogActivity(
                 req,
@@ -103,6 +105,16 @@ export class MasterJobCategoryRepository implements I_MasterJobCategoryRepositor
                 TypeLogActivity.JobCategory.API.Create,
                 payload.created_at,
                 null,
+                result
+            )
+
+            // Notification
+            await eventPublishNotification(
+                req?.user,
+                NotificationOption.JobCategory.Topic,
+                NotificationOption.JobCategory.Event.Create(result.name),
+                NotificationType.Information,
+                payload.created_at,
                 result
             )
 
@@ -133,11 +145,13 @@ export class MasterJobCategoryRepository implements I_MasterJobCategoryRepositor
                 }
             }
 
+            const jobName: string = result.name
+
             const updateResult = { ...result, ...payload }
 
             await this.repository.save(updateResult);
 
-
+            // Log Activity
             const userId: any = req?.user?.user_id
             await snapLogActivity(
                 req,
@@ -146,6 +160,16 @@ export class MasterJobCategoryRepository implements I_MasterJobCategoryRepositor
                 TypeLogActivity.JobCategory.API.Update,
                 payload.updated_at,
                 result,
+                updateResult
+            )
+
+            // Notification
+            await eventPublishNotification(
+                req?.user,
+                NotificationOption.JobCategory.Topic,
+                NotificationOption.JobCategory.Event.Update(jobName),
+                NotificationType.Information,
+                payload.updated_at,
                 updateResult
             )
 
@@ -179,6 +203,8 @@ export class MasterJobCategoryRepository implements I_MasterJobCategoryRepositor
                 }
             }
 
+            const jobName: string = result.name;
+
             const updateResult = {
                 ...result,
                 ...payload
@@ -186,6 +212,7 @@ export class MasterJobCategoryRepository implements I_MasterJobCategoryRepositor
 
             await this.repository.save(updateResult);
 
+            // Log Activity
             const userId: any = req?.user?.user_id
             await snapLogActivity(
                 req,
@@ -197,11 +224,22 @@ export class MasterJobCategoryRepository implements I_MasterJobCategoryRepositor
                 updateResult
             )
 
+
+            // Notification
+            await eventPublishNotification(
+                req?.user,
+                NotificationOption.JobCategory.Topic,
+                NotificationOption.JobCategory.Event.Delete(jobName),
+                NotificationType.Information,
+                payload.deleted_at,
+                updateResult
+            )
+
             return {
                 success: true,
                 message: MessageDialog.__('success.jobCategory.softDelete'),
                 record: {
-                    transportation_type_id: id
+                    job_category_id: id
                 }
             }
         } catch (error: any) {

@@ -4,9 +4,9 @@ import { Request, Response } from 'express'
 export interface I_RoleRepository {
     fetch(filters: Record<string, any>): Promise<I_ResultService>
     fetchById?(id: string): Promise<I_ResultService>
-    store?(payload: Record<string, any>): Promise<I_ResultService>
-    softDelete?(id: string, payload: Record<string, any>): Promise<I_ResultService>
-    update?(id: string, payload: Record<string, any>): Promise<I_ResultService>
+    store?(req: I_RequestCustom, payload: Record<string, any>): Promise<I_ResultService>
+    softDelete?(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService>
+    update?(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService>
 }
 export interface I_RoleService {
     fetch?(req: Request, res: Response): Promise<Response>

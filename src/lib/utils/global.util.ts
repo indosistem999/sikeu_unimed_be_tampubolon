@@ -79,9 +79,24 @@ export const TypeLogActivity = {
             Update: 'Pengguna Mengubah Data Pengguna',
             Delete: 'Pengguna Menghapus Data Pengguna',
         }
-    }
+    },
 
+    Role: {
+        Label: 'Master Role',
+        API: {
+            Create: 'Pengguna Menambahkan Data Role Yang Baru',
+            Update: 'Pengguna Mengubah Data Role',
+            Delete: 'Pengguna Menghapus Data Role',
+        }
+    },
 
+    RoleModule: {
+        Label: 'Akses Modul',
+        API: {
+            Create: (module: string, role: string) => `Pengguna Menugaskan Akses Modul ${module} Ke Role ${role}`,
+            Delete: (module: string, role: string) => `Pengguna Menghapus Akses Modul ${module} Untuk Role ${role}`
+        }
+    },
 
 }
 
@@ -116,7 +131,33 @@ export const NotificationOption = {
             Update: (value: string) => `Berhasil mengubah tahun anggaran ${value}`,
             Delete: (value: string) => `Berahsil menghapus tahun anggaran ${value}`
         }
-    }
+    },
+
+    Role: {
+        Topic: 'Master Role',
+        Event: {
+            Create: (value: string) => `Berhasil menambahkan role ${value}`,
+            Update: (value: string) => `Berhasil mengubah role ${value}`,
+            Delete: (value: string) => `Berahsil menghapus role ${value}`
+        }
+    },
+
+    RoleModule: {
+        Topic: 'Hak Akses Modul',
+        Event: {
+            Create: (module: string, role: string) => `Berhasil Menugaskan Akses Modul ${module} Ke Role ${role}`,
+            Delete: (module: string, role: string) => `Berhasil Menghapus Akses Modul ${module} Untuk Role ${role}`
+        }
+    },
+
+    JobCategory: {
+        Topic: 'Master Kategori Jabatan',
+        Event: {
+            Create: (value: string) => `Berhasil menambahkan kategori jabatan baru ${value}`,
+            Update: (value: string) => `Berhasil mengubah kategori jabatan ${value}`,
+            Delete: (value: string) => `Berahsil menghapus kategori jabatan ${value}`
+        }
+    },
 }
 
 export const NotificationType = {

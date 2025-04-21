@@ -1,12 +1,15 @@
 import { IsNull, Like } from 'typeorm';
 import { Roles } from '../../../database/models/Roles';
-import { I_ResultService } from '../../../interfaces/app.interface';
+import { I_RequestCustom, I_ResultService } from '../../../interfaces/app.interface';
 import { I_RoleRepository } from '../../../interfaces/role.interface';
 
 import { MessageDialog } from '../../../lang';
 import { I_ResponsePagination } from '../../../interfaces/pagination.interface';
 import { setPagination } from '../../../lib/utils/pagination.util';
 import AppDataSource from '../../../config/dbconfig';
+import { snapLogActivity } from '../../../events/publishers/logUser.publisher';
+import { NotificationOption, NotificationType, TypeLogActivity } from '../../../lib/utils/global.util';
+import { eventPublishNotification } from '../../../events/publishers/notification.publisher';
 
 class RoleRepository implements I_RoleRepository {
     private repository = AppDataSource.getRepository(Roles);
@@ -124,7 +127,7 @@ class RoleRepository implements I_RoleRepository {
     }
 
     /** Store Data */
-    async store(payload: Record<string, any>): Promise<I_ResultService> {
+    async store(req: I_RequestCustom, payload: Record<string, any>): Promise<I_ResultService> {
         try {
 
             const result = await this.repository.save(this.repository.create(payload));
@@ -136,6 +139,29 @@ class RoleRepository implements I_RoleRepository {
                     record: result
                 }
             }
+
+            // Log Activity
+            const userId: any = req?.user?.user_id
+            await snapLogActivity(
+                req,
+                userId,
+                TypeLogActivity.Role.Label,
+                TypeLogActivity.Role.API.Create,
+                payload.created_at,
+                null,
+                result
+            )
+
+
+            // Notification
+            await eventPublishNotification(
+                req?.user,
+                NotificationOption.Role.Topic,
+                NotificationOption.Role.Event.Create(payload?.role_name),
+                NotificationType.Information,
+                payload.created_at,
+                result
+            )
 
             return {
                 success: true,
@@ -150,7 +176,7 @@ class RoleRepository implements I_RoleRepository {
     }
 
     /** Update Data By Id */
-    async update(id: string, payload: Record<string, any>): Promise<I_ResultService> {
+    async update(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService> {
         try {
             const result = await this.repository.findOne({
                 where: {
@@ -167,7 +193,35 @@ class RoleRepository implements I_RoleRepository {
                 }
             }
 
-            await this.repository.save({ ...result, ...payload });
+            const roleName: string = result?.role_name
+
+            const updateResult = { ...result, ...payload }
+            await this.repository.save(updateResult);
+
+
+            // Log Activity
+            const userId: any = req?.user?.user_id
+            await snapLogActivity(
+                req,
+                userId,
+                TypeLogActivity.Role.Label,
+                TypeLogActivity.Role.API.Update,
+                payload.updated_at,
+                result,
+                updateResult
+            )
+
+
+            // Notification
+            await eventPublishNotification(
+                req?.user,
+                NotificationOption.Role.Topic,
+                NotificationOption.Role.Event.Update(roleName),
+                NotificationType.Information,
+                payload.updated_at,
+                updateResult
+            )
+
 
 
             return {
@@ -184,7 +238,7 @@ class RoleRepository implements I_RoleRepository {
     }
 
     /** Soft Delete Data By Id */
-    async softDelete(id: string, payload: Record<string, any>): Promise<I_ResultService> {
+    async softDelete(req: I_RequestCustom, id: string, payload: Record<string, any>): Promise<I_ResultService> {
         try {
             const result = await this.repository.findOne({
                 where: {
@@ -201,10 +255,38 @@ class RoleRepository implements I_RoleRepository {
                 }
             }
 
-            await this.repository.save({
+            const roleName: string = result?.role_name
+
+            const updateResult = {
                 ...result,
                 ...payload
-            });
+            }
+
+            await this.repository.save(updateResult);
+
+
+            // Log Activity
+            const userId: any = req?.user?.user_id
+            await snapLogActivity(
+                req,
+                userId,
+                TypeLogActivity.Role.Label,
+                TypeLogActivity.Role.API.Delete,
+                payload.deleted_at,
+                result,
+                updateResult
+            )
+
+
+            // Notification
+            await eventPublishNotification(
+                req?.user,
+                NotificationOption.Role.Topic,
+                NotificationOption.Role.Event.Delete(roleName),
+                NotificationType.Information,
+                payload.deleted_at,
+                updateResult
+            )
 
             return {
                 success: true,

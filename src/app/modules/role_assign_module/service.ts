@@ -49,7 +49,7 @@ class RoleAssignModuleService implements I_RoleAssignModuleService {
       ...this.bodyValidation(req),
     }
 
-    const result = await this.repository.store(roleId, payload);
+    const result = await this.repository.store(req, roleId, payload);
 
     if (!result?.success) {
       return sendErrorResponse(res, 400, result.message, result.record);
@@ -67,7 +67,7 @@ class RoleAssignModuleService implements I_RoleAssignModuleService {
     const roleId: string = req?.params?.[sc.role.primaryKey];
     const moduleId: string = req?.params?.[sc.module.primaryKey]
 
-    const result = await this.repository.delete(roleId, moduleId, payload);
+    const result = await this.repository.delete(req, roleId, moduleId, payload);
 
     if (!result?.success) {
       return sendErrorResponse(res, 400, result.message, result.record);
