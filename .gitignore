@@ -146,3 +146,5 @@ package-lock.json
 
 Makefile
 Makefile.local
+
+yarn.lock
