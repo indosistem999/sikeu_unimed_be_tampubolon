@@ -6,6 +6,7 @@ import { rolesSeeder } from "./RoleSeeder";
 import { usersSeeder } from "./UserSeeder";
 import { masterJobCategorySeeder } from './MasterJobCategorySeeder'
 import { masterWorkUnitSeeder } from "./MasterWorkUnitSeeder";
+import { paguAnggaranSeeder } from "./PaguAnggaranSeeder";
 
 const runSeeders = async () => {
   try {
@@ -15,25 +16,25 @@ const runSeeders = async () => {
       console.log('Database connection established');
     }
 
-    /** Roles */
-    console.log('Seeding Roles...');
-    await rolesSeeder();
-    console.log('Roles seeded successfully');
+    // /** Roles */
+    // console.log('Seeding Roles...');
+    // await rolesSeeder();
+    // console.log('Roles seeded successfully');
 
-    /** Users */
-    console.log('Seeding Users...');
-    await usersSeeder();
-    console.log('Users seeded successfully');
+    // /** Users */
+    // console.log('Seeding Users...');
+    // await usersSeeder();
+    // console.log('Users seeded successfully');
 
-    /** Master Module */
-    console.log('Seeding Master Module...');
-    await masterModuleSeeder();
-    console.log('Master Module seeded successfully');
+    // /** Master Module */
+    // console.log('Seeding Master Module...');
+    // await masterModuleSeeder();
+    // console.log('Master Module seeded successfully');
 
-    /** Master Menu */
-    console.log('Seeding Master Menu...');
-    await masterMenuSeeder();
-    console.log('Master Menu seeded successfully');
+    // /** Master Menu */
+    // console.log('Seeding Master Menu...');
+    // await masterMenuSeeder();
+    // console.log('Master Menu seeded successfully');
 
 
     /** Master Budget Year */
@@ -52,6 +53,14 @@ const runSeeders = async () => {
     console.log('Seeding master work unit ...');
     await masterWorkUnitSeeder();
     console.log('Master work unit successfully');
+
+
+    /** Master Work Unit */
+    console.log('Seeding pagu anggaran ...');
+    await paguAnggaranSeeder();
+    console.log('Master pagu anggaran successfully');
+
+
     // Close the connection if we initialized it
     if (AppDataSource.isInitialized) {
       await AppDataSource.destroy();

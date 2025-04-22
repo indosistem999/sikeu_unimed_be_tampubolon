@@ -28,7 +28,6 @@ export const masterJobCategorySeeder = async () => {
   const repoUser = AppDataSource.getRepository(Users)
   const today = new Date(standartDateISO());
 
-  let userId: any = null
 
   const user = await repoUser.findOne({
     where: {
@@ -40,37 +39,38 @@ export const masterJobCategorySeeder = async () => {
   })
 
   if (user) {
-    userId = user.user_id
-  }
+    const userId: any = user.user_id
+    for (let i = 0; i < listData.length; i++) {
+      const element = listData[i];
 
-  for (let i = 0; i < listData.length; i++) {
-    const element = listData[i];
-
-    const row = await repository.findOne({
-      where: {
-        code: element?.code,
-        deleted_at: IsNull()
-      },
-    })
-
-    if (row) {
-      // Update
-      await repository.save({
-        ...row, ...{
-          ...element,
-          updated_at: today,
-          updated_by: userId
-        }
+      const row = await repository.findOne({
+        where: {
+          code: element?.code,
+          deleted_at: IsNull()
+        },
       })
-    }
-    else {
-      await repository.save(repository.create({
-        ...element,
-        created_at: today,
-        created_by: userId
-      }))
-    }
+
+      if (row) {
+        // Update
+        await repository.save({
+          ...row, ...{
+            ...element,
+            updated_at: today,
+            updated_by: userId
+          }
+        })
+      }
+      else {
+        await repository.save(repository.create({
+          ...element,
+          created_at: today,
+          created_by: userId
+        }))
+      }
 
 
+    }
   }
+
+
 };

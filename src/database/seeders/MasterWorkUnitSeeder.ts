@@ -9,12 +9,12 @@ export const listData = [
   {
     unit_code: 'FAK-001',
     unit_type: 'FIB',
-    unit_name: 'Fakultas Ilmu Budaya'
+    unit_name: 'Fakultas Ilmu Budaya',
   },
   {
-    unit_code: 'FAK-002',
-    unit_type: 'FIK',
-    unit_name: 'Fakultas Ilmu Kesehatan'
+    unit_code: 'FAK-077',
+    unit_type: 'FTI',
+    unit_name: 'Fakultas Teknik Informatika',
   }
 ]
 
@@ -22,8 +22,6 @@ export const masterWorkUnitSeeder = async () => {
   const repository = AppDataSource.getRepository(MasterWorkUnit);
   const repoUser = AppDataSource.getRepository(Users)
   const today = new Date(standartDateISO());
-
-  let userId: any = null
 
   const user = await repoUser.findOne({
     where: {
@@ -35,39 +33,41 @@ export const masterWorkUnitSeeder = async () => {
   })
 
   if (user) {
-    userId = user.user_id
-  }
+    const userId: any = user.user_id
 
-  for (let i = 0; i < listData.length; i++) {
-    const element = listData[i];
+    for (let i = 0; i < listData.length; i++) {
+      const element = listData[i];
 
-    const row = await repository.findOne({
-      where: {
-        unit_code: element?.unit_code,
-        unit_type: element?.unit_type,
-        unit_name: element?.unit_name,
-        deleted_at: IsNull()
-      },
-    })
-
-    if (row) {
-      // Update
-      await repository.save({
-        ...row, ...{
-          ...element,
-          updated_at: today,
-          updated_by: userId
-        }
+      const row = await repository.findOne({
+        where: {
+          unit_code: element?.unit_code,
+          unit_type: element?.unit_type,
+          unit_name: element?.unit_name,
+          deleted_at: IsNull()
+        },
       })
-    }
-    else {
-      await repository.save(repository.create({
-        ...element,
-        created_at: today,
-        created_by: userId
-      }))
-    }
+
+      if (row) {
+        // Update
+        await repository.save({
+          ...row, ...{
+            ...element,
+            updated_at: today,
+            updated_by: userId
+          }
+        })
+      }
+      else {
+        await repository.save(repository.create({
+          ...element,
+          created_at: today,
+          created_by: userId
+        }))
+      }
 
 
+    }
   }
+
+
 };
