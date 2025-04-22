@@ -10,6 +10,7 @@ import {
 import { Users } from './Users';
 import { SPPDPegawai } from './SPPDPegawai';
 import { MasterOfficers } from './MasterOfficers';
+import { PaguAnggaran } from './PaguAnggaran';
 
 
 @Entity({ name: 'master_work_unit' })
@@ -52,4 +53,8 @@ export class MasterWorkUnit {
 
     @OneToMany(() => SPPDPegawai, (value: any) => value.work_unit)
     pegawai!: SPPDPegawai[]
+
+
+    @OneToMany(() => PaguAnggaran, (value: any) => value.work_unit)
+    pagu_anggaran!: PaguAnggaran[]
 }

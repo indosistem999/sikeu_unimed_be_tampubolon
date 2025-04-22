@@ -209,6 +209,10 @@ export const allSchema = {
   master_data_mak: {
     tableName: 'master_data_mak',
     primaryKey: 'mak_id',
+  },
+  pagu_anggaran: {
+    tableName: 'pagu_anggaran',
+    primaryKey: 'pagu_anggaran_id',
   }
 
 }
