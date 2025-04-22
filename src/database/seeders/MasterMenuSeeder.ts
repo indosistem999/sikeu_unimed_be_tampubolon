@@ -155,8 +155,6 @@ export const masterMenuSeeder = async () => {
 
     if (rowModule && element?.module_menus?.length > 0) {
 
-      console.log({ module_id: rowModule?.module_id, module_menu: element?.module_menus })
-
       for (let i = 0; i < element?.module_menus?.length; i++) {
         const itemMenu = element.module_menus[i];
         let parent_id: any = null;

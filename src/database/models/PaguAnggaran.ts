@@ -27,8 +27,14 @@ export class PaguAnggaran {
     @Column({ name: 'sumber_dana_id', type: 'uuid', default: null, nullable: true })
     sumber_dana_id!: string
 
+    @Column({ name: 'budget_id', type: 'uuid', default: null, nullable: true })
+    budget_id!: string
+
     @Column({ type: 'text', name: 'description', default: null })
     description!: string;
+
+    @Column({ type: 'text', name: 'kode_anggaran', default: null })
+    kode_anggaran!: string
 
     @Column({ type: 'decimal', name: 'prices', default: null })
     prices!: number;

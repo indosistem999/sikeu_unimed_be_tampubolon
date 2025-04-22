@@ -43,41 +43,39 @@ export const masterModuleSeeder = async () => {
   const repoUser = AppDataSource.getRepository(Users);
 
 
-  for (let i = 0; i < moduleList.length; i++) {
-    const element = moduleList[i];
-    let userId: any = null
+  const user = await repoUser.findOne({
+    where: {
+      role: { role_slug: 'admin' },
+      deleted_at: IsNull()
+    },
+    relations: ['role']
+  })
 
-    const user = await repoUser.findOne({
-      where: {
-        role: { role_slug: 'admin' },
-        deleted_at: IsNull()
-      },
-      relations: ['role']
-    })
+  if (user) {
+    const userId: string = user.user_id
 
-    if (user) {
-      userId = user.user_id
-    }
+    for (let i = 0; i < moduleList.length; i++) {
+      const element = moduleList[i];
+      const row = await repoModule.findOne({
+        where: {
+          module_name: element.module_name,
+          deleted_at: IsNull()
+        }
+      })
 
-    const row = await repoModule.findOne({
-      where: {
-        module_name: element.module_name,
-        deleted_at: IsNull()
+      if (!row) {
+        const today: Date = new Date(standartDateISO())
+        await repoModule.save(repoModule.create({
+          ...element,
+          created_at: today,
+          created_by: userId,
+          updated_at: today,
+          updated_by: userId
+        }))
       }
-    })
-
-    if (!row) {
-      const today: Date = new Date(standartDateISO())
-      await repoModule.save(repoModule.create({
-        ...element,
-        created_at: today,
-        created_by: userId,
-        updated_at: today,
-        updated_by: userId
-      }))
     }
-
-
-
   }
+
+
+
 };
