@@ -159,6 +159,27 @@
     "sppdBeranda": {
       "fetchBoard": "Get data graph board successfully",
       "fetchChart": "Get data graph chart successfully"
+    },
+    "masterDataOutput": {
+      "findItem": "Get data output {{item}} successfully",
+      "fetch": "Get data output successfully",
+      "store": "Data output added successfully",
+      "update": "Data output edited successfully",
+      "softDelete": "Data output deleted successfully"
+    },
+    "masterDataComponent": {
+      "findItem": "Get data component {{item}} successfully",
+      "fetch": "Get data component successfully",
+      "store": "Data component added successfully",
+      "update": "Data component edited successfully",
+      "softDelete": "Data component deleted successfully"
+    },
+    "masterDataMAK": {
+      "findItem": "Get data MAK {{item}} successfully",
+      "fetch": "Get data MAK successfully",
+      "store": "Data MAK added successfully",
+      "update": "Data MAK edited successfully",
+      "softDelete": "Data MAK deleted successfully"
     }
   },
   "error": {
@@ -180,7 +201,10 @@
       "roleModule": "Data already existed. The Module had assigned to role",
       "sppdPangkat": "Data spd pangkat already existed",
       "sppdBagianSurat": "Bagian Surat already exists",
-      "sppdKopSurat": "Kop Surat already exists"
+      "sppdKopSurat": "Kop Surat already exists",
+      "masterDataOutput": "Code data output already exists",
+      "masterDataComponent": "Code data component already exists",
+      "masterDataMAK": "Code data MAK already exists"
     },
     "missing": {
       "tokenAuth": "Unauthorized: Token is missing",
@@ -223,7 +247,10 @@
       "readFileStream": "Failed to read your import {{type}} file",
       "loadFileStream": "Failed to load your {{type}} file",
       "storeHistory": "Failed to store data to history",
-      "fetchBoard": "Failed to get graph board"
+      "fetchBoard": "Failed to get graph board",
+      "storeDataOutput": "Failed to store data output",
+      "storeDataComponent": "Failed to store data component",
+      "storeDataMAK": "Failed to store data MAK"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",

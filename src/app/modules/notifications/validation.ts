@@ -1,58 +1,9 @@
-import { I_RequestCustom, I_ResultService } from "../../../interfaces/app.interface";
+import { I_RequestCustom } from "../../../interfaces/app.interface";
 import { Response, NextFunction } from 'express'
 import { sendErrorResponse } from "../../../lib/utils/response.util";
 import { allSchema as sc } from "../../../constanta";
 import { MessageDialog } from "../../../lang";
-
-function ensureArray(value: unknown): I_ResultService {
-    if (value === undefined || value === null) {
-        return {
-            success: false,
-            message: 'Value is null or undefined',
-            record: value
-        }
-    }
-
-    if (Array.isArray(value)) {
-        return {
-            success: true,
-            message: 'Value is array',
-            record: value
-        }
-    }
-
-    if (typeof value === 'string') {
-        try {
-            const parsed = JSON.parse(value);
-            if (Array.isArray(parsed)) {
-                return {
-                    success: true,
-                    message: 'Value is array',
-                    record: parsed
-                }
-            } else {
-                return {
-                    success: false,
-                    message: 'Value is string. Parsed string is not an array',
-                    record: value
-                }
-            }
-        } catch (err: any) {
-            return {
-                success: false,
-                message: 'Failed to convert string to array',
-                record: err
-            }
-        }
-    }
-
-    return {
-        success: false,
-        message: 'Value is not an array or a valid array string',
-        record: value
-    }
-}
-
+import { ensureArray } from "../../../lib/utils/common.util";
 
 class NotificationValidation {
     async paramValidation(req: I_RequestCustom, res: Response, next: NextFunction): Promise<void> {

@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 
 @Entity({ name: 'pagu_anggaran' })
-export class MasterDataComponent {
+export class PaguAnggaran {
     @PrimaryGeneratedColumn('uuid')
     pagu_anggaran_id!: string;
 

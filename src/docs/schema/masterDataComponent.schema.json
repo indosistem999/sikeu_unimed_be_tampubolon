@@ -1,0 +1,46 @@
+{
+  "SchemaCreateMasterDataComponent": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "string",
+        "summary": "Kode Data Component",
+        "default": "001.051.A"
+      },
+      "description": {
+        "type": "string",
+        "summary": "Uraian Data Component",
+        "default": "Pengadaan Alat Pendidikan Pendukung Pembelajaran"
+      }
+    }
+  },
+  "SchemaUpdateMasterDataComponent": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "string",
+        "summary": "Kode Data Component",
+        "default": "001.051.A"
+      },
+      "description": {
+        "type": "string",
+        "summary": "Uraian Data Component",
+        "default": "Pengadaan Alat Pendidikan Pendukung Pembelajaran"
+      }
+    }
+  },
+  "SchemaAllDeleteMasterDataComponent": {
+    "type": "object",
+    "properties": {
+      "list_component": {
+        "type": "array",
+        "summary": "List Data Component ID",
+        "default": [
+          {
+            "component_id": "92a34f9e-4ede-4b8a-ae5b-8953a087a0d6"
+          }
+        ]
+      }
+    }
+  }
+}
