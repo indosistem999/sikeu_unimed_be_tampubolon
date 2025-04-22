@@ -1,0 +1,96 @@
+{
+  "/sppd-beranda/graph-board": {
+    "get": {
+      "tags": ["SPPD - Beranda"],
+      "summary": "Graphic Board (Total Surat, Total Pegawai dan Total Satker)",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultResponseSchema"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/sppd-beranda/graph-chart": {
+    "get": {
+      "tags": ["SPPD - Beranda"],
+      "summary": "Graphic Chart",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "in": "query",
+          "name": "start_year",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "default": 2024
+          },
+          "description": "Dari Tahun. Example : 2024"
+        },
+        {
+          "in": "query",
+          "name": "end_year",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "default": 2025
+          },
+          "description": "Sampai Tahun. Example : 2024"
+        },
+        {
+          "in": "query",
+          "name": "unit_id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "default": "92a34f9e-4ede-4b8a-ae5b-8953a087a0d6"
+          },
+          "description": "Pilih Satuan Kerja. (unit_id = uuid)"
+        },
+        {
+          "in": "query",
+          "name": "type_statistic",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "travel_statistics_month",
+              "cost_statistics_month",
+              "travel_statistics_year",
+              "cost_statistics_year"
+            ],
+            "default": "travel_statistics_month"
+          },
+          "description": "Pilih Statistik Yang Ingin Ditampilkan. Opsi Pilihan = [`travel_statistics_month (Statistic Perjalanan Bulanan)`, `cost_statistics_month (Statistik Biaya Perjalanan Bulanan)`,`travel_statistics_year (Statistic Perjalanan Tahunan)`, `cost_statistics_year (Statistik Biaya Perjalanan Tahunan)`]"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultResponseSchema"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -199,3 +199,12 @@ export const allSchema = {
     primaryKey: 'notification_id',
   }
 }
+
+
+
+export const ProcedureList = {
+  SppdBeranda: {
+    ChartMonthly: 'GetStatisticSppdBerandaChartMonthly',
+    ChartYearly: 'GetStatisticSppdBerandaChartYearly'
+  }
+}

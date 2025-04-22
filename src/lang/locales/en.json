@@ -155,6 +155,10 @@
     "notifications": {
       "fetch": "Get notification successfully",
       "read": "Notification read successfully"
+    },
+    "sppdBeranda": {
+      "fetchBoard": "Get data graph board successfully",
+      "fetchChart": "Get data graph chart successfully"
     }
   },
   "error": {
@@ -218,7 +222,8 @@
       "storeEmployee": "Failed to store employee",
       "readFileStream": "Failed to read your import {{type}} file",
       "loadFileStream": "Failed to load your {{type}} file",
-      "storeHistory": "Failed to store data to history"
+      "storeHistory": "Failed to store data to history",
+      "fetchBoard": "Failed to get graph board"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",

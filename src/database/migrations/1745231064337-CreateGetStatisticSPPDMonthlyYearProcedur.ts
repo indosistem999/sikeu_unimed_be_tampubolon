@@ -1,9 +1,10 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
+import { ProcedureList } from "../../constanta";
 
 
 export class CreateGetStatisticSPPDMonthlyYearProcedur1745231064337 implements MigrationInterface {
 
-    public procedureName: string = 'GetStatisticSppdMonthly'
+    public procedureName: string = ProcedureList.SppdBeranda.ChartMonthly
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
@@ -13,7 +14,8 @@ export class CreateGetStatisticSPPDMonthlyYearProcedur1745231064337 implements M
         await queryRunner.query(`
         CREATE PROCEDURE ${this.procedureName} (
             IN start_year INT,
-            IN end_year INT
+            IN end_year INT,
+            IN id_unit CHAR(36)
         )
         BEGIN
             WITH RECURSIVE bulan(bulan_num) AS (
@@ -70,8 +72,8 @@ export class CreateGetStatisticSPPDMonthlyYearProcedur1745231064337 implements M
             )
             
             SELECT 
-                tahun,
-                JSON_OBJECTAGG(bulan_nama, jumlah) AS bulan_data
+                tahun as year_number,
+                JSON_OBJECTAGG(bulan_nama, jumlah) AS list_month
             FROM (
                 SELECT * FROM bulan_bernama 
                 WHERE tahun BETWEEN start_year AND end_year
