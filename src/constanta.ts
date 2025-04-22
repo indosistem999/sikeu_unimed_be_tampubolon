@@ -197,7 +197,12 @@ export const allSchema = {
   notification: {
     tableName: 'notifications',
     primaryKey: 'notification_id',
+  },
+  master_data_output: {
+    tableName: 'master_data_output',
+    primaryKey: 'output_id',
   }
+
 }
 
 

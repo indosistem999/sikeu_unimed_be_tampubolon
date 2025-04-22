@@ -29,6 +29,7 @@ import SppdPegawaiController from '../app/modules/sppd_pegawai/controller'
 import HistoryImportPegawaiController from '../app/modules/history_import_pegawai/controller';
 import NotificationController from '../app/modules/notifications/controller';
 import SppdBerandaController from '../app/modules/sppd_beranda/controller';
+import MasterDataOutputController from '../app/modules/master_data_output/controller'
 
 const tagVersionOne: string = '/api/v1';
 
@@ -113,6 +114,10 @@ class RouteApplication extends MainRoutes {
 
     // SPPD Beranda
     this.router.use(`${tagVersionOne}/sppd-beranda`, SppdBerandaController)
+
+
+    // Pengeluaran
+    this.router.use(`${tagVersionOne}/master-data-output`, MasterDataOutputController)
   }
 }
 

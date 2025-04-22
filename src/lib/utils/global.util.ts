@@ -100,6 +100,16 @@ export const TypeLogActivity = {
         }
     },
 
+    MasterDataOutput: {
+        Label: 'Master Data Output',
+        API: {
+            Create: 'Pengguna Menambahkan Data Output Yang Baru',
+            Update: 'Pengguna Mengubah Data Output',
+            Delete: 'Pengguna Menghapus Data Output',
+            BatchDelete: 'Pengguna Menghapus Beberapa Data Output Sekaligus'
+        }
+    },
+
 }
 
 export const TagNameIntegration = {
@@ -160,6 +170,16 @@ export const NotificationOption = {
             Create: (value: string) => `Berhasil menambahkan kategori jabatan baru ${value}`,
             Update: (value: string) => `Berhasil mengubah kategori jabatan ${value}`,
             Delete: (value: string) => `Berahsil menghapus kategori jabatan ${value}`
+        }
+    },
+
+    MasterDataOutput: {
+        Topic: 'Master Data Output',
+        Event: {
+            Create: (value: string) => `Berhasil menambahkan data output baru ${value}`,
+            Update: (value: string) => `Berhasil mengubah data output jabatan ${value}`,
+            Delete: (value: string) => `Berahsil menghapus data output jabatan ${value}`,
+            BatchDelete: `Berhasil menghapus beberapa data output yang dipilih`
         }
     },
 }

@@ -4,6 +4,7 @@ import { Config as cfg } from '../../constanta';
 import { Request } from 'express';
 import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
 import { randomInt } from 'crypto'
+import { I_ResultService } from '../../interfaces/app.interface';
 
 /**
  * Generates a new UUID v4.
@@ -212,4 +213,54 @@ export const getRangeToday = (): any => {
   const startOfTomorrow = new Date(startOfToday);
   startOfTomorrow.setDate(startOfToday.getDate() + 1);
   return { startOfToday, startOfTomorrow }
+}
+
+
+export const ensureArray = (value: unknown): I_ResultService => {
+  if (value === undefined || value === null) {
+    return {
+      success: false,
+      message: 'Value is null or undefined',
+      record: value
+    }
+  }
+
+  if (Array.isArray(value)) {
+    return {
+      success: true,
+      message: 'Value is array',
+      record: value
+    }
+  }
+
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed)) {
+        return {
+          success: true,
+          message: 'Value is array',
+          record: parsed
+        }
+      } else {
+        return {
+          success: false,
+          message: 'Value is string. Parsed string is not an array',
+          record: value
+        }
+      }
+    } catch (err: any) {
+      return {
+        success: false,
+        message: 'Failed to convert string to array',
+        record: err
+      }
+    }
+  }
+
+  return {
+    success: false,
+    message: 'Value is not an array or a valid array string',
+    record: value
+  }
 }
