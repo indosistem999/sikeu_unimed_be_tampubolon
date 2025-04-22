@@ -29,7 +29,9 @@ import SppdPegawaiController from '../app/modules/sppd_pegawai/controller'
 import HistoryImportPegawaiController from '../app/modules/history_import_pegawai/controller';
 import NotificationController from '../app/modules/notifications/controller';
 import SppdBerandaController from '../app/modules/sppd_beranda/controller';
-import MasterDataOutputController from '../app/modules/master_data_output/controller'
+import MasterDataOutputController from '../app/modules/master_data_output/controller';
+import MasterDataComponentController from '../app/modules/master_data_component/controller';
+import MasterDataMAKController from '../app/modules/master_data_mak/controller'
 
 const tagVersionOne: string = '/api/v1';
 
@@ -116,8 +118,14 @@ class RouteApplication extends MainRoutes {
     this.router.use(`${tagVersionOne}/sppd-beranda`, SppdBerandaController)
 
 
-    // Pengeluaran
+    // Pengeluaran - Master Data Output
     this.router.use(`${tagVersionOne}/master-data-output`, MasterDataOutputController)
+
+    // Pengeluaran - Master Data Component
+    this.router.use(`${tagVersionOne}/master-data-component`, MasterDataComponentController)
+
+    // Pengeluaran - Master Data Component
+    this.router.use(`${tagVersionOne}/master-data-mak`, MasterDataMAKController)
   }
 }
 

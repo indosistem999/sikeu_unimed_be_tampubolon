@@ -4,14 +4,14 @@ import { I_RequestCustom, I_ResultService } from "../../../interfaces/app.interf
 import { MessageDialog } from "../../../lang";
 import { I_ResponsePagination } from "../../../interfaces/pagination.interface";
 import { setPagination } from "../../../lib/utils/pagination.util";
-import { MasterDataOutput } from "../../../database/models/MasterDataOutput";
 import { snapLogActivity } from "../../../events/publishers/logUser.publisher";
 import { NotificationOption, NotificationType, TypeLogActivity } from "../../../lib/utils/global.util";
 import { eventPublishNotification } from "../../../events/publishers/notification.publisher";
+import { MasterDataMAK } from "../../../database/models/MasterDataMAK";
 
 
-export class MasterDataOutputRepository {
-    private repository = AppDataSource.getRepository(MasterDataOutput);
+export class MasterDataMAKRepository {
+    private repository = AppDataSource.getRepository(MasterDataMAK);
 
     setupErrorMessage(error: any): I_ResultService {
         return {
@@ -47,7 +47,7 @@ export class MasterDataOutputRepository {
 
             return {
                 success: true,
-                message: MessageDialog.__('success.masterDataOutput.fetch'),
+                message: MessageDialog.__('success.masterDataMAK.fetch'),
                 record: pagination
             }
         } catch (error: any) {
@@ -61,21 +61,21 @@ export class MasterDataOutputRepository {
             const result = await this.repository.findOne({
                 where: {
                     deleted_at: IsNull(),
-                    output_id: id
+                    mak_id: id
                 },
             });
 
             if (!result) {
                 return {
                     success: false,
-                    message: MessageDialog.__('error.default.notFoundItem', { item: 'Output id' }),
+                    message: MessageDialog.__('error.default.notFoundItem', { item: 'MAK id' }),
                     record: result
                 }
             }
 
             return {
                 success: true,
-                message: MessageDialog.__('success.masterDataOutput.fetch'),
+                message: MessageDialog.__('success.masterDataMAK.fetch'),
                 record: result
             }
         } catch (error: any) {
@@ -90,7 +90,7 @@ export class MasterDataOutputRepository {
             if (!result) {
                 return {
                     success: false,
-                    message: MessageDialog.__('error.failed.storeDataOutput'),
+                    message: MessageDialog.__('error.failed.storeDataMAK'),
                     record: result
                 }
             }
@@ -100,8 +100,8 @@ export class MasterDataOutputRepository {
             await snapLogActivity(
                 req,
                 userId,
-                TypeLogActivity.MasterDataOutput.Label,
-                TypeLogActivity.MasterDataOutput.API.Create,
+                TypeLogActivity.MasterDataMAK.Label,
+                TypeLogActivity.MasterDataMAK.API.Create,
                 payload.created_at,
                 null,
                 result
@@ -111,8 +111,8 @@ export class MasterDataOutputRepository {
             // Notification
             await eventPublishNotification(
                 req?.user,
-                NotificationOption.MasterDataOutput.Topic,
-                NotificationOption.MasterDataOutput.Event.Create(result?.code),
+                NotificationOption.MasterDataMAK.Topic,
+                NotificationOption.MasterDataMAK.Event.Create(result?.code),
                 NotificationType.Information,
                 payload.created_at,
                 result
@@ -121,7 +121,7 @@ export class MasterDataOutputRepository {
 
             return {
                 success: true,
-                message: MessageDialog.__('success.masterDataOutput.store'),
+                message: MessageDialog.__('success.masterDataMAK.store'),
                 record: result
             }
         } catch (err: any) {
@@ -134,14 +134,14 @@ export class MasterDataOutputRepository {
             const result = await this.repository.findOne({
                 where: {
                     deleted_at: IsNull(),
-                    output_id: id
+                    mak_id: id
                 }
             });
 
             if (!result) {
                 return {
                     success: false,
-                    message: MessageDialog.__('error.default.notFoundItem', { item: 'Data output' }),
+                    message: MessageDialog.__('error.default.notFoundItem', { item: 'Data MAK' }),
                     record: result
                 }
             }
@@ -156,8 +156,8 @@ export class MasterDataOutputRepository {
             await snapLogActivity(
                 req,
                 userId,
-                TypeLogActivity.MasterDataOutput.Label,
-                TypeLogActivity.MasterDataOutput.API.Update,
+                TypeLogActivity.MasterDataMAK.Label,
+                TypeLogActivity.MasterDataMAK.API.Update,
                 payload.updated_at,
                 result,
                 updateResult
@@ -167,8 +167,8 @@ export class MasterDataOutputRepository {
             // Notification
             await eventPublishNotification(
                 req?.user,
-                NotificationOption.MasterDataOutput.Topic,
-                NotificationOption.MasterDataOutput.Event.Update(codeName),
+                NotificationOption.MasterDataMAK.Topic,
+                NotificationOption.MasterDataMAK.Event.Update(codeName),
                 NotificationType.Information,
                 payload.updated_at,
                 updateResult
@@ -177,9 +177,9 @@ export class MasterDataOutputRepository {
 
             return {
                 success: true,
-                message: MessageDialog.__('success.masterDataOutput.update'),
+                message: MessageDialog.__('success.masterDataMAK.update'),
                 record: {
-                    output_id: result?.output_id,
+                    mak_id: result?.mak_id,
                 }
             }
 
@@ -192,7 +192,7 @@ export class MasterDataOutputRepository {
         try {
             const result = await this.repository.findOne({
                 where: {
-                    output_id: id,
+                    mak_id: id,
                     deleted_at: IsNull()
                 }
             })
@@ -200,7 +200,7 @@ export class MasterDataOutputRepository {
             if (!result) {
                 return {
                     success: false,
-                    message: MessageDialog.__('error.default.notFoundItem', { item: 'Data output id' }),
+                    message: MessageDialog.__('error.default.notFoundItem', { item: 'Data MAK id' }),
                     record: result
                 }
             }
@@ -219,8 +219,8 @@ export class MasterDataOutputRepository {
             await snapLogActivity(
                 req,
                 userId,
-                TypeLogActivity.MasterDataOutput.Label,
-                TypeLogActivity.MasterDataOutput.API.Delete,
+                TypeLogActivity.MasterDataMAK.Label,
+                TypeLogActivity.MasterDataMAK.API.Delete,
                 payload.deleted_at,
                 result,
                 updateResult
@@ -230,8 +230,8 @@ export class MasterDataOutputRepository {
             // Notification
             await eventPublishNotification(
                 req?.user,
-                NotificationOption.MasterDataOutput.Topic,
-                NotificationOption.MasterDataOutput.Event.Delete(codeName),
+                NotificationOption.MasterDataMAK.Topic,
+                NotificationOption.MasterDataMAK.Event.Delete(codeName),
                 NotificationType.Information,
                 payload.deleted_at,
                 updateResult
@@ -239,9 +239,9 @@ export class MasterDataOutputRepository {
 
             return {
                 success: true,
-                message: MessageDialog.__('success.masterDataOutput.softDelete'),
+                message: MessageDialog.__('success.masterDataMAK.softDelete'),
                 record: {
-                    output_id: id
+                    mak_id: id
                 }
             }
         } catch (error: any) {
@@ -250,17 +250,17 @@ export class MasterDataOutputRepository {
     }
 
     async batchDelete(req: I_RequestCustom, data: Record<string, any>): Promise<I_ResultService> {
-        const { list_output, ...payload } = data;
+        const { list_mak, ...payload } = data;
 
         const queryRunner = AppDataSource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
 
         try {
-            const listId = list_output.map((item: any) => item.output_id)
+            const listId = list_mak.map((item: any) => item.mak_id)
             const results = await this.repository.createQueryBuilder()
                 .update()
-                .where('output_id in(:...listId)', { listId })
+                .where('mak_id in(:...listId)', { listId })
                 .andWhere('deleted_at is null')
                 .set({
                     ...payload
@@ -271,7 +271,7 @@ export class MasterDataOutputRepository {
                 await queryRunner.rollbackTransaction();
                 return {
                     success: false,
-                    message: MessageDialog.__('error.default.notFoundItem', { item: 'Data output id' }),
+                    message: MessageDialog.__('error.default.notFoundItem', { item: 'Data MAK id' }),
                     record: results
                 }
             }
@@ -283,27 +283,27 @@ export class MasterDataOutputRepository {
             await snapLogActivity(
                 req,
                 userId,
-                TypeLogActivity.MasterDataOutput.Label,
-                TypeLogActivity.MasterDataOutput.API.BatchDelete,
+                TypeLogActivity.MasterDataMAK.Label,
+                TypeLogActivity.MasterDataMAK.API.BatchDelete,
                 payload.deleted_at,
                 null,
-                list_output
+                list_mak
             )
 
 
             // Notification
             await eventPublishNotification(
                 req?.user,
-                NotificationOption.MasterDataOutput.Topic,
-                NotificationOption.MasterDataOutput.Event.BatchDelete,
+                NotificationOption.MasterDataMAK.Topic,
+                NotificationOption.MasterDataMAK.Event.BatchDelete,
                 NotificationType.Information,
                 payload.deleted_at,
-                list_output
+                list_mak
             )
 
             return {
                 success: true,
-                message: MessageDialog.__('success.masterDataOutput.softDelete'),
+                message: MessageDialog.__('success.masterDataMAK.softDelete'),
                 record: listId
             }
         } catch (error: any) {

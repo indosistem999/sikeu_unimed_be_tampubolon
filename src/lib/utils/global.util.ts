@@ -110,6 +110,26 @@ export const TypeLogActivity = {
         }
     },
 
+    MasterDataComponent: {
+        Label: 'Master Data Component',
+        API: {
+            Create: 'Pengguna Menambahkan Data Component Yang Baru',
+            Update: 'Pengguna Mengubah Data Component',
+            Delete: 'Pengguna Menghapus Data Component',
+            BatchDelete: 'Pengguna Menghapus Beberapa Data Component Sekaligus'
+        }
+    },
+
+    MasterDataMAK: {
+        Label: 'Master Data MAK',
+        API: {
+            Create: 'Pengguna Menambahkan Data MAK Yang Baru',
+            Update: 'Pengguna Mengubah Data MAK',
+            Delete: 'Pengguna Menghapus Data MAK',
+            BatchDelete: 'Pengguna Menghapus Beberapa Data MAK Sekaligus'
+        }
+    },
+
 }
 
 export const TagNameIntegration = {
@@ -177,9 +197,31 @@ export const NotificationOption = {
         Topic: 'Master Data Output',
         Event: {
             Create: (value: string) => `Berhasil menambahkan data output baru ${value}`,
-            Update: (value: string) => `Berhasil mengubah data output jabatan ${value}`,
-            Delete: (value: string) => `Berahsil menghapus data output jabatan ${value}`,
+            Update: (value: string) => `Berhasil mengubah data output ${value}`,
+            Delete: (value: string) => `Berahsil menghapus data output ${value}`,
             BatchDelete: `Berhasil menghapus beberapa data output yang dipilih`
+        }
+    },
+
+
+    MasterDataComponent: {
+        Topic: 'Master Data Component',
+        Event: {
+            Create: (value: string) => `Berhasil menambahkan data component baru ${value}`,
+            Update: (value: string) => `Berhasil mengubah data component ${value}`,
+            Delete: (value: string) => `Berahsil menghapus data component ${value}`,
+            BatchDelete: `Berhasil menghapus beberapa data component yang dipilih`
+        }
+    },
+
+
+    MasterDataMAK: {
+        Topic: 'Master Data MAK',
+        Event: {
+            Create: (value: string) => `Berhasil menambahkan data MAK baru ${value}`,
+            Update: (value: string) => `Berhasil mengubah data MAK ${value}`,
+            Delete: (value: string) => `Berahsil menghapus data MAK ${value}`,
+            BatchDelete: `Berhasil menghapus beberapa data MAK yang dipilih`
         }
     },
 }

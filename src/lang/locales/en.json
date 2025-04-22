@@ -166,6 +166,20 @@
       "store": "Data output added successfully",
       "update": "Data output edited successfully",
       "softDelete": "Data output deleted successfully"
+    },
+    "masterDataComponent": {
+      "findItem": "Get data component {{item}} successfully",
+      "fetch": "Get data component successfully",
+      "store": "Data component added successfully",
+      "update": "Data component edited successfully",
+      "softDelete": "Data component deleted successfully"
+    },
+    "masterDataMAK": {
+      "findItem": "Get data MAK {{item}} successfully",
+      "fetch": "Get data MAK successfully",
+      "store": "Data MAK added successfully",
+      "update": "Data MAK edited successfully",
+      "softDelete": "Data MAK deleted successfully"
     }
   },
   "error": {
@@ -188,7 +202,9 @@
       "sppdPangkat": "Data spd pangkat already existed",
       "sppdBagianSurat": "Bagian Surat already exists",
       "sppdKopSurat": "Kop Surat already exists",
-      "masterDataOutput": "Code data output already exists"
+      "masterDataOutput": "Code data output already exists",
+      "masterDataComponent": "Code data component already exists",
+      "masterDataMAK": "Code data MAK already exists"
     },
     "missing": {
       "tokenAuth": "Unauthorized: Token is missing",
@@ -232,7 +248,9 @@
       "loadFileStream": "Failed to load your {{type}} file",
       "storeHistory": "Failed to store data to history",
       "fetchBoard": "Failed to get graph board",
-      "storeDataOutput": "Failed to store data output"
+      "storeDataOutput": "Failed to store data output",
+      "storeDataComponent": "Failed to store data component",
+      "storeDataMAK": "Failed to store data MAK"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",
