@@ -180,6 +180,14 @@
       "store": "Data MAK added successfully",
       "update": "Data MAK edited successfully",
       "softDelete": "Data MAK deleted successfully"
+    },
+
+    "paguAnggaran": {
+      "findItem": "Get pagu anggaran {{item}} successfully",
+      "fetch": "Get pagu anggaran successfully",
+      "store": "Pagu anggaran added successfully",
+      "update": "Pagu anggaran edited successfully",
+      "softDelete": "Pagu anggaran deleted successfully"
     }
   },
   "error": {
@@ -250,7 +258,8 @@
       "fetchBoard": "Failed to get graph board",
       "storeDataOutput": "Failed to store data output",
       "storeDataComponent": "Failed to store data component",
-      "storeDataMAK": "Failed to store data MAK"
+      "storeDataMAK": "Failed to store data MAK",
+      "storePaguAnggaran": "Failed to store data pagu anggaran"
     },
     "invalid": {
       "emailEntry": "Invalid email entry",

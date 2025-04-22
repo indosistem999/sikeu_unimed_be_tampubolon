@@ -5,7 +5,9 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   PrimaryGeneratedColumn,
+  OneToMany,
 } from 'typeorm';
+import { PaguAnggaran } from './PaguAnggaran';
 
 /** Master Sumber Dana */
 @Entity({ name: 'master_sumber_dana' })
@@ -36,4 +38,8 @@ export class MasterSumberDana {
 
   @Column({ name: 'deleted_by', type: 'uuid' })
   deleted_by!: string;
+
+
+  @OneToMany(() => PaguAnggaran, (value: any) => value.sumber_dana)
+  pagu_anggaran!: PaguAnggaran[]
 }

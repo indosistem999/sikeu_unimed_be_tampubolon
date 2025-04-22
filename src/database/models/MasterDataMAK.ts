@@ -5,7 +5,9 @@ import {
     UpdateDateColumn,
     DeleteDateColumn,
     PrimaryGeneratedColumn,
+    OneToMany,
 } from 'typeorm';
+import { PaguAnggaran } from './PaguAnggaran';
 
 @Entity({ name: 'master_data_mak' })
 export class MasterDataMAK {
@@ -35,4 +37,7 @@ export class MasterDataMAK {
 
     @Column({ name: 'deleted_by', type: 'uuid', select: false })
     deleted_by!: string;
+
+    @OneToMany(() => PaguAnggaran, (value: any) => value.master_mak)
+    pagu_anggaran!: PaguAnggaran[]
 }

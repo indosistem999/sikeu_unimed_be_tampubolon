@@ -5,7 +5,15 @@ import {
     UpdateDateColumn,
     DeleteDateColumn,
     PrimaryGeneratedColumn,
+    OneToOne,
+    JoinColumn,
 } from 'typeorm';
+import { MasterWorkUnit } from './MasterWorkUnit';
+import { MasterBudgetYear } from './MasterBudgetYear';
+import { MasterSumberDana } from './MasterSumberDana';
+import { MasterDataMAK } from './MasterDataMAK';
+import { MasterDataComponent } from './MasterDataComponent';
+import { MasterDataOutput } from './MasterDataOutput';
 
 @Entity({ name: 'pagu_anggaran' })
 export class PaguAnggaran {
@@ -63,4 +71,30 @@ export class PaguAnggaran {
 
     @Column({ name: 'deleted_by', type: 'uuid', select: false })
     deleted_by!: string;
+
+
+    @OneToOne(() => MasterWorkUnit, (value: any) => value.pagu_anggaran)
+    @JoinColumn({ name: 'unit_id' })
+    work_unit!: MasterWorkUnit
+
+    @OneToOne(() => MasterBudgetYear, (value: any) => value.pagu_anggaran)
+    @JoinColumn({ name: 'budget_id' })
+    budget_year!: MasterBudgetYear
+
+    @OneToOne(() => MasterSumberDana, (value: any) => value.pagu_anggaran)
+    @JoinColumn({ name: 'sumber_dana_id' })
+    sumber_dana!: MasterSumberDana
+
+    @OneToOne(() => MasterDataMAK, (value: any) => value.pagu_anggaran)
+    @JoinColumn({ name: 'mak_id' })
+    master_mak!: MasterDataMAK
+
+
+    @OneToOne(() => MasterDataComponent, (value: any) => value.pagu_anggaran)
+    @JoinColumn({ name: 'component_id' })
+    master_component!: MasterDataComponent
+
+    @OneToOne(() => MasterDataOutput, (value: any) => value.pagu_anggaran)
+    @JoinColumn({ name: 'output_id' })
+    master_output!: MasterDataOutput
 }
